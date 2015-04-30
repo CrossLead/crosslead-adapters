@@ -2,12 +2,11 @@
  * crosslead-adapters
  * https://github.com/CrossLead/crosslead-adapters
  *
- * Copyright (c) 2015 Christian Yang
- * Licensed under the none license.
+ * Copyright (c) 2015 McChrystal Group
  */
 
 'use strict';
 
-var crossleadAdapters = require('../');
+var CLAdapters = require('../');
 
-console.log(crossleadAdapters()); // "awesome"
+console.log(CLAdapters.AdapterTypes);

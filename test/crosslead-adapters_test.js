@@ -1,12 +1,13 @@
 'use strict';
 
-var crossleadAdapters = require('../');
-var assert = require('should');
+var CLAdapters = require('../');
+var should = require('should');
 
-describe('crossleadAdapters', function () {
+describe('crossleadAdapters', function() {
 
-  it('should be awesome', function () {
-    crossleadAdapters().should.equal('awesome');
+  it('should exist in the proper namespace', function() {
+    should.exist(CLAdapters.AdapterTypes);
+    CLAdapters.AdapterTypes.NETSUITE.should.equal(2);
   });
 
 });
