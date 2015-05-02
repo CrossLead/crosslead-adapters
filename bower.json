@@ -1,0 +1,12 @@
+{
+  "name": "crosslead-adapters-client",
+  "version": "0.0.0",
+  "homepage": "https://github.com/CrossLead/crosslead-adapters",
+  "authors": [
+    "Christian Yang (christian.yang@crosslead.com"
+  ],
+  "description": "Client-side functionality for the `crosslead-adapters` npm module",
+  "main": "lib/clientIndex.js",
+  "license": "none",
+  "private": true
+}
