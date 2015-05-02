@@ -6,7 +6,12 @@
     "Christian Yang (christian.yang@crosslead.com"
   ],
   "description": "Client-side functionality for the `crosslead-adapters` npm module",
-  "main": "lib/clientIndex.js",
+  "main": "dist/crosslead-adapters-client.js",
+  "ignore": [
+    "coverage",  
+    "node_modules",
+    "test"
+  ],
   "license": "none",
   "private": true
 }
