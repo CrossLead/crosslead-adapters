@@ -18,6 +18,9 @@
    */
   var CLAdapters = {};
 
+  // Fields namespace
+  CLAdapters.Fields = require('./clAdapters/fields');
+
   CLAdapters.AdapterStatus = require('./clAdapters/adapterStatus');
   CLAdapters.AdapterTypes = require('./clAdapters/adapterTypes');
 
@@ -27,7 +30,7 @@
 })());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./clAdapters/adapterStatus":2,"./clAdapters/adapterTypes":3}],2:[function(require,module,exports){
+},{"./clAdapters/adapterStatus":2,"./clAdapters/adapterTypes":3,"./clAdapters/fields":4}],2:[function(require,module,exports){
 'use strict';
 
 /**
@@ -54,6 +57,34 @@ module.exports = {
 module.exports = {
   CUSTOM: 1,
   NETSUITE: 2,
+};
+
+},{}],4:[function(require,module,exports){
+'use strict';
+
+/**
+ * Adapter data fields
+ * @return {Fields}
+ 1*/
+var Fields = module.exports = {};
+
+// Search fields
+Fields.Types = require('./types');
+
+},{"./types":5}],5:[function(require,module,exports){
+'use strict';
+
+/**
+ * Enumeration for different data field types
+ *
+ * @enum
+ */
+module.exports = {
+  OTHER_ENTITY: 1,
+  USER: 2,
+  GROUP: 3,
+  ORGANIZATION: 4,
+  RELATIONSHIP: 5
 };
 
 },{}]},{},[1]);
