@@ -19,6 +19,7 @@
     "after"      : false,
     "afterEach"  : false,
     "define"     : false,
-    "window"     : false
+    "window"     : false,
+    "Promise"    : false
   }
 }
