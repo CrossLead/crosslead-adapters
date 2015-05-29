@@ -81,7 +81,7 @@ Fields.Types = require('./types');
  * @enum
  */
 module.exports = {
-  OTHER_ENTITY: 1,
+  EXT_ENTITY: 1,
   USER: 2,
   GROUP: 3,
   ORGANIZATION: 4,
