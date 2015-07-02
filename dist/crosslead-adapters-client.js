@@ -57,7 +57,9 @@ module.exports = {
 module.exports = {
   CUSTOM: 1,
   NETSUITE: 2,
-  CL_MOCK: 3
+  CL_MOCK: 3,
+  OFFICE365: 4,
+  GOOGLE: 5
 };
 
 },{}],4:[function(require,module,exports){
