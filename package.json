@@ -18,7 +18,12 @@
   "keywords": [],
   "dependencies": {
     "es6-promise": "^2.1.1",
-    "netsuite-js": "git://github.com/CrossLead/netsuite-js"
+    "lodash": "^3.10.0",
+    "moment": "^2.10.3",
+    "netsuite-js": "git://github.com/CrossLead/netsuite-js",
+    "node-uuid": "^1.4.3",
+    "promised-mongo": "^1.1.4",
+    "request-promise": "^0.4.2"
   },
   "devDependencies": {
     "browserify": "^10.0.0",
