@@ -1,7 +1,7 @@
 {
   "name": "crosslead-adapters",
   "description": "Common data adapter functionality across web server and background workers",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/CrossLead/crosslead-adapters",
   "bugs": "https://github.com/CrossLead/crosslead-adapters/issues",
   "license": "none",
