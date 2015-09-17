@@ -1,15 +1,35 @@
-'use strict';
+"use strict";
 
-var _Promise = require('babel-runtime/core-js/promise')['default'];
+var _classCallCheck = require("babel-runtime/helpers/class-call-check")["default"];
 
-function Service(config) {
-  this.config = config;
-}
+var _regeneratorRuntime = require("babel-runtime/regenerator")["default"];
 
-Service.prototype.init = function () {
-  return _Promise.resolve(true);
-};
+exports.__esModule = true;
 
-module.exports = Service;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL1NlcnZpY2UuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsWUFBWSxDQUFDOzs7O0FBRWIsU0FBUyxPQUFPLENBQUMsTUFBTSxFQUFFO0FBQ3ZCLE1BQUksQ0FBQyxNQUFNLEdBQUcsTUFBTSxDQUFDO0NBQ3RCOztBQUVELE9BQU8sQ0FBQyxTQUFTLENBQUMsSUFBSSxHQUFHLFlBQVc7QUFDbEMsU0FBTyxTQUFRLE9BQU8sQ0FBQyxJQUFJLENBQUMsQ0FBQztDQUM5QixDQUFDOztBQUVGLE1BQU0sQ0FBQyxPQUFPLEdBQUcsT0FBTyxDQUFDIiwiZmlsZSI6ImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL1NlcnZpY2UuanMiLCJzb3VyY2VzQ29udGVudCI6WyIndXNlIHN0cmljdCc7XG5cbmZ1bmN0aW9uIFNlcnZpY2UoY29uZmlnKSB7XG4gIHRoaXMuY29uZmlnID0gY29uZmlnO1xufVxuXG5TZXJ2aWNlLnByb3RvdHlwZS5pbml0ID0gZnVuY3Rpb24oKSB7XG4gIHJldHVybiBQcm9taXNlLnJlc29sdmUodHJ1ZSk7XG59O1xuXG5tb2R1bGUuZXhwb3J0cyA9IFNlcnZpY2U7XG4iXX0=
+var Service = (function () {
+  function Service(config) {
+    _classCallCheck(this, Service);
+
+    this.config = config;
+  }
+
+  Service.prototype.init = function init() {
+    return _regeneratorRuntime.async(function init$(context$2$0) {
+      while (1) switch (context$2$0.prev = context$2$0.next) {
+        case 0:
+          return context$2$0.abrupt("return", true);
+
+        case 1:
+        case "end":
+          return context$2$0.stop();
+      }
+    }, null, this);
+  };
+
+  return Service;
+})();
+
+exports["default"] = Service;
+module.exports = exports["default"];
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL1NlcnZpY2UuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7SUFBcUIsT0FBTztBQUVmLFdBRlEsT0FBTyxDQUVkLE1BQU0sRUFBRTswQkFGRCxPQUFPOztBQUd4QixRQUFJLENBQUMsTUFBTSxHQUFHLE1BQU0sQ0FBQztHQUN0Qjs7QUFKa0IsU0FBTyxXQU1wQixJQUFJLEdBQUE7Ozs7OENBQ0QsSUFBSTs7Ozs7OztHQUNaOztTQVJrQixPQUFPOzs7cUJBQVAsT0FBTyIsImZpbGUiOiJjbEFkYXB0ZXJzL2dvb2dsZS1jYWxlbmRhci9TZXJ2aWNlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGRlZmF1bHQgY2xhc3MgU2VydmljZSB7XG5cbiAgY29uc3RydWN0b3IoY29uZmlnKSB7XG4gICAgdGhpcy5jb25maWcgPSBjb25maWc7XG4gIH1cblxuICBhc3luYyBpbml0KCkge1xuICAgIHJldHVybiB0cnVlO1xuICB9XG5cbn1cbiJdfQ==
 //# sourceMappingURL=../../clAdapters/google-calendar/Service.js.map
