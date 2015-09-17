@@ -1,0 +1,39 @@
+'use strict';
+
+var AdapterTypes = require('./adapterTypes'),
+    CLMockAdapter = require('./clMockAdapter'),
+    NetSuiteAdapter = require('./netsuiteAdapter'),
+    Office365Adapter = require('./office365Adapter'),
+    GoogleAdapter = require('./googleAdapter');
+
+/**
+ * Adapter factory
+ *
+ * @class
+ * @return {AdapterFactory}
+ */
+var AdapterFactory = module.exports = function AdapterFactory() {};
+
+/**
+ * Static factory
+ * @param  {AdapterType} type
+ * @return {BaseAdapter} concrete adapter subclass
+ */
+AdapterFactory.createAdapter = function (type) {
+  switch (type) {
+    case AdapterTypes.CUSTOM:
+      throw new Error('Custom adapters provide their own approach');
+    case AdapterTypes.NETSUITE:
+      return new NetSuiteAdapter();
+    case AdapterTypes.CL_MOCK:
+      return new CLMockAdapter();
+    case AdapterTypes.OFFICE365:
+      return new Office365Adapter();
+    case AdapterTypes.GOOGLE:
+      return new GoogleAdapter();
+    default:
+      throw new Error('Unknown type');
+  }
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvYWRhcHRlckZhY3RvcnkuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsWUFBWSxDQUFDOztBQUViLElBQUksWUFBWSxHQUFHLE9BQU8sQ0FBQyxnQkFBZ0IsQ0FBQztJQUMxQyxhQUFhLEdBQUcsT0FBTyxDQUFDLGlCQUFpQixDQUFDO0lBQzFDLGVBQWUsR0FBRyxPQUFPLENBQUMsbUJBQW1CLENBQUM7SUFDOUMsZ0JBQWdCLEdBQUcsT0FBTyxDQUFDLG9CQUFvQixDQUFDO0lBQ2hELGFBQWEsR0FBRyxPQUFPLENBQUMsaUJBQWlCLENBQUMsQ0FBQzs7Ozs7Ozs7QUFRN0MsSUFBSSxjQUFjLEdBQUcsTUFBTSxDQUFDLE9BQU8sR0FBRyxTQUFTLGNBQWMsR0FBRyxFQUFFLENBQUM7Ozs7Ozs7QUFPbkUsY0FBYyxDQUFDLGFBQWEsR0FBRyxVQUFTLElBQUksRUFBRTtBQUM1QyxVQUFRLElBQUk7QUFDVixTQUFLLFlBQVksQ0FBQyxNQUFNO0FBQ3RCLFlBQU0sSUFBSSxLQUFLLENBQUMsNENBQTRDLENBQUMsQ0FBQztBQUFBLEFBQ2hFLFNBQUssWUFBWSxDQUFDLFFBQVE7QUFDeEIsYUFBTyxJQUFJLGVBQWUsRUFBRSxDQUFDO0FBQUEsQUFDL0IsU0FBSyxZQUFZLENBQUMsT0FBTztBQUN2QixhQUFPLElBQUksYUFBYSxFQUFFLENBQUM7QUFBQSxBQUM3QixTQUFLLFlBQVksQ0FBQyxTQUFTO0FBQ3pCLGFBQU8sSUFBSSxnQkFBZ0IsRUFBRSxDQUFDO0FBQUEsQUFDaEMsU0FBSyxZQUFZLENBQUMsTUFBTTtBQUN0QixhQUFPLElBQUksYUFBYSxFQUFFLENBQUM7QUFBQSxBQUM3QjtBQUNFLFlBQU0sSUFBSSxLQUFLLENBQUMsY0FBYyxDQUFDLENBQUM7QUFBQSxHQUNuQztDQUNGLENBQUMiLCJmaWxlIjoiY2xBZGFwdGVycy9hZGFwdGVyRmFjdG9yeS5qcyIsInNvdXJjZXNDb250ZW50IjpbIid1c2Ugc3RyaWN0JztcblxudmFyIEFkYXB0ZXJUeXBlcyA9IHJlcXVpcmUoJy4vYWRhcHRlclR5cGVzJyksXG4gIENMTW9ja0FkYXB0ZXIgPSByZXF1aXJlKCcuL2NsTW9ja0FkYXB0ZXInKSxcbiAgTmV0U3VpdGVBZGFwdGVyID0gcmVxdWlyZSgnLi9uZXRzdWl0ZUFkYXB0ZXInKSxcbiAgT2ZmaWNlMzY1QWRhcHRlciA9IHJlcXVpcmUoJy4vb2ZmaWNlMzY1QWRhcHRlcicpLFxuICBHb29nbGVBZGFwdGVyID0gcmVxdWlyZSgnLi9nb29nbGVBZGFwdGVyJyk7XG5cbi8qKlxuICogQWRhcHRlciBmYWN0b3J5XG4gKlxuICogQGNsYXNzXG4gKiBAcmV0dXJuIHtBZGFwdGVyRmFjdG9yeX1cbiAqL1xudmFyIEFkYXB0ZXJGYWN0b3J5ID0gbW9kdWxlLmV4cG9ydHMgPSBmdW5jdGlvbiBBZGFwdGVyRmFjdG9yeSgpIHt9O1xuXG4vKipcbiAqIFN0YXRpYyBmYWN0b3J5XG4gKiBAcGFyYW0gIHtBZGFwdGVyVHlwZX0gdHlwZVxuICogQHJldHVybiB7QmFzZUFkYXB0ZXJ9IGNvbmNyZXRlIGFkYXB0ZXIgc3ViY2xhc3NcbiAqL1xuQWRhcHRlckZhY3RvcnkuY3JlYXRlQWRhcHRlciA9IGZ1bmN0aW9uKHR5cGUpIHtcbiAgc3dpdGNoICh0eXBlKSB7XG4gICAgY2FzZSBBZGFwdGVyVHlwZXMuQ1VTVE9NOlxuICAgICAgdGhyb3cgbmV3IEVycm9yKCdDdXN0b20gYWRhcHRlcnMgcHJvdmlkZSB0aGVpciBvd24gYXBwcm9hY2gnKTtcbiAgICBjYXNlIEFkYXB0ZXJUeXBlcy5ORVRTVUlURTpcbiAgICAgIHJldHVybiBuZXcgTmV0U3VpdGVBZGFwdGVyKCk7XG4gICAgY2FzZSBBZGFwdGVyVHlwZXMuQ0xfTU9DSzpcbiAgICAgIHJldHVybiBuZXcgQ0xNb2NrQWRhcHRlcigpO1xuICAgIGNhc2UgQWRhcHRlclR5cGVzLk9GRklDRTM2NTpcbiAgICAgIHJldHVybiBuZXcgT2ZmaWNlMzY1QWRhcHRlcigpO1xuICAgIGNhc2UgQWRhcHRlclR5cGVzLkdPT0dMRTpcbiAgICAgIHJldHVybiBuZXcgR29vZ2xlQWRhcHRlcigpO1xuICAgIGRlZmF1bHQ6XG4gICAgICB0aHJvdyBuZXcgRXJyb3IoJ1Vua25vd24gdHlwZScpO1xuICB9XG59O1xuIl19
+//# sourceMappingURL=../clAdapters/adapterFactory.js.map

@@ -1,0 +1,15 @@
+'use strict';
+
+var _Promise = require('babel-runtime/core-js/promise')['default'];
+
+function Service(config) {
+  this.config = config;
+}
+
+Service.prototype.init = function () {
+  return _Promise.resolve(true);
+};
+
+module.exports = Service;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL1NlcnZpY2UuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsWUFBWSxDQUFDOzs7O0FBRWIsU0FBUyxPQUFPLENBQUMsTUFBTSxFQUFFO0FBQ3ZCLE1BQUksQ0FBQyxNQUFNLEdBQUcsTUFBTSxDQUFDO0NBQ3RCOztBQUVELE9BQU8sQ0FBQyxTQUFTLENBQUMsSUFBSSxHQUFHLFlBQVc7QUFDbEMsU0FBTyxTQUFRLE9BQU8sQ0FBQyxJQUFJLENBQUMsQ0FBQztDQUM5QixDQUFDOztBQUVGLE1BQU0sQ0FBQyxPQUFPLEdBQUcsT0FBTyxDQUFDIiwiZmlsZSI6ImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL1NlcnZpY2UuanMiLCJzb3VyY2VzQ29udGVudCI6WyIndXNlIHN0cmljdCc7XG5cbmZ1bmN0aW9uIFNlcnZpY2UoY29uZmlnKSB7XG4gIHRoaXMuY29uZmlnID0gY29uZmlnO1xufVxuXG5TZXJ2aWNlLnByb3RvdHlwZS5pbml0ID0gZnVuY3Rpb24oKSB7XG4gIHJldHVybiBQcm9taXNlLnJlc29sdmUodHJ1ZSk7XG59O1xuXG5tb2R1bGUuZXhwb3J0cyA9IFNlcnZpY2U7XG4iXX0=
+//# sourceMappingURL=../../clAdapters/google-calendar/Service.js.map

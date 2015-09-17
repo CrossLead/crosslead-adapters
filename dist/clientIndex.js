@@ -1,0 +1,30 @@
+/**
+ * crosslead-adapters-client
+ * https://github.com/CrossLead/crosslead-adapters
+ *
+ * Copyright (c) 2015 McChrystal Group
+ *
+ * @ignore
+ */
+
+'use strict';
+(function () {
+  /**
+   * CLAdapters functionality available on client. Mostly a subset
+   * of server functionality like common enums
+   * @return {CLAdapters}
+   */
+  var CLAdapters = {};
+
+  // Fields namespace
+  CLAdapters.Fields = require('./clAdapters/fields');
+
+  CLAdapters.AdapterStatus = require('./clAdapters/adapterStatus');
+  CLAdapters.AdapterTypes = require('./clAdapters/adapterTypes');
+
+  this.CLAdapters = CLAdapters;
+}).call((function () {
+  return this || (typeof window !== 'undefined' ? window : global);
+})());
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsaWVudEluZGV4LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7OztBQVNBLFlBQVksQ0FBQztBQUNiLENBQUMsWUFBVzs7Ozs7O0FBTVYsTUFBSSxVQUFVLEdBQUcsRUFBRSxDQUFDOzs7QUFHcEIsWUFBVSxDQUFDLE1BQU0sR0FBRyxPQUFPLENBQUMscUJBQXFCLENBQUMsQ0FBQzs7QUFFbkQsWUFBVSxDQUFDLGFBQWEsR0FBRyxPQUFPLENBQUMsNEJBQTRCLENBQUMsQ0FBQztBQUNqRSxZQUFVLENBQUMsWUFBWSxHQUFHLE9BQU8sQ0FBQywyQkFBMkIsQ0FBQyxDQUFDOztBQUUvRCxNQUFJLENBQUMsVUFBVSxHQUFHLFVBQVUsQ0FBQztDQUM5QixDQUFBLENBQUUsSUFBSSxDQUFDLENBQUMsWUFBVztBQUNsQixTQUFPLElBQUksS0FBSyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU0sQ0FBQSxBQUFDLENBQUM7Q0FDbEUsQ0FBQSxFQUFHLENBQUMsQ0FBQyIsImZpbGUiOiJjbGllbnRJbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogY3Jvc3NsZWFkLWFkYXB0ZXJzLWNsaWVudFxuICogaHR0cHM6Ly9naXRodWIuY29tL0Nyb3NzTGVhZC9jcm9zc2xlYWQtYWRhcHRlcnNcbiAqXG4gKiBDb3B5cmlnaHQgKGMpIDIwMTUgTWNDaHJ5c3RhbCBHcm91cFxuICpcbiAqIEBpZ25vcmVcbiAqL1xuXG4ndXNlIHN0cmljdCc7XG4oZnVuY3Rpb24oKSB7XG4gIC8qKlxuICAgKiBDTEFkYXB0ZXJzIGZ1bmN0aW9uYWxpdHkgYXZhaWxhYmxlIG9uIGNsaWVudC4gTW9zdGx5IGEgc3Vic2V0XG4gICAqIG9mIHNlcnZlciBmdW5jdGlvbmFsaXR5IGxpa2UgY29tbW9uIGVudW1zXG4gICAqIEByZXR1cm4ge0NMQWRhcHRlcnN9XG4gICAqL1xuICB2YXIgQ0xBZGFwdGVycyA9IHt9O1xuXG4gIC8vIEZpZWxkcyBuYW1lc3BhY2VcbiAgQ0xBZGFwdGVycy5GaWVsZHMgPSByZXF1aXJlKCcuL2NsQWRhcHRlcnMvZmllbGRzJyk7XG5cbiAgQ0xBZGFwdGVycy5BZGFwdGVyU3RhdHVzID0gcmVxdWlyZSgnLi9jbEFkYXB0ZXJzL2FkYXB0ZXJTdGF0dXMnKTtcbiAgQ0xBZGFwdGVycy5BZGFwdGVyVHlwZXMgPSByZXF1aXJlKCcuL2NsQWRhcHRlcnMvYWRhcHRlclR5cGVzJyk7XG5cbiAgdGhpcy5DTEFkYXB0ZXJzID0gQ0xBZGFwdGVycztcbn0pLmNhbGwoKGZ1bmN0aW9uKCkge1xuICByZXR1cm4gdGhpcyB8fCAodHlwZW9mIHdpbmRvdyAhPT0gJ3VuZGVmaW5lZCcgPyB3aW5kb3cgOiBnbG9iYWwpO1xufSkoKSk7XG4iXX0=
+//# sourceMappingURL=clientIndex.js.map
