@@ -11,8 +11,9 @@
  */
 module.exports = {
   ACTIVE: 1,
-  DELETED: 2,
+  DELETED: 2
 };
+
 
 },{}],2:[function(require,module,exports){
 'use strict';
@@ -30,6 +31,7 @@ module.exports = {
   GOOGLE: 5
 };
 
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -41,6 +43,7 @@ var Fields = module.exports = {};
 
 // Search fields
 Fields.Types = require('./types');
+
 
 },{"./types":4}],4:[function(require,module,exports){
 'use strict';
@@ -58,6 +61,7 @@ module.exports = {
   RELATIONSHIP: 5
 };
 
+
 },{}],5:[function(require,module,exports){
 (function (global){
 /**
@@ -70,7 +74,7 @@ module.exports = {
  */
 
 'use strict';
-(function() {
+(function () {
   /**
    * CLAdapters functionality available on client. Mostly a subset
    * of server functionality like common enums
@@ -85,9 +89,10 @@ module.exports = {
   CLAdapters.AdapterTypes = require('./clAdapters/adapterTypes');
 
   this.CLAdapters = CLAdapters;
-}).call((function() {
+}).call((function () {
   return this || (typeof window !== 'undefined' ? window : global);
 })());
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./clAdapters/adapterStatus":1,"./clAdapters/adapterTypes":2,"./clAdapters/fields":3}]},{},[5]);

@@ -3,3 +3,5 @@ temp/npm-debug.log
 coverage/
 .DS_Store
 .idea
+/dist
+!/dist/crosslead-adapters-client.js
