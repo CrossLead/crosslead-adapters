@@ -62,7 +62,7 @@ gulp.task('istanbul', ['compile'], function(cb) {
     });
 });
 
-gulp.task('client', ['compile'], function() {
+gulp.task('build', ['compile'], function() {
   return browserify('./dist/client/index.js')
     .bundle()
     .pipe(source('index.js'))

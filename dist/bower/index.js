@@ -105,9 +105,12 @@ var _clAdaptersAdapterTypes2 = _interopRequireDefault(_clAdaptersAdapterTypes);
  * of server functionality like common enums
  * @return {CLAdapters}
  */
-exports.Fields = _clAdaptersFields2['default'];
-exports.AdapterStatus = _clAdaptersAdapterStatus2['default'];
-exports.AdapterTypes = _clAdaptersAdapterTypes2['default'];
+exports['default'] = {
+  Fields: _clAdaptersFields2['default'],
+  AdapterStatus: _clAdaptersAdapterStatus2['default'],
+  AdapterTypes: _clAdaptersAdapterTypes2['default']
+};
+module.exports = exports['default'];
 
 
 },{"../clAdapters/adapterStatus":1,"../clAdapters/adapterTypes":2,"../clAdapters/fields/":3,"babel-runtime/helpers/interop-require-default":6}],6:[function(require,module,exports){
