@@ -63,10 +63,10 @@ gulp.task('istanbul', ['compile'], function(cb) {
 });
 
 gulp.task('client', ['compile'], function() {
-  return browserify('./dist/clientIndex.js')
+  return browserify('./dist/client/index.js')
     .bundle()
-    .pipe(source('crosslead-adapters-client.js'))
-    .pipe(gulp.dest('./dist/'));
+    .pipe(source('index.js'))
+    .pipe(gulp.dest('./dist/bower/'));
 });
 
 gulp.task('bump', ['test'], function() {

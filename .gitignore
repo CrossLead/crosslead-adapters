@@ -4,4 +4,4 @@ coverage/
 .DS_Store
 .idea
 /dist
-!/dist/crosslead-adapters-client.js
+!/dist/bower
