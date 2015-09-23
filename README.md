@@ -26,6 +26,12 @@ If using browserify / webpack / etc., simply require the client module
 ```javascript
 import { adapterTypes } from 'crosslead-adapters/dist/client';
 ```
+
+If you have a babel compilation step in your build process (or in an es6 supporting environment), the client source can also be required directly.
+```javascript
+import { adapterTypes } from 'crosslead-adapters/src/client';
+```
+
 Additionally, there is a global exposing bower module...
 ```shell
 bower install crosslead-adapters-client --save
