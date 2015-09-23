@@ -5,7 +5,7 @@
   "homepage": "https://github.com/CrossLead/crosslead-adapters",
   "bugs": "https://github.com/CrossLead/crosslead-adapters/issues",
   "license": "none",
-  "main": "dist/index.js",
+  "main": "dist/",
   "author": {
     "name": "Christian Yang",
     "email": "christian.yang@crosslead.com",
