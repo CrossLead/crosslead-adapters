@@ -81,10 +81,11 @@ gulp.task('bump', ['test'], function() {
 
 gulp.task('watch', ['test'], function() {
   gulp.watch(paths.watch, ['test']);
+  gulp.watch(paths.compileSource, ['build']);
 });
 
 gulp.task('test', ['istanbul']);
 
 gulp.task('release', ['bump']);
 
-gulp.task('default', ['test', 'client']);
+gulp.task('default', ['test', 'build']);
