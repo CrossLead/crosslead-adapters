@@ -1,0 +1,13 @@
+'use strict';
+
+var _Promise = require('babel-runtime/core-js/promise')['default'];
+
+var Service = module.exports = function Service(config) {
+  this.config = config;
+};
+
+Service.prototype.init = function () {
+  return _Promise.resolve(true); //todo
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvb2ZmaWNlMzY1L29mZmljZTM2NS1qcy1zZXJ2aWNlLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLFlBQVksQ0FBQzs7OztBQUViLElBQUksT0FBTyxHQUFHLE1BQU0sQ0FBQyxPQUFPLEdBQUcsU0FBUyxPQUFPLENBQUMsTUFBTSxFQUFFO0FBQ3RELE1BQUksQ0FBQyxNQUFNLEdBQUcsTUFBTSxDQUFDO0NBQ3RCLENBQUM7O0FBRUYsT0FBTyxDQUFDLFNBQVMsQ0FBQyxJQUFJLEdBQUcsWUFBVztBQUNsQyxTQUFPLFNBQVEsT0FBTyxDQUFDLElBQUksQ0FBQyxDQUFDO0NBQzlCLENBQUMiLCJmaWxlIjoiY2xBZGFwdGVycy9vZmZpY2UzNjUvb2ZmaWNlMzY1LWpzLXNlcnZpY2UuanMiLCJzb3VyY2VzQ29udGVudCI6WyIndXNlIHN0cmljdCc7XG5cbnZhciBTZXJ2aWNlID0gbW9kdWxlLmV4cG9ydHMgPSBmdW5jdGlvbiBTZXJ2aWNlKGNvbmZpZykge1xuICB0aGlzLmNvbmZpZyA9IGNvbmZpZztcbn07XG5cblNlcnZpY2UucHJvdG90eXBlLmluaXQgPSBmdW5jdGlvbigpIHtcbiAgcmV0dXJuIFByb21pc2UucmVzb2x2ZSh0cnVlKTsvL3RvZG9cbn07XG4iXX0=
+//# sourceMappingURL=../../clAdapters/office365/office365-js-service.js.map
