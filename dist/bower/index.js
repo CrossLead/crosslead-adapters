@@ -36,7 +36,8 @@ exports["default"] = {
   CL_MOCK: 3,
   OFFICE365: 4,
   GOOGLE: 5,
-  GOOGLE_CALENDAR: 6
+  GOOGLE_CALENDAR: 6,
+  OFFICE365_CALENDAR: 7
 };
 module.exports = exports["default"];
 
