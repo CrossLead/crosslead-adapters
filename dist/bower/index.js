@@ -19,6 +19,7 @@ exports["default"] = {
 module.exports = exports["default"];
 
 
+
 },{}],2:[function(require,module,exports){
 /**
  * Enumeration for different adapter types
@@ -42,6 +43,7 @@ exports["default"] = {
 module.exports = exports["default"];
 
 
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -53,6 +55,7 @@ var Fields = module.exports = {};
 
 // Search fields
 Fields.Types = require('./types');
+
 
 
 },{"./types":4}],4:[function(require,module,exports){
@@ -70,6 +73,7 @@ module.exports = {
   ORGANIZATION: 4,
   RELATIONSHIP: 5
 };
+
 
 
 },{}],5:[function(require,module,exports){
@@ -112,6 +116,7 @@ exports['default'] = {
   AdapterTypes: _clAdaptersAdapterTypes2['default']
 };
 module.exports = exports['default'];
+
 
 
 },{"../clAdapters/adapterStatus":1,"../clAdapters/adapterTypes":2,"../clAdapters/fields/":3,"babel-runtime/helpers/interop-require-default":6}],6:[function(require,module,exports){
