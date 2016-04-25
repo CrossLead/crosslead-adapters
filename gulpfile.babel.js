@@ -63,7 +63,7 @@ gulp.task('istanbul', ['compile'], function(cb) {
 });
 
 gulp.task('build', ['compile'], function() {
-  return browserify('./dist/client/index.js')
+  return browserify('./dist/client/index.js', { standalone: 'CLAdapters' })
     .bundle()
     .pipe(source('index.js'))
     .pipe(gulp.dest('./dist/bower/'));
