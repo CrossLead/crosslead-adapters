@@ -6,6 +6,8 @@ import loadPlugins  from 'gulp-load-plugins';
 import sourcemaps   from 'gulp-sourcemaps';
 import eslint       from 'gulp-eslint';
 
+const config = require('./package.json'); // eslint-disable-line
+
 const plugins = loadPlugins();
 
 const paths = {
@@ -26,7 +28,10 @@ if (process.env.CI) {
 }
 
 
-gulp.task('compile', () => {
+gulp.task('compile', ['compile-commonjs', 'compile-module']);
+
+
+gulp.task('compile-commonjs', () => {
   return gulp
     .src(paths.compileSource)
     .pipe(sourcemaps.init())
@@ -35,6 +40,21 @@ gulp.task('compile', () => {
     .pipe(gulp.dest('./dist/'));
 });
 
+
+gulp.task('compile-module', () => {
+  return gulp
+    .src(paths.compileSource)
+    .pipe(sourcemaps.init())
+    .pipe(babel(Object.assign(config.babel, {
+      babelrc: false,
+      presets: [
+        'stage-0',
+        'es2015-rollup'
+      ]
+    })))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./dist-module/'));
+});
 
 /*
  * Linting
