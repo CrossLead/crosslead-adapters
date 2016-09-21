@@ -1,12 +1,21 @@
 'use strict';
 
-var _ = require('lodash');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-/*var Configuration = */module.exports = function Configuration(credentials, options) {
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+exports.Configuration = Configuration;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function Configuration(credentials, options) {
   this.credentials = credentials || {};
-  this.options = _.merge({
+  this.options = (0, _assign2.default)({
     apiVersion: '1'
   }, options);
 };
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLW1haWwvZ29vZ2xlLWpzLWNvbmZpZy5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLElBQUksQ0FBQyxHQUFHLE9BQU8sQ0FBQyxRQUFRLENBQUMsQ0FBQzs7d0JBRUYsTUFBTSxDQUFDLE9BQU8sR0FBRyxTQUFTLGFBQWEsQ0FBQyxXQUFXLEVBQUUsT0FBTyxFQUFFO0FBQ3BGLE1BQUksQ0FBQyxXQUFXLEdBQUcsV0FBVyxJQUFJLEVBQUUsQ0FBQztBQUNyQyxNQUFJLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxLQUFLLENBQUM7QUFDckIsY0FBVSxFQUFFLEdBQUc7R0FDaEIsRUFBRSxPQUFPLENBQUMsQ0FBQztDQUNiLENBQUMiLCJmaWxlIjoiY2xBZGFwdGVycy9nb29nbGUtbWFpbC9nb29nbGUtanMtY29uZmlnLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIF8gPSByZXF1aXJlKCdsb2Rhc2gnKTtcblxuLyp2YXIgQ29uZmlndXJhdGlvbiA9ICovbW9kdWxlLmV4cG9ydHMgPSBmdW5jdGlvbiBDb25maWd1cmF0aW9uKGNyZWRlbnRpYWxzLCBvcHRpb25zKSB7XG4gIHRoaXMuY3JlZGVudGlhbHMgPSBjcmVkZW50aWFscyB8fCB7fTtcbiAgdGhpcy5vcHRpb25zID0gXy5tZXJnZSh7XG4gICAgYXBpVmVyc2lvbjogJzEnXG4gIH0sIG9wdGlvbnMpO1xufTtcbiJdfQ==
-//# sourceMappingURL=google-js-config.js.map
+//# sourceMappingURL=../../clAdapters/google-mail/google-js-config.js.map

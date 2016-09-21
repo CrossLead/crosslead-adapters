@@ -1,13 +1,22 @@
 "use strict";
 
-var _Promise = require("babel-runtime/core-js/promise")["default"];
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var Service = module.exports = function Service(config) {
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+exports.Service = Service;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function Service(config) {
   this.config = config;
 };
 
 Service.prototype.init = function () {
-  return _Promise.resolve(true);
+  return _promise2.default.resolve(true);
 };
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLW1haWwvZ29vZ2xlLWpzLXNlcnZpY2UuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7OztBQUFBLElBQUksT0FBTyxHQUFHLE1BQU0sQ0FBQyxPQUFPLEdBQUcsU0FBUyxPQUFPLENBQUMsTUFBTSxFQUFFO0FBQ3RELE1BQUksQ0FBQyxNQUFNLEdBQUcsTUFBTSxDQUFDO0NBQ3RCLENBQUM7O0FBRUYsT0FBTyxDQUFDLFNBQVMsQ0FBQyxJQUFJLEdBQUcsWUFBVztBQUNsQyxTQUFPLFNBQVEsT0FBTyxDQUFDLElBQUksQ0FBQyxDQUFDO0NBQzlCLENBQUMiLCJmaWxlIjoiY2xBZGFwdGVycy9nb29nbGUtbWFpbC9nb29nbGUtanMtc2VydmljZS5qcyIsInNvdXJjZXNDb250ZW50IjpbInZhciBTZXJ2aWNlID0gbW9kdWxlLmV4cG9ydHMgPSBmdW5jdGlvbiBTZXJ2aWNlKGNvbmZpZykge1xuICB0aGlzLmNvbmZpZyA9IGNvbmZpZztcbn07XG5cblNlcnZpY2UucHJvdG90eXBlLmluaXQgPSBmdW5jdGlvbigpIHtcbiAgcmV0dXJuIFByb21pc2UucmVzb2x2ZSh0cnVlKTtcbn07XG4iXX0=
-//# sourceMappingURL=google-js-service.js.map
+//# sourceMappingURL=../../clAdapters/google-mail/google-js-service.js.map

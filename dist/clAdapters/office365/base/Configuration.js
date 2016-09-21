@@ -1,42 +1,56 @@
 'use strict';
 
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Object$assign = require('babel-runtime/core-js/object/assign')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _baseConfiguration = require('../../base/Configuration');
+var _assign = require('babel-runtime/core-js/object/assign');
 
-var _baseConfiguration2 = _interopRequireDefault(_baseConfiguration);
+var _assign2 = _interopRequireDefault(_assign);
 
-var Office365BaseConfiguration = (function (_Configuration) {
-  _inherits(Office365BaseConfiguration, _Configuration);
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _Configuration2 = require('../../base/Configuration');
+
+var _Configuration3 = _interopRequireDefault(_Configuration2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Office365BaseConfiguration = function (_Configuration) {
+  (0, _inherits3.default)(Office365BaseConfiguration, _Configuration);
 
   function Office365BaseConfiguration() {
-    _classCallCheck(this, Office365BaseConfiguration);
+    var _ref;
+
+    (0, _classCallCheck3.default)(this, Office365BaseConfiguration);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _get(Object.getPrototypeOf(Office365BaseConfiguration.prototype), 'constructor', this).apply(this, args);
-    _Object$assign(this.options, { apiVersion: '1.0' });
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_ref = Office365BaseConfiguration.__proto__ || (0, _getPrototypeOf2.default)(Office365BaseConfiguration)).call.apply(_ref, [this].concat(args)));
+
+    (0, _assign2.default)(_this.options, { apiVersion: '1.0' });
+    return _this;
   }
 
   return Office365BaseConfiguration;
-})(_baseConfiguration2['default']);
+}(_Configuration3.default);
 
-exports['default'] = Office365BaseConfiguration;
+exports.default = Office365BaseConfiguration;
 ;
-module.exports = exports['default'];
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvb2ZmaWNlMzY1L2Jhc2UvQ29uZmlndXJhdGlvbi5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7O2lDQUEwQiwwQkFBMEI7Ozs7SUFFL0IsMEJBQTBCO1lBQTFCLDBCQUEwQjs7QUFDbEMsV0FEUSwwQkFBMEIsR0FDeEI7MEJBREYsMEJBQTBCOztzQ0FDOUIsSUFBSTtBQUFKLFVBQUk7OztBQUNqQiwrQkFGaUIsMEJBQTBCLDhDQUVsQyxJQUFJLEVBQUM7QUFDZCxtQkFBYyxJQUFJLENBQUMsT0FBTyxFQUFHLEVBQUUsVUFBVSxFQUFFLEtBQUssRUFBRSxDQUFDLENBQUM7R0FDckQ7O1NBSmtCLDBCQUEwQjs7O3FCQUExQiwwQkFBMEI7QUFLOUMsQ0FBQyIsImZpbGUiOiJjbEFkYXB0ZXJzL29mZmljZTM2NS9iYXNlL0NvbmZpZ3VyYXRpb24uanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgQ29uZmlndXJhdGlvbiBmcm9tICcuLi8uLi9iYXNlL0NvbmZpZ3VyYXRpb24nO1xuXG5leHBvcnQgZGVmYXVsdCBjbGFzcyBPZmZpY2UzNjVCYXNlQ29uZmlndXJhdGlvbiBleHRlbmRzIENvbmZpZ3VyYXRpb24ge1xuICBjb25zdHJ1Y3RvciguLi5hcmdzKSB7XG4gICAgc3VwZXIoLi4uYXJncylcbiAgICBPYmplY3QuYXNzaWduKHRoaXMub3B0aW9ucywgIHsgYXBpVmVyc2lvbjogJzEuMCcgfSk7XG4gIH1cbn07XG4iXX0=
-//# sourceMappingURL=Configuration.js.map
+//# sourceMappingURL=../../../clAdapters/office365/base/Configuration.js.map
