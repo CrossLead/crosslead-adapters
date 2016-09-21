@@ -1,3 +1,4 @@
+import _Promise from 'babel-runtime/core-js/promise';
 import * as util from 'util';
 import BaseAdapter from './base/Adapter';
 import * as Fields from './fields/';
@@ -34,7 +35,7 @@ util.inherits(CLMockAdapter, BaseAdapter);
  */
 CLMockAdapter.prototype.init = function () {
   var _this = this;
-  var p = new Promise(function (resolve, reject) {
+  var p = new _Promise(function (resolve, reject) {
     if (_this.credentials.appId === '123456' && _this.credentials.apiKey === '999999') {
       resolve(_this);
     } else {
@@ -105,6 +106,6 @@ CLMockAdapter.prototype.getFieldData = function (field, query) {
     result.results.push(createResult());
   }
 
-  return Promise.resolve(result);
+  return _Promise.resolve(result);
 };
 //# sourceMappingURL=../clAdapters/clMockAdapter.js.map

@@ -4,11 +4,57 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof2 = require('babel-runtime/helpers/typeof');
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _typeof3 = _interopRequireDefault(_typeof2);
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _googleapis = require('googleapis');
 
@@ -24,19 +70,9 @@ var _ = _interopRequireWildcard(_lodash);
 
 var _index = require('../base/index');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // google calendar api
 var calendar = googleapis.calendar('v3');
@@ -48,19 +84,18 @@ var credentialMappings = {
 };
 
 var GoogleCalendarAdapter = function (_Adapter) {
-  _inherits(GoogleCalendarAdapter, _Adapter);
+  (0, _inherits3.default)(GoogleCalendarAdapter, _Adapter);
 
   // constructor needs to call super
   function GoogleCalendarAdapter() {
-    _classCallCheck(this, GoogleCalendarAdapter);
-
-    return _possibleConstructorReturn(this, (GoogleCalendarAdapter.__proto__ || Object.getPrototypeOf(GoogleCalendarAdapter)).call(this));
+    (0, _classCallCheck3.default)(this, GoogleCalendarAdapter);
+    return (0, _possibleConstructorReturn3.default)(this, (GoogleCalendarAdapter.__proto__ || (0, _getPrototypeOf2.default)(GoogleCalendarAdapter)).call(this));
   }
 
   // convert the names of the api response data
 
 
-  _createClass(GoogleCalendarAdapter, [{
+  (0, _createClass3.default)(GoogleCalendarAdapter, [{
     key: 'reset',
     value: function reset() {
       delete this._config;
@@ -70,9 +105,9 @@ var GoogleCalendarAdapter = function (_Adapter) {
   }, {
     key: 'init',
     value: function () {
-      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
         var credentials, want, alternate, email;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -97,7 +132,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
                 }
 
                 // validate required credential properties
-                Object.keys(credentialMappings).forEach(function (prop) {
+                (0, _keys2.default)(credentialMappings).forEach(function (prop) {
                   if (!credentials[prop]) {
                     throw new Error('Property ' + prop + ' required in adapter credentials!');
                   }
@@ -137,7 +172,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
   }, {
     key: 'getBatchData',
     value: function () {
-      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5() {
         var userProfiles = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
         var _this2 = this;
@@ -145,7 +180,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
         var filterStartDate = arguments[1];
         var filterEndDate /*, fields */ = arguments[2];
         var fieldNameMap, opts, groupRunStats, results;
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
@@ -171,15 +206,15 @@ var GoogleCalendarAdapter = function (_Adapter) {
                 };
                 _context5.prev = 3;
                 _context5.next = 6;
-                return Promise.all(userProfiles.map(function () {
-                  var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4(userProfile) {
+                return _promise2.default.all(userProfiles.map(function () {
+                  var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(userProfile) {
                     var individualRunStats, _ret, errorMessage;
 
-                    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    return _regenerator2.default.wrap(function _callee4$(_context4) {
                       while (1) {
                         switch (_context4.prev = _context4.next) {
                           case 0:
-                            individualRunStats = _extends({
+                            individualRunStats = (0, _extends3.default)({
                               filterStartDate: filterStartDate,
                               filterEndDate: filterEndDate
                             }, userProfile, {
@@ -187,10 +222,10 @@ var GoogleCalendarAdapter = function (_Adapter) {
                               runDate: (0, _moment2.default)().utc().toDate()
                             });
                             _context4.prev = 1;
-                            return _context4.delegateYield(regeneratorRuntime.mark(function _callee3() {
+                            return _context4.delegateYield(_regenerator2.default.mark(function _callee3() {
                               var getEvents, _ref5, items, data;
 
-                              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                              return _regenerator2.default.wrap(function _callee3$(_context3) {
                                 while (1) {
                                   switch (_context3.prev = _context3.next) {
                                     case 0:
@@ -202,15 +237,15 @@ var GoogleCalendarAdapter = function (_Adapter) {
 
                                       // function to recurse through pageTokens
                                       getEvents = function () {
-                                        var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(data) {
+                                        var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(data) {
                                           var events, _data$items;
 
-                                          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                                          return _regenerator2.default.wrap(function _callee2$(_context2) {
                                             while (1) {
                                               switch (_context2.prev = _context2.next) {
                                                 case 0:
                                                   _context2.next = 2;
-                                                  return new Promise(function (res, rej) {
+                                                  return new _promise2.default(function (res, rej) {
                                                     // add page token if given
                                                     if (data && data.nextPageToken) {
                                                       opts.pageToken = data.nextPageToken;
@@ -227,7 +262,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
 
                                                   // if we already have data being accumulated, add to items
                                                   if (data) {
-                                                    (_data$items = data.items).push.apply(_data$items, _toConsumableArray(events.items));
+                                                    (_data$items = data.items).push.apply(_data$items, (0, _toConsumableArray3.default)(events.items));
                                                   } else {
                                                     data = events;
                                                   }
@@ -303,7 +338,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
                                       // request all events for this user in the given time frame
 
                                       return _context3.abrupt('return', {
-                                        v: Object.assign(individualRunStats, { data: data })
+                                        v: (0, _assign2.default)(individualRunStats, { data: data })
                                       });
 
                                     case 10:
@@ -317,7 +352,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
                           case 3:
                             _ret = _context4.t0;
 
-                            if (!((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object")) {
+                            if (!((typeof _ret === 'undefined' ? 'undefined' : (0, _typeof3.default)(_ret)) === "object")) {
                               _context4.next = 6;
                               break;
                             }
@@ -342,7 +377,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
                               errorMessage = 'Email address: ' + userProfile.emailAfterMapping + ' not found in this Google Calendar account.';
                             }
 
-                            return _context4.abrupt('return', Object.assign(individualRunStats, {
+                            return _context4.abrupt('return', (0, _assign2.default)(individualRunStats, {
                               errorMessage: errorMessage,
                               success: false,
                               data: []
@@ -363,12 +398,12 @@ var GoogleCalendarAdapter = function (_Adapter) {
 
               case 6:
                 results = _context5.sent;
-                return _context5.abrupt('return', Object.assign(groupRunStats, { results: results }));
+                return _context5.abrupt('return', (0, _assign2.default)(groupRunStats, { results: results }));
 
               case 10:
                 _context5.prev = 10;
                 _context5.t0 = _context5['catch'](3);
-                return _context5.abrupt('return', Object.assign(groupRunStats, {
+                return _context5.abrupt('return', (0, _assign2.default)(groupRunStats, {
                   errorMessage: _context5.t0,
                   success: false
                 }));
@@ -390,9 +425,9 @@ var GoogleCalendarAdapter = function (_Adapter) {
   }, {
     key: 'runConnectionTest',
     value: function () {
-      var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6() {
+      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6() {
         var email, data;
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
@@ -432,8 +467,8 @@ var GoogleCalendarAdapter = function (_Adapter) {
   }, {
     key: 'runMessageTest',
     value: function () {
-      var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7() {
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7() {
+        return _regenerator2.default.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
@@ -461,10 +496,10 @@ var GoogleCalendarAdapter = function (_Adapter) {
   }, {
     key: 'authorize',
     value: function () {
-      var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(email) {
+      var _ref8 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee8(email) {
         var _credentials, serviceEmail, certificate, auth;
 
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        return _regenerator2.default.wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
@@ -486,7 +521,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
 
                 // await authorization
 
-                return _context8.abrupt('return', new Promise(function (res, rej) {
+                return _context8.abrupt('return', new _promise2.default(function (res, rej) {
                   return auth.authorize(function (err) {
                     err ? rej(err) : res(auth);
                   });
@@ -507,7 +542,6 @@ var GoogleCalendarAdapter = function (_Adapter) {
       return authorize;
     }()
   }]);
-
   return GoogleCalendarAdapter;
 }(_index.Adapter);
 

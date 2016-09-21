@@ -1,3 +1,4 @@
+import _Promise from 'babel-runtime/core-js/promise';
 import * as _ from 'lodash';
 import * as util from 'util';
 import BaseAdapter from '../base/Adapter';
@@ -109,7 +110,7 @@ NetSuiteAdapter.prototype._getCacheValue = function (field, limit, skip) {
 NetSuiteAdapter.prototype.getFieldData = function (field, query) {
   console.log(field);
   var _this = this;
-  return new Promise(function (resolve, reject) {
+  return new _Promise(function (resolve, reject) {
     query = query || {};
 
     var preferences = new NetSuite.Search.SearchPreferences();

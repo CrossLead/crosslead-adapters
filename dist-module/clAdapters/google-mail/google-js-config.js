@@ -1,6 +1,7 @@
+import _Object$assign from 'babel-runtime/core-js/object/assign';
 export function Configuration(credentials, options) {
   this.credentials = credentials || {};
-  this.options = Object.assign({
+  this.options = _Object$assign({
     apiVersion: '1'
   }, options);
 };

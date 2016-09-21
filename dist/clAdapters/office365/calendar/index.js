@@ -4,9 +4,45 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _regenerator = require('babel-runtime/regenerator');
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _moment = require('moment');
 
@@ -24,37 +60,28 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 /**
  * Office 365 Calendar adapter
  */
 var Office365CalendarAdapter = function (_Office365BaseAdapter) {
-  _inherits(Office365CalendarAdapter, _Office365BaseAdapter);
+  (0, _inherits3.default)(Office365CalendarAdapter, _Office365BaseAdapter);
 
   function Office365CalendarAdapter() {
-    _classCallCheck(this, Office365CalendarAdapter);
-
-    return _possibleConstructorReturn(this, (Office365CalendarAdapter.__proto__ || Object.getPrototypeOf(Office365CalendarAdapter)).apply(this, arguments));
+    (0, _classCallCheck3.default)(this, Office365CalendarAdapter);
+    return (0, _possibleConstructorReturn3.default)(this, (Office365CalendarAdapter.__proto__ || (0, _getPrototypeOf2.default)(Office365CalendarAdapter)).apply(this, arguments));
   }
 
-  _createClass(Office365CalendarAdapter, [{
+  (0, _createClass3.default)(Office365CalendarAdapter, [{
     key: 'getBatchData',
 
 
     // collect these fields always...
     value: function () {
-      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(userProfiles, filterStartDate, filterEndDate, additionalFields) {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(userProfiles, filterStartDate, filterEndDate, additionalFields) {
         var _this2 = this;
 
         var fieldNameMap, dataAdapterRunStats, eventData, results;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -68,7 +95,7 @@ var Office365CalendarAdapter = function (_Office365BaseAdapter) {
                 };
                 _context.prev = 2;
                 _context.next = 5;
-                return Promise.all(userProfiles.map(function (userProfile) {
+                return _promise2.default.all(userProfiles.map(function (userProfile) {
                   return _this2.getUserData({
                     userProfile: userProfile,
                     filterStartDate: filterStartDate,
@@ -84,7 +111,7 @@ var Office365CalendarAdapter = function (_Office365BaseAdapter) {
 
                 // replace data keys with desired mappings...
                 results = _.map(eventData, function (user) {
-                  return _extends({}, user.userProfile, {
+                  return (0, _extends3.default)({}, user.userProfile, {
                     filterStartDate: user.filterStartDate,
                     filterEndDate: user.filterEndDate,
                     success: user.success,
@@ -120,7 +147,7 @@ var Office365CalendarAdapter = function (_Office365BaseAdapter) {
 
                 // return results and success!
 
-                return _context.abrupt('return', _extends({}, dataAdapterRunStats, {
+                return _context.abrupt('return', (0, _extends3.default)({}, dataAdapterRunStats, {
                   results: results,
                   success: true
                 }));
@@ -130,8 +157,8 @@ var Office365CalendarAdapter = function (_Office365BaseAdapter) {
                 _context.t0 = _context['catch'](2);
 
                 console.log(_context.t0.stack);
-                console.log('Office365 GetBatchData Error: ' + JSON.stringify(_context.t0));
-                return _context.abrupt('return', _extends({}, dataAdapterRunStats, { errorMessage: _context.t0 }));
+                console.log('Office365 GetBatchData Error: ' + (0, _stringify2.default)(_context.t0));
+                return _context.abrupt('return', (0, _extends3.default)({}, dataAdapterRunStats, { errorMessage: _context.t0 }));
 
               case 15:
               case 'end':
@@ -151,7 +178,6 @@ var Office365CalendarAdapter = function (_Office365BaseAdapter) {
     // convert the names of the api response data
 
   }]);
-
   return Office365CalendarAdapter;
 }(_Adapter2.default);
 

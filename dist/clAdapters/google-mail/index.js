@@ -3,6 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 exports.default = GoogleAdapter;
 
 var _crypto = require('crypto');
@@ -37,9 +46,9 @@ var _googleJs = require('./google-js.js');
 
 var GoogleMail = _interopRequireWildcard(_googleJs);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function GoogleAdapter() {
   _Adapter2.default.call(this);
@@ -117,8 +126,8 @@ var getAccessToken = function getAccessToken(clientId, adminEmail, userEmail, pr
     'sub': userEmail
   };
 
-  var encodedJwtHeader = new Buffer(JSON.stringify(jwtHeader)).toString('base64');
-  var encodedJwtPayload = new Buffer(JSON.stringify(jwtPayload)).toString('base64');
+  var encodedJwtHeader = new Buffer((0, _stringify2.default)(jwtHeader)).toString('base64');
+  var encodedJwtPayload = new Buffer((0, _stringify2.default)(jwtPayload)).toString('base64');
   var stringToSign = encodedJwtHeader + '.' + encodedJwtPayload;
 
   //sign it!
@@ -155,19 +164,19 @@ var getAccessToken = function getAccessToken(clientId, adminEmail, userEmail, pr
     if (tokenData && tokenData.access_token) {
       return tokenData.access_token;
     } else {
-      return Promise.reject('Could not get access token.');
+      return _promise2.default.reject('Could not get access token.');
     }
   }).catch(function (err) {
-    var tokenData = JSON.parse(JSON.stringify(err));
+    var tokenData = JSON.parse((0, _stringify2.default)(err));
     if (tokenData.name === 'StatusCodeError') {
       var entireMessage = tokenData.message;
       var messageJson = entireMessage.replace(tokenData.statusCode + ' - ', '');
       var messageData = JSON.parse(messageJson.replace(new RegExp('\\"', 'g'), '"'));
       //console.log('-----');
       //console.log(messageData);
-      return Promise.reject(messageData);
+      return _promise2.default.reject(messageData);
     } else {
-      return Promise.reject(err);
+      return _promise2.default.reject(err);
     }
   });
 };
@@ -189,7 +198,7 @@ var getMoreEmails = function getMoreEmails(messages, userEmail, token, apiVersio
       }
     }
 
-    return Promise.all(messageDetailPromises);
+    return _promise2.default.all(messageDetailPromises);
   }).then(function () {
     if (tempPageToken) {
       return getMoreEmails(messages, userEmail, token, apiVersion, additionalFields, emailRequestOptions, firstUri, tempPageToken);
@@ -234,7 +243,7 @@ var getUserEmails = function getUserEmails(clientId, serviceEmail, userEmail, pr
       }
     }
 
-    return Promise.all(messageDetailPromises);
+    return _promise2.default.all(messageDetailPromises);
   }).then(function () {
     //console.log(result.data.messageList);
     if (result.data.messageList.nextPageToken) {
@@ -252,7 +261,7 @@ var getUserEmails = function getUserEmails(clientId, serviceEmail, userEmail, pr
       var messageData = JSON.parse(messageJson.replace(new RegExp('\\"', 'g'), '"'));
       result.errorMessage = messageData.error.message;
     } else {
-      result.errorMessage = JSON.stringify(err);
+      result.errorMessage = (0, _stringify2.default)(err);
     }
     return true;
   });
@@ -402,7 +411,7 @@ var getEmailData = function getEmailData(emails, filterStartDate, filterEndDate,
     emailResultPromises.push(getUserEmails(clientId, serviceEmail, emails[emailIter].emailAfterMapping, privateKey, apiVersion, filterStartDate, filterEndDate, additionalFields, emailResults[emailIter]));
   }
 
-  return Promise.all(emailResultPromises).then(function () {
+  return _promise2.default.all(emailResultPromises).then(function () {
     return emailResults;
   });
 };
@@ -433,7 +442,7 @@ GoogleAdapter.prototype.getBatchData = function (emails, filterStartDate, filter
   }).catch(function (err) {
     dataAdapterRunStats.success = false;
     dataAdapterRunStats.errorMessage = err;
-    console.log('GoogleMail GetBatchData Error: ' + JSON.stringify(err));
+    console.log('GoogleMail GetBatchData Error: ' + (0, _stringify2.default)(err));
     return dataAdapterRunStats;
   });
 };
@@ -462,7 +471,7 @@ GoogleAdapter.prototype.runMessageTest = function (connectionData) {
     console.log('runMessageTest worked');
     console.log(data.results[0]);
   }).catch(function (err) {
-    console.log('runMessageTest Error: ' + JSON.stringify(err));
+    console.log('runMessageTest Error: ' + (0, _stringify2.default)(err));
   });
 };
 //# sourceMappingURL=../../clAdapters/google-mail/index.js.map

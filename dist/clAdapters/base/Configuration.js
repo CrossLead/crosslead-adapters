@@ -4,15 +4,21 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends2 = require('babel-runtime/helpers/extends');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Configuration = function Configuration(credentials, options) {
-  _classCallCheck(this, Configuration);
+  (0, _classCallCheck3.default)(this, Configuration);
 
   this.credentials = credentials || {};
-  this.options = _extends({
+  this.options = (0, _extends3.default)({
     apiVersion: '1'
   }, options);
 };

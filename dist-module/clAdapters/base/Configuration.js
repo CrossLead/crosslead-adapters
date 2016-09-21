@@ -1,8 +1,11 @@
+import _extends from 'babel-runtime/helpers/extends';
+import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
+
 var Configuration = function Configuration(credentials, options) {
-  babelHelpers.classCallCheck(this, Configuration);
+  _classCallCheck(this, Configuration);
 
   this.credentials = credentials || {};
-  this.options = babelHelpers.extends({
+  this.options = _extends({
     apiVersion: '1'
   }, options);
 };

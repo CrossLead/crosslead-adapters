@@ -1,3 +1,13 @@
+import _Object$assign from 'babel-runtime/core-js/object/assign';
+import _toConsumableArray from 'babel-runtime/helpers/toConsumableArray';
+import _JSON$stringify from 'babel-runtime/core-js/json/stringify';
+import _regeneratorRuntime from 'babel-runtime/regenerator';
+import _asyncToGenerator from 'babel-runtime/helpers/asyncToGenerator';
+import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
+import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
+import _createClass from 'babel-runtime/helpers/createClass';
+import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
+import _inherits from 'babel-runtime/helpers/inherits';
 import * as uuid from 'node-uuid';
 import * as crypto from 'crypto';
 import request from 'request-promise';
@@ -12,14 +22,15 @@ import Office365BaseConfiguration from './Configuration';
  */
 
 var Office365BaseAdapter = function (_Adapter) {
-  babelHelpers.inherits(Office365BaseAdapter, _Adapter);
+  _inherits(Office365BaseAdapter, _Adapter);
 
   function Office365BaseAdapter() {
-    babelHelpers.classCallCheck(this, Office365BaseAdapter);
-    return babelHelpers.possibleConstructorReturn(this, (Office365BaseAdapter.__proto__ || Object.getPrototypeOf(Office365BaseAdapter)).apply(this, arguments));
+    _classCallCheck(this, Office365BaseAdapter);
+
+    return _possibleConstructorReturn(this, (Office365BaseAdapter.__proto__ || _Object$getPrototypeOf(Office365BaseAdapter)).apply(this, arguments));
   }
 
-  babelHelpers.createClass(Office365BaseAdapter, [{
+  _createClass(Office365BaseAdapter, [{
     key: 'reset',
     value: function reset() {
       delete this._config;
@@ -29,8 +40,8 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'init',
     value: function () {
-      var _ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref = _asyncToGenerator(_regeneratorRuntime.mark(function _callee() {
+        return _regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -60,9 +71,9 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'runConnectionTest',
     value: function () {
-      var _ref2 = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee2(connectionData) {
+      var _ref2 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee2(connectionData) {
         var today, filterStartDate, filterEndDate, data;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -101,10 +112,10 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'getAccessToken',
     value: function () {
-      var _ref3 = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+      var _ref3 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee3() {
         var _config, _config$credentials, clientId, tenantId, certificate, certificateThumbprint, apiVersion, tokenRequestUrl, jwtHeader, accessTokenExpires, jwtPayload, encode, encodedJwtHeader, encodedJwtPayload, stringToSign, encodedSignedJwtInfo, tokenRequestFormData, tokenRequestOptions, tokenData, messageData;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -146,7 +157,7 @@ var Office365BaseAdapter = function (_Adapter) {
                   'sub': clientId
                 };
                 encode = function encode(header) {
-                  return new Buffer(JSON.stringify(header)).toString('base64');
+                  return new Buffer(_JSON$stringify(header)).toString('base64');
                 }, encodedJwtHeader = encode(jwtHeader), encodedJwtPayload = encode(jwtPayload), stringToSign = encodedJwtHeader + '.' + encodedJwtPayload, encodedSignedJwtInfo = crypto.createSign('RSA-SHA256').update(stringToSign).sign(certificate, 'base64');
                 tokenRequestFormData = {
                   client_id: clientId,
@@ -216,12 +227,12 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'getUserData',
     value: function () {
-      var _ref4 = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee4(options, userData) {
+      var _ref4 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee4(options, userData) {
         var pageToGet = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
 
         var userProfile, filterStartDate, filterEndDate, additionalFields, $filter, apiType, _options$maxPages, maxPages, _options$recordsPerPa, recordsPerPage, accessToken, apiVersion, skip, baseFields, params, urlParams, requestOptions, _ref5, records, e, recIter, rec, mid, attachmentOptions, attachmentData, _userData$data;
 
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return _regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -359,7 +370,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 }
 
                 if (records && pageToGet > 1) {
-                  (_userData$data = userData.data).push.apply(_userData$data, babelHelpers.toConsumableArray(records));
+                  (_userData$data = userData.data).push.apply(_userData$data, _toConsumableArray(records));
                 }
 
                 // if the returned results are the maximum number of records per page,
@@ -383,9 +394,9 @@ var Office365BaseAdapter = function (_Adapter) {
                 _context4.prev = 61;
                 _context4.t6 = _context4['catch'](21);
 
-                Object.assign(userData, {
+                _Object$assign(userData, {
                   success: false,
-                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? JSON.stringify(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
+                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? _JSON$stringify(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
                 });
                 return _context4.abrupt('return', true);
 
@@ -404,6 +415,7 @@ var Office365BaseAdapter = function (_Adapter) {
       return getUserData;
     }()
   }]);
+
   return Office365BaseAdapter;
 }(Adapter);
 

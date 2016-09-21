@@ -1,3 +1,5 @@
+import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
+import _createClass from 'babel-runtime/helpers/createClass';
 import adapters from './';
 import types from './adapterTypes';
 
@@ -10,10 +12,10 @@ import types from './adapterTypes';
 
 var AdapterFactory = function () {
   function AdapterFactory() {
-    babelHelpers.classCallCheck(this, AdapterFactory);
+    _classCallCheck(this, AdapterFactory);
   }
 
-  babelHelpers.createClass(AdapterFactory, null, [{
+  _createClass(AdapterFactory, null, [{
     key: 'createAdapter',
 
 
@@ -43,6 +45,7 @@ var AdapterFactory = function () {
       }
     }
   }]);
+
   return AdapterFactory;
 }();
 

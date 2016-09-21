@@ -3,6 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 exports.default = CLMockAdapter;
 
 var _util = require('util');
@@ -17,9 +22,9 @@ var _fields = require('./fields/');
 
 var Fields = _interopRequireWildcard(_fields);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * CLMockAdapter
@@ -54,7 +59,7 @@ util.inherits(CLMockAdapter, _Adapter2.default);
  */
 CLMockAdapter.prototype.init = function () {
   var _this = this;
-  var p = new Promise(function (resolve, reject) {
+  var p = new _promise2.default(function (resolve, reject) {
     if (_this.credentials.appId === '123456' && _this.credentials.apiKey === '999999') {
       resolve(_this);
     } else {
@@ -125,6 +130,6 @@ CLMockAdapter.prototype.getFieldData = function (field, query) {
     result.results.push(createResult());
   }
 
-  return Promise.resolve(result);
+  return _promise2.default.resolve(result);
 };
 //# sourceMappingURL=../clAdapters/clMockAdapter.js.map

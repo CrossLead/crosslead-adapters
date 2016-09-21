@@ -1,15 +1,20 @@
+import _regeneratorRuntime from "babel-runtime/regenerator";
+import _asyncToGenerator from "babel-runtime/helpers/asyncToGenerator";
+import _classCallCheck from "babel-runtime/helpers/classCallCheck";
+import _createClass from "babel-runtime/helpers/createClass";
+
 var Service = function () {
   function Service(config) {
-    babelHelpers.classCallCheck(this, Service);
+    _classCallCheck(this, Service);
 
     this.config = config;
   }
 
-  babelHelpers.createClass(Service, [{
+  _createClass(Service, [{
     key: "init",
     value: function () {
-      var _ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref = _asyncToGenerator(_regeneratorRuntime.mark(function _callee() {
+        return _regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -30,6 +35,7 @@ var Service = function () {
       return init;
     }()
   }]);
+
   return Service;
 }();
 

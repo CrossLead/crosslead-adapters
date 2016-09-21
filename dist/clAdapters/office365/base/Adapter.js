@@ -4,7 +4,45 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _nodeUuid = require('node-uuid');
 
@@ -38,33 +76,22 @@ var _Configuration = require('./Configuration');
 
 var _Configuration2 = _interopRequireDefault(_Configuration);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Common reset, runConnectionTest, and getAccessToken methods...
  */
 var Office365BaseAdapter = function (_Adapter) {
-  _inherits(Office365BaseAdapter, _Adapter);
+  (0, _inherits3.default)(Office365BaseAdapter, _Adapter);
 
   function Office365BaseAdapter() {
-    _classCallCheck(this, Office365BaseAdapter);
-
-    return _possibleConstructorReturn(this, (Office365BaseAdapter.__proto__ || Object.getPrototypeOf(Office365BaseAdapter)).apply(this, arguments));
+    (0, _classCallCheck3.default)(this, Office365BaseAdapter);
+    return (0, _possibleConstructorReturn3.default)(this, (Office365BaseAdapter.__proto__ || (0, _getPrototypeOf2.default)(Office365BaseAdapter)).apply(this, arguments));
   }
 
-  _createClass(Office365BaseAdapter, [{
+  (0, _createClass3.default)(Office365BaseAdapter, [{
     key: 'reset',
     value: function reset() {
       delete this._config;
@@ -74,8 +101,8 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'init',
     value: function () {
-      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -105,9 +132,9 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'runConnectionTest',
     value: function () {
-      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(connectionData) {
+      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(connectionData) {
         var today, filterStartDate, filterEndDate, data;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -146,10 +173,10 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'getAccessToken',
     value: function () {
-      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
         var _config, _config$credentials, clientId, tenantId, certificate, certificateThumbprint, apiVersion, tokenRequestUrl, jwtHeader, accessTokenExpires, jwtPayload, encode, encodedJwtHeader, encodedJwtPayload, stringToSign, encodedSignedJwtInfo, tokenRequestFormData, tokenRequestOptions, tokenData, messageData;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -191,7 +218,7 @@ var Office365BaseAdapter = function (_Adapter) {
                   'sub': clientId
                 };
                 encode = function encode(header) {
-                  return new Buffer(JSON.stringify(header)).toString('base64');
+                  return new Buffer((0, _stringify2.default)(header)).toString('base64');
                 }, encodedJwtHeader = encode(jwtHeader), encodedJwtPayload = encode(jwtPayload), stringToSign = encodedJwtHeader + '.' + encodedJwtPayload, encodedSignedJwtInfo = crypto.createSign('RSA-SHA256').update(stringToSign).sign(certificate, 'base64');
                 tokenRequestFormData = {
                   client_id: clientId,
@@ -261,12 +288,12 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'getUserData',
     value: function () {
-      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4(options, userData) {
+      var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(options, userData) {
         var pageToGet = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
 
         var userProfile, filterStartDate, filterEndDate, additionalFields, $filter, apiType, _options$maxPages, maxPages, _options$recordsPerPa, recordsPerPage, accessToken, apiVersion, skip, baseFields, params, urlParams, requestOptions, _ref5, records, e, recIter, rec, mid, attachmentOptions, attachmentData, _userData$data;
 
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -404,7 +431,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 }
 
                 if (records && pageToGet > 1) {
-                  (_userData$data = userData.data).push.apply(_userData$data, _toConsumableArray(records));
+                  (_userData$data = userData.data).push.apply(_userData$data, (0, _toConsumableArray3.default)(records));
                 }
 
                 // if the returned results are the maximum number of records per page,
@@ -428,9 +455,9 @@ var Office365BaseAdapter = function (_Adapter) {
                 _context4.prev = 61;
                 _context4.t6 = _context4['catch'](21);
 
-                Object.assign(userData, {
+                (0, _assign2.default)(userData, {
                   success: false,
-                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? JSON.stringify(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
+                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? (0, _stringify2.default)(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
                 });
                 return _context4.abrupt('return', true);
 
@@ -449,7 +476,6 @@ var Office365BaseAdapter = function (_Adapter) {
       return getUserData;
     }()
   }]);
-
   return Office365BaseAdapter;
 }(_Adapter3.default);
 

@@ -6,7 +6,6 @@
  *
  * @ignore
  */
-
 import * as Fields from './clAdapters/fields';
 import AdapterFactory from './clAdapters/adapterFactory';
 import AdapterStatus from './clAdapters/adapterStatus';

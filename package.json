@@ -68,7 +68,8 @@
     ],
     "plugins": [
       "transform-class-properties",
-      "transform-flow-strip-types"
+      "transform-flow-strip-types",
+      "transform-runtime"
     ],
     "compact": false
   }
