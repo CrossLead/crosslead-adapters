@@ -1,8 +1,3 @@
-'use strict';
-
-var GoogleMail = module.exports = {};
-
-GoogleMail.Configuration = require('./google-js-config.js');
-GoogleMail.Service = require('./google-js-service.js');
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLW1haWwvZ29vZ2xlLWpzLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsSUFBSSxVQUFVLEdBQUcsTUFBTSxDQUFDLE9BQU8sR0FBRyxFQUFFLENBQUM7O0FBRXJDLFVBQVUsQ0FBQyxhQUFhLEdBQUcsT0FBTyxDQUFDLHVCQUF1QixDQUFDLENBQUM7QUFDNUQsVUFBVSxDQUFDLE9BQU8sR0FBRyxPQUFPLENBQUMsd0JBQXdCLENBQUMsQ0FBQyIsImZpbGUiOiJjbEFkYXB0ZXJzL2dvb2dsZS1tYWlsL2dvb2dsZS1qcy5qcyIsInNvdXJjZXNDb250ZW50IjpbInZhciBHb29nbGVNYWlsID0gbW9kdWxlLmV4cG9ydHMgPSB7fTtcblxuR29vZ2xlTWFpbC5Db25maWd1cmF0aW9uID0gcmVxdWlyZSgnLi9nb29nbGUtanMtY29uZmlnLmpzJyk7XG5Hb29nbGVNYWlsLlNlcnZpY2UgPSByZXF1aXJlKCcuL2dvb2dsZS1qcy1zZXJ2aWNlLmpzJyk7XG4iXX0=
-//# sourceMappingURL=google-js.js.map
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _googleJsConfig=require('./google-js-config');Object.defineProperty(exports,'Configuration',{enumerable:true,get:function get(){return _googleJsConfig.Configuration;}});var _googleJsService=require('./google-js-service');Object.defineProperty(exports,'Service',{enumerable:true,get:function get(){return _googleJsService.Service;}});
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLW1haWwvZ29vZ2xlLWpzLmpzIl0sIm5hbWVzIjpbIkNvbmZpZ3VyYXRpb24iLCJTZXJ2aWNlIl0sIm1hcHBpbmdzIjoiaU9BQVFBLGEsNkpBQ0FDLE8iLCJmaWxlIjoiY2xBZGFwdGVycy9nb29nbGUtbWFpbC9nb29nbGUtanMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQge0NvbmZpZ3VyYXRpb259IGZyb20gJy4vZ29vZ2xlLWpzLWNvbmZpZyc7XG5leHBvcnQge1NlcnZpY2V9IGZyb20gJy4vZ29vZ2xlLWpzLXNlcnZpY2UnOyJdfQ==
+//# sourceMappingURL=../../clAdapters/google-mail/google-js.js.map

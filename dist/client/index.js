@@ -1,41 +1,14 @@
-/**
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.AdapterTypes=exports.AdapterStatus=exports.Fields=undefined;var _fields=require('../clAdapters/fields/');var _Fields=_interopRequireWildcard(_fields);var _adapterStatus=require('../clAdapters/adapterStatus');var _adapterStatus2=_interopRequireDefault(_adapterStatus);var _adapterTypes=require('../clAdapters/adapterTypes');var _adapterTypes2=_interopRequireDefault(_adapterTypes);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj.default=obj;return newObj;}}exports.Fields=_Fields;/**
  * crosslead-adapters-client
  * https://github.com/CrossLead/crosslead-adapters
  *
  * Copyright (c) 2015 McChrystal Group
  *
  * @ignore
- */
-'use strict';
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _clAdaptersFields = require('../clAdapters/fields/');
-
-var _clAdaptersFields2 = _interopRequireDefault(_clAdaptersFields);
-
-var _clAdaptersAdapterStatus = require('../clAdapters/adapterStatus');
-
-var _clAdaptersAdapterStatus2 = _interopRequireDefault(_clAdaptersAdapterStatus);
-
-var _clAdaptersAdapterTypes = require('../clAdapters/adapterTypes');
-
-var _clAdaptersAdapterTypes2 = _interopRequireDefault(_clAdaptersAdapterTypes);
-
-/**
+ *//**
  * CLAdapters functionality available on client. Mostly a subset
  * of server functionality like common enums
  * @return {CLAdapters}
- */
-exports['default'] = {
-  Fields: _clAdaptersFields2['default'],
-  AdapterStatus: _clAdaptersAdapterStatus2['default'],
-  AdapterTypes: _clAdaptersAdapterTypes2['default']
-};
-module.exports = exports['default'];
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsaWVudC9pbmRleC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7O2dDQVEyQix1QkFBdUI7Ozs7dUNBQ3ZCLDZCQUE2Qjs7OztzQ0FDN0IsNEJBQTRCOzs7Ozs7Ozs7cUJBT3hDO0FBQ2IsUUFBTSwrQkFBQTtBQUNOLGVBQWEsc0NBQUE7QUFDYixjQUFZLHFDQUFBO0NBQ2IiLCJmaWxlIjoiY2xpZW50L2luZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBjcm9zc2xlYWQtYWRhcHRlcnMtY2xpZW50XG4gKiBodHRwczovL2dpdGh1Yi5jb20vQ3Jvc3NMZWFkL2Nyb3NzbGVhZC1hZGFwdGVyc1xuICpcbiAqIENvcHlyaWdodCAoYykgMjAxNSBNY0NocnlzdGFsIEdyb3VwXG4gKlxuICogQGlnbm9yZVxuICovXG5pbXBvcnQgRmllbGRzICAgICAgICAgZnJvbSAnLi4vY2xBZGFwdGVycy9maWVsZHMvJztcbmltcG9ydCBBZGFwdGVyU3RhdHVzICBmcm9tICcuLi9jbEFkYXB0ZXJzL2FkYXB0ZXJTdGF0dXMnO1xuaW1wb3J0IEFkYXB0ZXJUeXBlcyAgIGZyb20gJy4uL2NsQWRhcHRlcnMvYWRhcHRlclR5cGVzJztcblxuLyoqXG4gKiBDTEFkYXB0ZXJzIGZ1bmN0aW9uYWxpdHkgYXZhaWxhYmxlIG9uIGNsaWVudC4gTW9zdGx5IGEgc3Vic2V0XG4gKiBvZiBzZXJ2ZXIgZnVuY3Rpb25hbGl0eSBsaWtlIGNvbW1vbiBlbnVtc1xuICogQHJldHVybiB7Q0xBZGFwdGVyc31cbiAqL1xuZXhwb3J0IGRlZmF1bHQge1xuICBGaWVsZHMsXG4gIEFkYXB0ZXJTdGF0dXMsXG4gIEFkYXB0ZXJUeXBlc1xufVxuIl19
-//# sourceMappingURL=index.js.map
+ */exports.AdapterStatus=_adapterStatus2.default;exports.AdapterTypes=_adapterTypes2.default;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsaWVudC9pbmRleC5qcyJdLCJuYW1lcyI6WyJGaWVsZHMiLCJBZGFwdGVyU3RhdHVzIiwiQWRhcHRlclR5cGVzIl0sIm1hcHBpbmdzIjoiK3dCQWNZQSxNLFNBZFo7Ozs7Ozs7R0FTQTs7OztXQU1PQyxhLGlDQUNBQyxZIiwiZmlsZSI6ImNsaWVudC9pbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogY3Jvc3NsZWFkLWFkYXB0ZXJzLWNsaWVudFxuICogaHR0cHM6Ly9naXRodWIuY29tL0Nyb3NzTGVhZC9jcm9zc2xlYWQtYWRhcHRlcnNcbiAqXG4gKiBDb3B5cmlnaHQgKGMpIDIwMTUgTWNDaHJ5c3RhbCBHcm91cFxuICpcbiAqIEBpZ25vcmVcbiAqL1xuXG4vKipcbiAqIENMQWRhcHRlcnMgZnVuY3Rpb25hbGl0eSBhdmFpbGFibGUgb24gY2xpZW50LiBNb3N0bHkgYSBzdWJzZXRcbiAqIG9mIHNlcnZlciBmdW5jdGlvbmFsaXR5IGxpa2UgY29tbW9uIGVudW1zXG4gKiBAcmV0dXJuIHtDTEFkYXB0ZXJzfVxuICovXG5leHBvcnQgKiBhcyBGaWVsZHMgZnJvbSAnLi4vY2xBZGFwdGVycy9maWVsZHMvJztcbmV4cG9ydCBBZGFwdGVyU3RhdHVzIGZyb20gJy4uL2NsQWRhcHRlcnMvYWRhcHRlclN0YXR1cyc7XG5leHBvcnQgQWRhcHRlclR5cGVzIGZyb20gJy4uL2NsQWRhcHRlcnMvYWRhcHRlclR5cGVzJztcblxuIl19
+//# sourceMappingURL=../client/index.js.map

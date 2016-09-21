@@ -42,34 +42,34 @@ gulp.task('compile', () => {
 gulp.task('eslint', () => {
   return gulp
     .src(paths.lint)
-    .pipe(eslint('.eslintrc'))
+    .pipe(eslint('.eslintrc.json'))
     .pipe(eslint.format());
 });
 
-gulp.task('istanbul', ['compile'], function(cb) {
+gulp.task('istanbul', ['compile'], (cb) => {
   gulp.src(paths.dist)
     .pipe(plugins.istanbul()) // Covering files
     .pipe(plugins.istanbul.hookRequire()) // Force `require` to return covered files
-    .on('finish', function() {
+    .on('finish', () => {
       gulp.src(paths.tests)
         .pipe(plugins.plumber(plumberConf))
         .pipe(plugins.mocha())
         .pipe(plugins.istanbul.writeReports()) // Creating the reports after tests runned
-        .on('finish', function() {
+        .on('finish', () => {
           process.chdir(__dirname);
           cb();
         });
     });
 });
 
-gulp.task('build', ['compile'], function() {
+gulp.task('build', ['compile'], () => {
   return browserify('./dist/client/index.js', { standalone: 'CLAdapters' })
     .bundle()
     .pipe(source('index.js'))
     .pipe(gulp.dest('./dist/bower/'));
 });
 
-gulp.task('bump', ['test'], function() {
+gulp.task('bump', ['test'], () => {
   const bumpType = plugins.util.env.type || 'patch'; // major.minor.patch
 
   return gulp.src(['./package.json'])
@@ -79,7 +79,7 @@ gulp.task('bump', ['test'], function() {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('watch', ['test'], function() {
+gulp.task('watch', ['test'], () => {
   gulp.watch(paths.watch, ['test']);
   gulp.watch(paths.compileSource, ['build']);
 });

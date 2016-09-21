@@ -1,51 +1,11 @@
-/**
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.ClAdaptersClient=exports.adapters=exports.AdapterTypes=exports.AdapterStatus=exports.AdapterFactory=exports.Fields=undefined;var _fields=require('./clAdapters/fields');var _Fields=_interopRequireWildcard(_fields);var _adapterFactory=require('./clAdapters/adapterFactory');var _adapterFactory2=_interopRequireDefault(_adapterFactory);var _adapterStatus=require('./clAdapters/adapterStatus');var _adapterStatus2=_interopRequireDefault(_adapterStatus);var _adapterTypes=require('./clAdapters/adapterTypes');var _adapterTypes2=_interopRequireDefault(_adapterTypes);var _clAdapters=require('./clAdapters/');var _clAdapters2=_interopRequireDefault(_clAdapters);var _client=require('./client/');var _ClAdaptersClient=_interopRequireWildcard(_client);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj.default=obj;return newObj;}}exports.Fields=_Fields;/**
  * crosslead-adapters
  * https://github.com/CrossLead/crosslead-adapters
  *
  * Copyright (c) 2015 McChrystal Group
  *
  * @ignore
- */
-'use strict';
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _clAdaptersFields = require('./clAdapters/fields');
-
-var _clAdaptersFields2 = _interopRequireDefault(_clAdaptersFields);
-
-var _clAdaptersAdapterFactory = require('./clAdapters/adapterFactory');
-
-var _clAdaptersAdapterFactory2 = _interopRequireDefault(_clAdaptersAdapterFactory);
-
-var _clAdaptersAdapterStatus = require('./clAdapters/adapterStatus');
-
-var _clAdaptersAdapterStatus2 = _interopRequireDefault(_clAdaptersAdapterStatus);
-
-var _clAdaptersAdapterTypes = require('./clAdapters/adapterTypes');
-
-var _clAdaptersAdapterTypes2 = _interopRequireDefault(_clAdaptersAdapterTypes);
-
-var _clAdapters = require('./clAdapters/');
-
-var _clAdapters2 = _interopRequireDefault(_clAdapters);
-
-/**
- * Main package
- * @return {CLAdapters}
- */
-exports['default'] = _extends({
-  Fields: _clAdaptersFields2['default'],
-  AdapterFactory: _clAdaptersAdapterFactory2['default'],
-  AdapterStatus: _clAdaptersAdapterStatus2['default'],
-  AdapterTypes: _clAdaptersAdapterTypes2['default']
-}, _clAdapters2['default']);
-module.exports = exports['default'];
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7OztnQ0FRbUMscUJBQXFCOzs7O3dDQUNyQiw2QkFBNkI7Ozs7dUNBQzdCLDRCQUE0Qjs7OztzQ0FDNUIsMkJBQTJCOzs7OzBCQUMzQixlQUFlOzs7Ozs7Ozs7QUFPaEQsUUFBTSwrQkFBQTtBQUNOLGdCQUFjLHVDQUFBO0FBQ2QsZUFBYSxzQ0FBQTtBQUNiLGNBQVkscUNBQUEiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIGNyb3NzbGVhZC1hZGFwdGVyc1xuICogaHR0cHM6Ly9naXRodWIuY29tL0Nyb3NzTGVhZC9jcm9zc2xlYWQtYWRhcHRlcnNcbiAqXG4gKiBDb3B5cmlnaHQgKGMpIDIwMTUgTWNDaHJ5c3RhbCBHcm91cFxuICpcbiAqIEBpZ25vcmVcbiAqL1xuaW1wb3J0IEZpZWxkcyAgICAgICAgICAgICAgICAgZnJvbSAnLi9jbEFkYXB0ZXJzL2ZpZWxkcyc7XG5pbXBvcnQgQWRhcHRlckZhY3RvcnkgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvYWRhcHRlckZhY3RvcnknO1xuaW1wb3J0IEFkYXB0ZXJTdGF0dXMgICAgICAgICAgZnJvbSAnLi9jbEFkYXB0ZXJzL2FkYXB0ZXJTdGF0dXMnO1xuaW1wb3J0IEFkYXB0ZXJUeXBlcyAgICAgICAgICAgZnJvbSAnLi9jbEFkYXB0ZXJzL2FkYXB0ZXJUeXBlcyc7XG5pbXBvcnQgYWRhcHRlcnMgICAgICAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvJztcblxuLyoqXG4gKiBNYWluIHBhY2thZ2VcbiAqIEByZXR1cm4ge0NMQWRhcHRlcnN9XG4gKi9cbmV4cG9ydCBkZWZhdWx0IHtcbiAgRmllbGRzLFxuICBBZGFwdGVyRmFjdG9yeSxcbiAgQWRhcHRlclN0YXR1cyxcbiAgQWRhcHRlclR5cGVzLFxuICAuLi5hZGFwdGVyc1xufVxuIl19
+ */exports.AdapterFactory=_adapterFactory2.default;exports.AdapterStatus=_adapterStatus2.default;exports.AdapterTypes=_adapterTypes2.default;exports.adapters=_clAdapters2.default;// client
+exports.ClAdaptersClient=_ClAdaptersClient;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkZpZWxkcyIsIkFkYXB0ZXJGYWN0b3J5IiwiQWRhcHRlclN0YXR1cyIsIkFkYXB0ZXJUeXBlcyIsImFkYXB0ZXJzIiwiQ2xBZGFwdGVyc0NsaWVudCJdLCJtYXBwaW5ncyI6IjBuQ0FRWUEsTSxTQVJaOzs7Ozs7O1dBU09DLGMsa0NBQ0FDLGEsaUNBQ0FDLFksZ0NBQ0FDLFEsc0JBRVA7UUFDWUMsZ0IiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIGNyb3NzbGVhZC1hZGFwdGVyc1xuICogaHR0cHM6Ly9naXRodWIuY29tL0Nyb3NzTGVhZC9jcm9zc2xlYWQtYWRhcHRlcnNcbiAqXG4gKiBDb3B5cmlnaHQgKGMpIDIwMTUgTWNDaHJ5c3RhbCBHcm91cFxuICpcbiAqIEBpZ25vcmVcbiAqL1xuZXhwb3J0ICogYXMgRmllbGRzICAgICAgICAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvZmllbGRzJztcbmV4cG9ydCBBZGFwdGVyRmFjdG9yeSAgICAgICAgIGZyb20gJy4vY2xBZGFwdGVycy9hZGFwdGVyRmFjdG9yeSc7XG5leHBvcnQgQWRhcHRlclN0YXR1cyAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvYWRhcHRlclN0YXR1cyc7XG5leHBvcnQgQWRhcHRlclR5cGVzICAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvYWRhcHRlclR5cGVzJztcbmV4cG9ydCBhZGFwdGVycyAgICAgICAgICAgICAgIGZyb20gJy4vY2xBZGFwdGVycy8nO1xuXG4vLyBjbGllbnRcbmV4cG9ydCAqIGFzIENsQWRhcHRlcnNDbGllbnQgZnJvbSAnLi9jbGllbnQvJzsiXX0=
 //# sourceMappingURL=index.js.map
