@@ -1,4 +1,27 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=CLMockAdapter;var _util=require('util');var util=_interopRequireWildcard(_util);var _Adapter=require('./base/Adapter');var _Adapter2=_interopRequireDefault(_Adapter);var _fields=require('./fields/');var Fields=_interopRequireWildcard(_fields);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj.default=obj;return newObj;}}/**
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = CLMockAdapter;
+
+var _util = require('util');
+
+var util = _interopRequireWildcard(_util);
+
+var _Adapter = require('./base/Adapter');
+
+var _Adapter2 = _interopRequireDefault(_Adapter);
+
+var _fields = require('./fields/');
+
+var Fields = _interopRequireWildcard(_fields);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+/**
  * CLMockAdapter
  *
  * `credentials` should always be:
@@ -10,11 +33,39 @@
  * ```
  * @class
  * @return {ClMockAdapter}
- */function CLMockAdapter(){_Adapter2.default.call(this);/**
+ */
+function CLMockAdapter() {
+  _Adapter2.default.call(this);
+
+  /**
    * @override
-   */Object.defineProperty(this,'extEntityKey',{get:function get(){return this.credentials.appId;}});};util.inherits(CLMockAdapter,_Adapter2.default);/**
+   */
+  Object.defineProperty(this, 'extEntityKey', {
+    get: function get() {
+      return this.credentials.appId;
+    }
+  });
+};
+
+util.inherits(CLMockAdapter, _Adapter2.default);
+
+/**
  * @override
- */CLMockAdapter.prototype.init=function(){var _this=this;var p=new Promise(function(resolve,reject){if(_this.credentials.appId==='123456'&&_this.credentials.apiKey==='999999'){resolve(_this);}else{reject('Wrong credentials, please use appId "123456" and apiKey "999999"');}});return p;};/**
+ */
+CLMockAdapter.prototype.init = function () {
+  var _this = this;
+  var p = new Promise(function (resolve, reject) {
+    if (_this.credentials.appId === '123456' && _this.credentials.apiKey === '999999') {
+      resolve(_this);
+    } else {
+      reject('Wrong credentials, please use appId "123456" and apiKey "999999"');
+    }
+  });
+
+  return p;
+};
+
+/**
  * Reflects given field in this `result` format:
  * ```
  * {
@@ -33,6 +84,47 @@
  *
  * Returns between 0-50 results in pages of `query.limit` (default 5)
  * @override
- */CLMockAdapter.prototype.getFieldData=function(field,query){query=query||{};var typeName=void 0;console.log(field);switch(field.type){case Fields.Types.USER:typeName='user';break;case Fields.Types.GROUP:typeName='group';break;default:typeName='unknown';break;}var skip=query.skip||0;if(!skip){this.numResultsToGenerate=Math.floor(Math.random()*50);console.log('CLMockAdapter: Generating %d results',this.numResultsToGenerate);}var result={count:this.numResultsToGenerate,results:[]};var createResult=function createResult(){var r={};r[typeName+'ExtId']=Math.floor(Math.random()*3)+1;r[field.extId]=Math.random();return r;};var pageSize=query.limit||5;var resultsToReturn=Math.min(pageSize,this.numResultsToGenerate-skip);for(var i=0;i<resultsToReturn;i++){result.results.push(createResult());}return Promise.resolve(result);};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvY2xNb2NrQWRhcHRlci5qcyJdLCJuYW1lcyI6WyJDTE1vY2tBZGFwdGVyIiwidXRpbCIsIkZpZWxkcyIsImNhbGwiLCJPYmplY3QiLCJkZWZpbmVQcm9wZXJ0eSIsImdldCIsImNyZWRlbnRpYWxzIiwiYXBwSWQiLCJpbmhlcml0cyIsInByb3RvdHlwZSIsImluaXQiLCJfdGhpcyIsInAiLCJQcm9taXNlIiwicmVzb2x2ZSIsInJlamVjdCIsImFwaUtleSIsImdldEZpZWxkRGF0YSIsImZpZWxkIiwicXVlcnkiLCJ0eXBlTmFtZSIsImNvbnNvbGUiLCJsb2ciLCJ0eXBlIiwiVHlwZXMiLCJVU0VSIiwiR1JPVVAiLCJza2lwIiwibnVtUmVzdWx0c1RvR2VuZXJhdGUiLCJNYXRoIiwiZmxvb3IiLCJyYW5kb20iLCJyZXN1bHQiLCJjb3VudCIsInJlc3VsdHMiLCJjcmVhdGVSZXN1bHQiLCJyIiwiZXh0SWQiLCJwYWdlU2l6ZSIsImxpbWl0IiwicmVzdWx0c1RvUmV0dXJuIiwibWluIiwiaSIsInB1c2giXSwibWFwcGluZ3MiOiJzRkFnQndCQSxhLENBaEJ4QiwwQixHQUFZQyxLLGdDQUNaLHVDLCtDQUNBLGlDLEdBQVlDLE8sK1ZBQ1o7Ozs7Ozs7Ozs7OztHQWFlLFFBQVNGLGNBQVQsRUFBeUIsQ0FDdEMsa0JBQVlHLElBQVosQ0FBaUIsSUFBakIsRUFFQTs7S0FHQUMsT0FBT0MsY0FBUCxDQUFzQixJQUF0QixDQUE0QixjQUE1QixDQUE0QyxDQUMxQ0MsSUFBSyxjQUFXLENBQ2QsTUFBTyxNQUFLQyxXQUFMLENBQWlCQyxLQUF4QixDQUNELENBSHlDLENBQTVDLEVBS0QsRUFFRFAsS0FBS1EsUUFBTCxDQUFjVCxhQUFkLG9CQUVBOztHQUdBQSxjQUFjVSxTQUFkLENBQXdCQyxJQUF4QixDQUErQixVQUFXLENBQ3hDLEdBQU1DLE9BQVEsSUFBZCxDQUNBLEdBQU1DLEdBQUksR0FBSUMsUUFBSixDQUFZLFNBQUNDLE9BQUQsQ0FBVUMsTUFBVixDQUFxQixDQUN6QyxHQUFJSixNQUFNTCxXQUFOLENBQWtCQyxLQUFsQixHQUE0QixRQUE1QixFQUF3Q0ksTUFBTUwsV0FBTixDQUFrQlUsTUFBbEIsR0FBNkIsUUFBekUsQ0FBbUYsQ0FDakZGLFFBQVFILEtBQVIsRUFDRCxDQUZELElBRU8sQ0FDTEksT0FBTyxrRUFBUCxFQUNELENBQ0YsQ0FOUyxDQUFWLENBUUEsTUFBT0gsRUFBUCxDQUNELENBWEQsQ0FhQTs7Ozs7Ozs7Ozs7Ozs7Ozs7OztHQW9CQWIsY0FBY1UsU0FBZCxDQUF3QlEsWUFBeEIsQ0FBdUMsU0FBU0MsS0FBVCxDQUFnQkMsS0FBaEIsQ0FBdUIsQ0FDNURBLE1BQVFBLE9BQVMsRUFBakIsQ0FDQSxHQUFJQyxnQkFBSixDQUNBQyxRQUFRQyxHQUFSLENBQVlKLEtBQVosRUFDQSxPQUFRQSxNQUFNSyxJQUFkLEVBQ0UsSUFBS3RCLFFBQU91QixLQUFQLENBQWFDLElBQWxCLENBQ0VMLFNBQVcsTUFBWCxDQUNBLE1BQ0YsSUFBS25CLFFBQU91QixLQUFQLENBQWFFLEtBQWxCLENBQ0VOLFNBQVcsT0FBWCxDQUNBLE1BQ0YsUUFDRUEsU0FBVyxTQUFYLENBQ0EsTUFUSixDQVlBLEdBQU1PLE1BQU9SLE1BQU1RLElBQU4sRUFBYyxDQUEzQixDQUNBLEdBQUksQ0FBQ0EsSUFBTCxDQUFXLENBQ1QsS0FBS0Msb0JBQUwsQ0FBNEJDLEtBQUtDLEtBQUwsQ0FBV0QsS0FBS0UsTUFBTCxHQUFnQixFQUEzQixDQUE1QixDQUNBVixRQUFRQyxHQUFSLENBQVksc0NBQVosQ0FBb0QsS0FBS00sb0JBQXpELEVBQ0QsQ0FFRCxHQUFNSSxRQUFTLENBQ2JDLE1BQU8sS0FBS0wsb0JBREMsQ0FFYk0sUUFBUyxFQUZJLENBQWYsQ0FLQSxHQUFNQyxjQUFlLFFBQWZBLGFBQWUsRUFBVyxDQUM5QixHQUFNQyxHQUFJLEVBQVYsQ0FDQUEsRUFBRWhCLFNBQVcsT0FBYixFQUF3QlMsS0FBS0MsS0FBTCxDQUFXRCxLQUFLRSxNQUFMLEdBQWdCLENBQTNCLEVBQWdDLENBQXhELENBQ0FLLEVBQUVsQixNQUFNbUIsS0FBUixFQUFpQlIsS0FBS0UsTUFBTCxFQUFqQixDQUNBLE1BQU9LLEVBQVAsQ0FDRCxDQUxELENBT0EsR0FBTUUsVUFBV25CLE1BQU1vQixLQUFOLEVBQWUsQ0FBaEMsQ0FDQSxHQUFNQyxpQkFBa0JYLEtBQUtZLEdBQUwsQ0FBU0gsUUFBVCxDQUFtQixLQUFLVixvQkFBTCxDQUE0QkQsSUFBL0MsQ0FBeEIsQ0FDQSxJQUFLLEdBQUllLEdBQUksQ0FBYixDQUFnQkEsRUFBSUYsZUFBcEIsQ0FBcUNFLEdBQXJDLENBQTBDLENBQ3hDVixPQUFPRSxPQUFQLENBQWVTLElBQWYsQ0FBb0JSLGNBQXBCLEVBQ0QsQ0FFRCxNQUFPdEIsU0FBUUMsT0FBUixDQUFnQmtCLE1BQWhCLENBQVAsQ0FDRCxDQXpDRCIsImZpbGUiOiJjbEFkYXB0ZXJzL2NsTW9ja0FkYXB0ZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgKiBhcyB1dGlsIGZyb20gJ3V0aWwnO1xuaW1wb3J0IEJhc2VBZGFwdGVyIGZyb20gJy4vYmFzZS9BZGFwdGVyJztcbmltcG9ydCAqIGFzIEZpZWxkcyBmcm9tICcuL2ZpZWxkcy8nO1xuLyoqXG4gKiBDTE1vY2tBZGFwdGVyXG4gKlxuICogYGNyZWRlbnRpYWxzYCBzaG91bGQgYWx3YXlzIGJlOlxuICogYGBgXG4gKiB7XG4gKiAgIGFwcElkOiAnMTIzNDU2JyxcbiAqICAgYXBpS2V5OiAnOTk5OTk5J1xuICogfVxuICogYGBgXG4gKiBAY2xhc3NcbiAqIEByZXR1cm4ge0NsTW9ja0FkYXB0ZXJ9XG4gKi9cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIENMTW9ja0FkYXB0ZXIoKSB7XG4gIEJhc2VBZGFwdGVyLmNhbGwodGhpcyk7XG5cbiAgLyoqXG4gICAqIEBvdmVycmlkZVxuICAgKi9cbiAgT2JqZWN0LmRlZmluZVByb3BlcnR5KHRoaXMsICdleHRFbnRpdHlLZXknLCB7XG4gICAgZ2V0OiBmdW5jdGlvbigpIHtcbiAgICAgIHJldHVybiB0aGlzLmNyZWRlbnRpYWxzLmFwcElkO1xuICAgIH1cbiAgfSk7XG59O1xuXG51dGlsLmluaGVyaXRzKENMTW9ja0FkYXB0ZXIsIEJhc2VBZGFwdGVyKTtcblxuLyoqXG4gKiBAb3ZlcnJpZGVcbiAqL1xuQ0xNb2NrQWRhcHRlci5wcm90b3R5cGUuaW5pdCA9IGZ1bmN0aW9uKCkge1xuICBjb25zdCBfdGhpcyA9IHRoaXM7XG4gIGNvbnN0IHAgPSBuZXcgUHJvbWlzZSgocmVzb2x2ZSwgcmVqZWN0KSA9PiB7XG4gICAgaWYgKF90aGlzLmNyZWRlbnRpYWxzLmFwcElkID09PSAnMTIzNDU2JyAmJiBfdGhpcy5jcmVkZW50aWFscy5hcGlLZXkgPT09ICc5OTk5OTknKSB7XG4gICAgICByZXNvbHZlKF90aGlzKTtcbiAgICB9IGVsc2Uge1xuICAgICAgcmVqZWN0KCdXcm9uZyBjcmVkZW50aWFscywgcGxlYXNlIHVzZSBhcHBJZCBcIjEyMzQ1NlwiIGFuZCBhcGlLZXkgXCI5OTk5OTlcIicpO1xuICAgIH1cbiAgfSk7XG5cbiAgcmV0dXJuIHA7XG59O1xuXG4vKipcbiAqIFJlZmxlY3RzIGdpdmVuIGZpZWxkIGluIHRoaXMgYHJlc3VsdGAgZm9ybWF0OlxuICogYGBgXG4gKiB7XG4gKiAgIHtmaWVsZFR5cGV9RXh0SWQ6IHJhbmQgIyBiZXR3ZWVuIDEtNTAsXG4gKiAgIHtleHRJZH06IEZsb2F0ICgwLTEuMClcbiAqIH1cbiAqIGBgYFxuICpcbiAqIEZvciBleGFtcGxlLCBmb3IgYSBcIkZpZWxkcy5UeXBlcy5VU0VSXCIgZmllbGQgdy9leHRJZCAndXNlciN1dGlsaXphdGlvblJhdGUnLCB3b3VsZCByZXR1cm46XG4gKiBgYGBcbiAqIHtcbiAqICAgdXNlckV4dElkOiA1MCxcbiAqICAgJ3VzZXIjdXRpbGl6YXRpb25SYXRlJzogMC41NVxuICogfVxuICogYGBgXG4gKlxuICogUmV0dXJucyBiZXR3ZWVuIDAtNTAgcmVzdWx0cyBpbiBwYWdlcyBvZiBgcXVlcnkubGltaXRgIChkZWZhdWx0IDUpXG4gKiBAb3ZlcnJpZGVcbiAqL1xuQ0xNb2NrQWRhcHRlci5wcm90b3R5cGUuZ2V0RmllbGREYXRhID0gZnVuY3Rpb24oZmllbGQsIHF1ZXJ5KSB7XG4gIHF1ZXJ5ID0gcXVlcnkgfHwge307XG4gIGxldCB0eXBlTmFtZTtcbiAgY29uc29sZS5sb2coZmllbGQpO1xuICBzd2l0Y2ggKGZpZWxkLnR5cGUpIHtcbiAgICBjYXNlIEZpZWxkcy5UeXBlcy5VU0VSOlxuICAgICAgdHlwZU5hbWUgPSAndXNlcic7XG4gICAgICBicmVhaztcbiAgICBjYXNlIEZpZWxkcy5UeXBlcy5HUk9VUDpcbiAgICAgIHR5cGVOYW1lID0gJ2dyb3VwJztcbiAgICAgIGJyZWFrO1xuICAgIGRlZmF1bHQ6XG4gICAgICB0eXBlTmFtZSA9ICd1bmtub3duJztcbiAgICAgIGJyZWFrO1xuICB9XG5cbiAgY29uc3Qgc2tpcCA9IHF1ZXJ5LnNraXAgfHwgMDtcbiAgaWYgKCFza2lwKSB7XG4gICAgdGhpcy5udW1SZXN1bHRzVG9HZW5lcmF0ZSA9IE1hdGguZmxvb3IoTWF0aC5yYW5kb20oKSAqIDUwKTtcbiAgICBjb25zb2xlLmxvZygnQ0xNb2NrQWRhcHRlcjogR2VuZXJhdGluZyAlZCByZXN1bHRzJywgdGhpcy5udW1SZXN1bHRzVG9HZW5lcmF0ZSk7XG4gIH1cblxuICBjb25zdCByZXN1bHQgPSB7XG4gICAgY291bnQ6IHRoaXMubnVtUmVzdWx0c1RvR2VuZXJhdGUsXG4gICAgcmVzdWx0czogW11cbiAgfTtcblxuICBjb25zdCBjcmVhdGVSZXN1bHQgPSBmdW5jdGlvbigpIHtcbiAgICBjb25zdCByID0ge307XG4gICAgclt0eXBlTmFtZSArICdFeHRJZCddID0gTWF0aC5mbG9vcihNYXRoLnJhbmRvbSgpICogMykgKyAxO1xuICAgIHJbZmllbGQuZXh0SWRdID0gTWF0aC5yYW5kb20oKTtcbiAgICByZXR1cm4gcjtcbiAgfTtcblxuICBjb25zdCBwYWdlU2l6ZSA9IHF1ZXJ5LmxpbWl0IHx8IDU7XG4gIGNvbnN0IHJlc3VsdHNUb1JldHVybiA9IE1hdGgubWluKHBhZ2VTaXplLCB0aGlzLm51bVJlc3VsdHNUb0dlbmVyYXRlIC0gc2tpcCk7XG4gIGZvciAobGV0IGkgPSAwOyBpIDwgcmVzdWx0c1RvUmV0dXJuOyBpKyspIHtcbiAgICByZXN1bHQucmVzdWx0cy5wdXNoKGNyZWF0ZVJlc3VsdCgpKTtcbiAgfVxuXG4gIHJldHVybiBQcm9taXNlLnJlc29sdmUocmVzdWx0KTtcbn07XG4iXX0=
+ */
+CLMockAdapter.prototype.getFieldData = function (field, query) {
+  query = query || {};
+  var typeName = void 0;
+  console.log(field);
+  switch (field.type) {
+    case Fields.Types.USER:
+      typeName = 'user';
+      break;
+    case Fields.Types.GROUP:
+      typeName = 'group';
+      break;
+    default:
+      typeName = 'unknown';
+      break;
+  }
+
+  var skip = query.skip || 0;
+  if (!skip) {
+    this.numResultsToGenerate = Math.floor(Math.random() * 50);
+    console.log('CLMockAdapter: Generating %d results', this.numResultsToGenerate);
+  }
+
+  var result = {
+    count: this.numResultsToGenerate,
+    results: []
+  };
+
+  var createResult = function createResult() {
+    var r = {};
+    r[typeName + 'ExtId'] = Math.floor(Math.random() * 3) + 1;
+    r[field.extId] = Math.random();
+    return r;
+  };
+
+  var pageSize = query.limit || 5;
+  var resultsToReturn = Math.min(pageSize, this.numResultsToGenerate - skip);
+  for (var i = 0; i < resultsToReturn; i++) {
+    result.results.push(createResult());
+  }
+
+  return Promise.resolve(result);
+};
 //# sourceMappingURL=../clAdapters/clMockAdapter.js.map

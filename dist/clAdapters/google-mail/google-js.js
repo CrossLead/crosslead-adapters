@@ -1,3 +1,24 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _googleJsConfig=require('./google-js-config');Object.defineProperty(exports,'Configuration',{enumerable:true,get:function get(){return _googleJsConfig.Configuration;}});var _googleJsService=require('./google-js-service');Object.defineProperty(exports,'Service',{enumerable:true,get:function get(){return _googleJsService.Service;}});
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLW1haWwvZ29vZ2xlLWpzLmpzIl0sIm5hbWVzIjpbIkNvbmZpZ3VyYXRpb24iLCJTZXJ2aWNlIl0sIm1hcHBpbmdzIjoiaU9BQVFBLGEsNkpBQ0FDLE8iLCJmaWxlIjoiY2xBZGFwdGVycy9nb29nbGUtbWFpbC9nb29nbGUtanMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQge0NvbmZpZ3VyYXRpb259IGZyb20gJy4vZ29vZ2xlLWpzLWNvbmZpZyc7XG5leHBvcnQge1NlcnZpY2V9IGZyb20gJy4vZ29vZ2xlLWpzLXNlcnZpY2UnOyJdfQ==
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _googleJsConfig = require('./google-js-config');
+
+Object.defineProperty(exports, 'Configuration', {
+  enumerable: true,
+  get: function get() {
+    return _googleJsConfig.Configuration;
+  }
+});
+
+var _googleJsService = require('./google-js-service');
+
+Object.defineProperty(exports, 'Service', {
+  enumerable: true,
+  get: function get() {
+    return _googleJsService.Service;
+  }
+});
 //# sourceMappingURL=../../clAdapters/google-mail/google-js.js.map

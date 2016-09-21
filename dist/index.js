@@ -1,11 +1,61 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.ClAdaptersClient=exports.adapters=exports.AdapterTypes=exports.AdapterStatus=exports.AdapterFactory=exports.Fields=undefined;var _fields=require('./clAdapters/fields');var _Fields=_interopRequireWildcard(_fields);var _adapterFactory=require('./clAdapters/adapterFactory');var _adapterFactory2=_interopRequireDefault(_adapterFactory);var _adapterStatus=require('./clAdapters/adapterStatus');var _adapterStatus2=_interopRequireDefault(_adapterStatus);var _adapterTypes=require('./clAdapters/adapterTypes');var _adapterTypes2=_interopRequireDefault(_adapterTypes);var _clAdapters=require('./clAdapters/');var _clAdapters2=_interopRequireDefault(_clAdapters);var _client=require('./client/');var _ClAdaptersClient=_interopRequireWildcard(_client);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj.default=obj;return newObj;}}exports.Fields=_Fields;/**
- * crosslead-adapters
- * https://github.com/CrossLead/crosslead-adapters
- *
- * Copyright (c) 2015 McChrystal Group
- *
- * @ignore
- */exports.AdapterFactory=_adapterFactory2.default;exports.AdapterStatus=_adapterStatus2.default;exports.AdapterTypes=_adapterTypes2.default;exports.adapters=_clAdapters2.default;// client
-exports.ClAdaptersClient=_ClAdaptersClient;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIkZpZWxkcyIsIkFkYXB0ZXJGYWN0b3J5IiwiQWRhcHRlclN0YXR1cyIsIkFkYXB0ZXJUeXBlcyIsImFkYXB0ZXJzIiwiQ2xBZGFwdGVyc0NsaWVudCJdLCJtYXBwaW5ncyI6IjBuQ0FRWUEsTSxTQVJaOzs7Ozs7O1dBU09DLGMsa0NBQ0FDLGEsaUNBQ0FDLFksZ0NBQ0FDLFEsc0JBRVA7UUFDWUMsZ0IiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIGNyb3NzbGVhZC1hZGFwdGVyc1xuICogaHR0cHM6Ly9naXRodWIuY29tL0Nyb3NzTGVhZC9jcm9zc2xlYWQtYWRhcHRlcnNcbiAqXG4gKiBDb3B5cmlnaHQgKGMpIDIwMTUgTWNDaHJ5c3RhbCBHcm91cFxuICpcbiAqIEBpZ25vcmVcbiAqL1xuZXhwb3J0ICogYXMgRmllbGRzICAgICAgICAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvZmllbGRzJztcbmV4cG9ydCBBZGFwdGVyRmFjdG9yeSAgICAgICAgIGZyb20gJy4vY2xBZGFwdGVycy9hZGFwdGVyRmFjdG9yeSc7XG5leHBvcnQgQWRhcHRlclN0YXR1cyAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvYWRhcHRlclN0YXR1cyc7XG5leHBvcnQgQWRhcHRlclR5cGVzICAgICAgICAgICBmcm9tICcuL2NsQWRhcHRlcnMvYWRhcHRlclR5cGVzJztcbmV4cG9ydCBhZGFwdGVycyAgICAgICAgICAgICAgIGZyb20gJy4vY2xBZGFwdGVycy8nO1xuXG4vLyBjbGllbnRcbmV4cG9ydCAqIGFzIENsQWRhcHRlcnNDbGllbnQgZnJvbSAnLi9jbGllbnQvJzsiXX0=
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ClAdaptersClient = exports.adapters = exports.AdapterTypes = exports.AdapterStatus = exports.AdapterFactory = exports.Fields = undefined;
+
+var _fields = require('./clAdapters/fields');
+
+var Fields = _interopRequireWildcard(_fields);
+
+var _Fields = _interopRequireWildcard(_fields);
+
+var _adapterFactory = require('./clAdapters/adapterFactory');
+
+var _adapterFactory2 = _interopRequireDefault(_adapterFactory);
+
+var _adapterStatus = require('./clAdapters/adapterStatus');
+
+var _adapterStatus2 = _interopRequireDefault(_adapterStatus);
+
+var _adapterTypes = require('./clAdapters/adapterTypes');
+
+var _adapterTypes2 = _interopRequireDefault(_adapterTypes);
+
+var _clAdapters = require('./clAdapters/');
+
+var _clAdapters2 = _interopRequireDefault(_clAdapters);
+
+var _client = require('./client/');
+
+var _ClAdaptersClient = _interopRequireWildcard(_client);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+exports.default = {
+  Fields: Fields,
+  AdapterFactory: _adapterFactory2.default,
+  AdapterTypes: _adapterTypes2.default,
+  AdapterStatus: _adapterStatus2.default,
+  adapters: _clAdapters2.default
+}; /**
+    * crosslead-adapters
+    * https://github.com/CrossLead/crosslead-adapters
+    *
+    * Copyright (c) 2015 McChrystal Group
+    *
+    * @ignore
+    */
+
+exports.Fields = _Fields;
+exports.AdapterFactory = _adapterFactory2.default;
+exports.AdapterStatus = _adapterStatus2.default;
+exports.AdapterTypes = _adapterTypes2.default;
+exports.adapters = _clAdapters2.default;
+// client
+
+exports.ClAdaptersClient = _ClAdaptersClient;
 //# sourceMappingURL=index.js.map

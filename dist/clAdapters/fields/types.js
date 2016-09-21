@@ -1,7 +1,18 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});/**
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
  * Enumeration for different data field types
  *
  * @enum
- */var Types=exports.Types={EXT_ENTITY:1,USER:2,GROUP:3,ORGANIZATION:4,RELATIONSHIP:5};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZmllbGRzL3R5cGVzLmpzIl0sIm5hbWVzIjpbIlR5cGVzIiwiRVhUX0VOVElUWSIsIlVTRVIiLCJHUk9VUCIsIk9SR0FOSVpBVElPTiIsIlJFTEFUSU9OU0hJUCJdLCJtYXBwaW5ncyI6InNFQUFBOzs7O0dBS08sR0FBTUEscUJBQVEsQ0FDbkJDLFdBQVksQ0FETyxDQUVuQkMsS0FBTSxDQUZhLENBR25CQyxNQUFPLENBSFksQ0FJbkJDLGFBQWMsQ0FKSyxDQUtuQkMsYUFBYyxDQUxLLENBQWQiLCJmaWxlIjoiY2xBZGFwdGVycy9maWVsZHMvdHlwZXMuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEVudW1lcmF0aW9uIGZvciBkaWZmZXJlbnQgZGF0YSBmaWVsZCB0eXBlc1xuICpcbiAqIEBlbnVtXG4gKi9cbmV4cG9ydCBjb25zdCBUeXBlcyA9IHtcbiAgRVhUX0VOVElUWTogMSxcbiAgVVNFUjogMixcbiAgR1JPVVA6IDMsXG4gIE9SR0FOSVpBVElPTjogNCxcbiAgUkVMQVRJT05TSElQOiA1XG59O1xuIl19
+ */
+var Types = exports.Types = {
+  EXT_ENTITY: 1,
+  USER: 2,
+  GROUP: 3,
+  ORGANIZATION: 4,
+  RELATIONSHIP: 5
+};
 //# sourceMappingURL=../../clAdapters/fields/types.js.map

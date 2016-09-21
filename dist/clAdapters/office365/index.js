@@ -1,3 +1,21 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _mail=require('./mail/');var _mail2=_interopRequireDefault(_mail);var _calendar=require('./calendar/');var _calendar2=_interopRequireDefault(_calendar);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={Office365MailAdapter:_mail2.default,Office365CalendarAdapter:_calendar2.default};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvb2ZmaWNlMzY1L2luZGV4LmpzIl0sIm5hbWVzIjpbIk9mZmljZTM2NU1haWxBZGFwdGVyIiwiT2ZmaWNlMzY1Q2FsZW5kYXJBZGFwdGVyIl0sIm1hcHBpbmdzIjoic0VBQUEsNkIseUNBQ0EscUMsb0pBRWUsQ0FDYkEsbUNBRGEsQ0FFYkMsMkNBRmEsQyIsImZpbGUiOiJjbEFkYXB0ZXJzL29mZmljZTM2NS9pbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBPZmZpY2UzNjVNYWlsQWRhcHRlciAgICAgZnJvbSAnLi9tYWlsLyc7XG5pbXBvcnQgT2ZmaWNlMzY1Q2FsZW5kYXJBZGFwdGVyIGZyb20gJy4vY2FsZW5kYXIvJztcblxuZXhwb3J0IGRlZmF1bHQge1xuICBPZmZpY2UzNjVNYWlsQWRhcHRlcixcbiAgT2ZmaWNlMzY1Q2FsZW5kYXJBZGFwdGVyXG59O1xuIl19
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _mail = require('./mail/');
+
+var _mail2 = _interopRequireDefault(_mail);
+
+var _calendar = require('./calendar/');
+
+var _calendar2 = _interopRequireDefault(_calendar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  Office365MailAdapter: _mail2.default,
+  Office365CalendarAdapter: _calendar2.default
+};
 //# sourceMappingURL=../../clAdapters/office365/index.js.map

@@ -1,27 +1,540 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _extends=Object.assign||function(target){for(var i=1;i<arguments.length;i++){var source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _googleapis=require('googleapis');var _googleapis2=_interopRequireDefault(_googleapis);var _moment=require('moment');var _moment2=_interopRequireDefault(_moment);var _lodash=require('lodash');var _lodash2=_interopRequireDefault(_lodash);var _index=require('../base/index');function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}function _asyncToGenerator(fn){return function(){var gen=fn.apply(this,arguments);return new Promise(function(resolve,reject){function step(key,arg){try{var info=gen[key](arg);var value=info.value;}catch(error){reject(error);return;}if(info.done){resolve(value);}else{return Promise.resolve(value).then(function(value){return step("next",value);},function(err){return step("throw",err);});}}return step("next");});};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}// google calendar api
-var calendar=_googleapis2.default.calendar('v3');var credentialMappings={'certificate':'private_key','serviceEmail':'client_email','email':'adminEmail'};var GoogleCalendarAdapter=function(_Adapter){_inherits(GoogleCalendarAdapter,_Adapter);// constructor needs to call super
-function GoogleCalendarAdapter(){_classCallCheck(this,GoogleCalendarAdapter);return _possibleConstructorReturn(this,(GoogleCalendarAdapter.__proto__||Object.getPrototypeOf(GoogleCalendarAdapter)).call(this));}// convert the names of the api response data
-_createClass(GoogleCalendarAdapter,[{key:'reset',value:function reset(){delete this._config;delete this._service;return this;}},{key:'init',value:function(){var _ref=_asyncToGenerator(regeneratorRuntime.mark(function _callee(){var credentials,want,alternate,email;return regeneratorRuntime.wrap(function _callee$(_context){while(1){switch(_context.prev=_context.next){case 0:credentials=this.credentials;if(credentials){_context.next=3;break;}throw new Error('credentials required for adapter.');case 3:// map Google json keys to keys used in this library
-for(want in credentialMappings){alternate=credentialMappings[want];if(!credentials[want]){credentials[want]=credentials[alternate];}}// validate required credential properties
-Object.keys(credentialMappings).forEach(function(prop){if(!credentials[prop]){throw new Error('Property '+prop+' required in adapter credentials!');}});this._config=new GoogleCalendarAdapter.Configuration(credentials);this._service=new GoogleCalendarAdapter.Service(this._config);_context.next=9;return this._service.init();case 9:email=credentials.serviceEmail;console.log('Successfully initialized google calendar adapter for email: '+email);return _context.abrupt('return',this);case 12:case'end':return _context.stop();}}},_callee,this);}));function init(){return _ref.apply(this,arguments);}return init;}()// currently doing nothing with fields here, but keeping as placeholder
-},{key:'getBatchData',value:function(){var _ref2=_asyncToGenerator(regeneratorRuntime.mark(function _callee5(){var userProfiles=arguments.length<=0||arguments[0]===undefined?[]:arguments[0];var _this2=this;var filterStartDate=arguments[1];var filterEndDate/*, fields */=arguments[2];var fieldNameMap,opts,groupRunStats,results;return regeneratorRuntime.wrap(function _callee5$(_context5){while(1){switch(_context5.prev=_context5.next){case 0:fieldNameMap=this.constructor.fieldNameMap;// api options...
-// https://developers.google.com/google-apps/calendar/v3/
-opts={alwaysIncludeEmail:true,calendarId:'primary',singleEvents:true,timeMax:filterEndDate.toISOString(),timeMin:filterStartDate.toISOString(),orderBy:'startTime'};groupRunStats={success:true,runDate:(0,_moment2.default)().utc().toDate(),filterStartDate:filterStartDate,filterEndDate:filterEndDate,emails:userProfiles};_context5.prev=3;_context5.next=6;return Promise.all(userProfiles.map(function(){var _ref3=_asyncToGenerator(regeneratorRuntime.mark(function _callee4(userProfile){var individualRunStats,_ret,errorMessage;return regeneratorRuntime.wrap(function _callee4$(_context4){while(1){switch(_context4.prev=_context4.next){case 0:individualRunStats=_extends({filterStartDate:filterStartDate,filterEndDate:filterEndDate},userProfile,{success:true,runDate:(0,_moment2.default)().utc().toDate()});_context4.prev=1;return _context4.delegateYield(regeneratorRuntime.mark(function _callee3(){var getEvents,_ref5,items,data;return regeneratorRuntime.wrap(function _callee3$(_context3){while(1){switch(_context3.prev=_context3.next){case 0:_context3.next=2;return _this2.authorize(userProfile.emailAfterMapping);case 2:opts.auth=_context3.sent;// function to recurse through pageTokens
-getEvents=function(){var _ref4=_asyncToGenerator(regeneratorRuntime.mark(function _callee2(data){var events,_data$items;return regeneratorRuntime.wrap(function _callee2$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:_context2.next=2;return new Promise(function(res,rej){// add page token if given
-if(data&&data.nextPageToken){opts.pageToken=data.nextPageToken;}calendar.events.list(opts,function(err,d){return err?rej(err):res(d);});});case 2:events=_context2.sent;// if we already have data being accumulated, add to items
-if(data){(_data$items=data.items).push.apply(_data$items,_toConsumableArray(events.items));}else{data=events;}// if there is a token for the next page, continue...
-if(!events.nextPageToken){_context2.next=9;break;}data.nextPageToken=events.nextPageToken;_context2.next=8;return getEvents(data);case 8:return _context2.abrupt('return',_context2.sent);case 9:return _context2.abrupt('return',data);case 10:case'end':return _context2.stop();}}},_callee2,_this2);}));return function getEvents(_x3){return _ref4.apply(this,arguments);};}();_context3.next=6;return getEvents();case 6:_ref5=_context3.sent;items=_ref5.items;data=_lodash2.default.map(items,function(item){var out={};_lodash2.default.each(fieldNameMap,function(have,want){var modified=_lodash2.default.get(item,have);if(/^dateTime/.test(want)){modified=new Date(modified);}if(modified!==undefined){out[want]=modified;}});var attendeeSelf=_lodash2.default.find(out.attendees,function(attendee){return attendee.self;});if(attendeeSelf){out.responseStatus=attendeeSelf.responseStatus;}out.attendees=_lodash2.default.map(out.attendees,function(attendee){var email=attendee.email;var responseStatus=attendee.responseStatus;return{address:email,response:responseStatus};});return out;});// request all events for this user in the given time frame
-return _context3.abrupt('return',{v:Object.assign(individualRunStats,{data:data})});case 10:case'end':return _context3.stop();}}},_callee3,_this2);})(),'t0',3);case 3:_ret=_context4.t0;if(!((typeof _ret==='undefined'?'undefined':_typeof(_ret))==="object")){_context4.next=6;break;}return _context4.abrupt('return',_ret.v);case 6:_context4.next=14;break;case 8:_context4.prev=8;_context4.t1=_context4['catch'](1);// if the batch collection failed...
-console.log('GoogleCalendarAdapter.getBatchData Error:',_context4.t1.stack);errorMessage=_context4.t1;if(/invalid_grant/.test(errorMessage.toString())){errorMessage='Email address: '+userProfile.emailAfterMapping+' not found in this Google Calendar account.';}return _context4.abrupt('return',Object.assign(individualRunStats,{errorMessage:errorMessage,success:false,data:[]}));case 14:case'end':return _context4.stop();}}},_callee4,_this2,[[1,8]]);}));return function(_x2){return _ref3.apply(this,arguments);};}()));case 6:results=_context5.sent;return _context5.abrupt('return',Object.assign(groupRunStats,{results:results}));case 10:_context5.prev=10;_context5.t0=_context5['catch'](3);return _context5.abrupt('return',Object.assign(groupRunStats,{errorMessage:_context5.t0,success:false}));case 13:case'end':return _context5.stop();}}},_callee5,this,[[3,10]]);}));function getBatchData(){return _ref2.apply(this,arguments);}return getBatchData;}()},{key:'runConnectionTest',value:function(){var _ref6=_asyncToGenerator(regeneratorRuntime.mark(function _callee6(){var email,data;return regeneratorRuntime.wrap(function _callee6$(_context6){while(1){switch(_context6.prev=_context6.next){case 0:email=this.credentials.email;_context6.prev=1;_context6.next=4;return this.getBatchData([{email:email,emailAfterMapping:email}],(0,_moment2.default)().toDate(),(0,_moment2.default)().add(-1,'day').toDate());case 4:data=_context6.sent;return _context6.abrupt('return',data);case 8:_context6.prev=8;_context6.t0=_context6['catch'](1);console.log(_context6.t0.stack||_context6.t0);return _context6.abrupt('return',{error:_context6.t0,success:false});case 12:case'end':return _context6.stop();}}},_callee6,this,[[1,8]]);}));function runConnectionTest(){return _ref6.apply(this,arguments);}return runConnectionTest;}()},{key:'runMessageTest',value:function(){var _ref7=_asyncToGenerator(regeneratorRuntime.mark(function _callee7(){return regeneratorRuntime.wrap(function _callee7$(_context7){while(1){switch(_context7.prev=_context7.next){case 0:// TODO: does this need to be different?
-console.warn('Note: runMessageTest() currently calls runConnectionTest()');return _context7.abrupt('return',this.runConnectionTest());case 2:case'end':return _context7.stop();}}},_callee7,this);}));function runMessageTest(){return _ref7.apply(this,arguments);}return runMessageTest;}()// create authenticated token for api requests for given user
-},{key:'authorize',value:function(){var _ref8=_asyncToGenerator(regeneratorRuntime.mark(function _callee8(email){var _credentials,serviceEmail,certificate,auth;return regeneratorRuntime.wrap(function _callee8$(_context8){while(1){switch(_context8.prev=_context8.next){case 0:_credentials=this.credentials;serviceEmail=_credentials.serviceEmail;certificate=_credentials.certificate;auth=new _googleapis2.default.auth.JWT(// email of google app admin...
-serviceEmail,// no need for keyFile...
-null,// the private key itself...
-certificate,// scopes...
-['https://www.googleapis.com/auth/calendar.readonly'],// the email of the individual we want to authenticate
-// ('sub' property of the json web token)
-email);// await authorization
-return _context8.abrupt('return',new Promise(function(res,rej){return auth.authorize(function(err){err?rej(err):res(auth);});}));case 5:case'end':return _context8.stop();}}},_callee8,this);}));function authorize(_x4){return _ref8.apply(this,arguments);}return authorize;}()}]);return GoogleCalendarAdapter;}(_index.Adapter);GoogleCalendarAdapter.Configuration=_index.Configuration;GoogleCalendarAdapter.Service=_index.Service;GoogleCalendarAdapter.fieldNameMap={// Desired...                          // Given...
-'eventId':'id','attendees':'attendees','dateTimeCreated':'created','dateTimeLastModified':'updated','attendeeAddress':'EmailAddress.Address','attendeeName':'EmailAddress.Name','iCalUId':'iCalUID','location':'location','status':'status','isCreator':'creator.self','isOrganizer':'organizer.self','organizerEmail':'organizer.email','recurrance':'recurrance','responseStatus':'responseStatus','dateTimeStart':'start.dateTime','dateTimeEnd':'end.dateTime','subject':'summary','url':'htmlLink','hangoutLink':'hangoutLink','privacy':'visibility'};exports.default=GoogleCalendarAdapter;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL2luZGV4LmpzIl0sIm5hbWVzIjpbImNhbGVuZGFyIiwiY3JlZGVudGlhbE1hcHBpbmdzIiwiR29vZ2xlQ2FsZW5kYXJBZGFwdGVyIiwiX2NvbmZpZyIsIl9zZXJ2aWNlIiwiY3JlZGVudGlhbHMiLCJFcnJvciIsIndhbnQiLCJhbHRlcm5hdGUiLCJPYmplY3QiLCJrZXlzIiwiZm9yRWFjaCIsInByb3AiLCJDb25maWd1cmF0aW9uIiwiU2VydmljZSIsImluaXQiLCJlbWFpbCIsInNlcnZpY2VFbWFpbCIsImNvbnNvbGUiLCJsb2ciLCJ1c2VyUHJvZmlsZXMiLCJmaWx0ZXJTdGFydERhdGUiLCJmaWx0ZXJFbmREYXRlIiwiZmllbGROYW1lTWFwIiwiY29uc3RydWN0b3IiLCJvcHRzIiwiYWx3YXlzSW5jbHVkZUVtYWlsIiwiY2FsZW5kYXJJZCIsInNpbmdsZUV2ZW50cyIsInRpbWVNYXgiLCJ0b0lTT1N0cmluZyIsInRpbWVNaW4iLCJvcmRlckJ5IiwiZ3JvdXBSdW5TdGF0cyIsInN1Y2Nlc3MiLCJydW5EYXRlIiwidXRjIiwidG9EYXRlIiwiZW1haWxzIiwiUHJvbWlzZSIsImFsbCIsIm1hcCIsInVzZXJQcm9maWxlIiwiaW5kaXZpZHVhbFJ1blN0YXRzIiwiYXV0aG9yaXplIiwiZW1haWxBZnRlck1hcHBpbmciLCJhdXRoIiwiZ2V0RXZlbnRzIiwiZGF0YSIsInJlcyIsInJlaiIsIm5leHRQYWdlVG9rZW4iLCJwYWdlVG9rZW4iLCJldmVudHMiLCJsaXN0IiwiZXJyIiwiZCIsIml0ZW1zIiwicHVzaCIsIm91dCIsImVhY2giLCJoYXZlIiwibW9kaWZpZWQiLCJnZXQiLCJpdGVtIiwidGVzdCIsIkRhdGUiLCJ1bmRlZmluZWQiLCJhdHRlbmRlZVNlbGYiLCJmaW5kIiwiYXR0ZW5kZWVzIiwiYXR0ZW5kZWUiLCJzZWxmIiwicmVzcG9uc2VTdGF0dXMiLCJhZGRyZXNzIiwicmVzcG9uc2UiLCJhc3NpZ24iLCJzdGFjayIsImVycm9yTWVzc2FnZSIsInRvU3RyaW5nIiwicmVzdWx0cyIsImdldEJhdGNoRGF0YSIsImFkZCIsImVycm9yIiwid2FybiIsInJ1bkNvbm5lY3Rpb25UZXN0IiwiY2VydGlmaWNhdGUiLCJKV1QiXSwibWFwcGluZ3MiOiJxL0JBQUEsc0MscURBQ0EsOEIsNkNBQ0EsOEIsNkNBQ0Esb0MsMDhDQUVBO0FBQ0EsR0FBTUEsVUFBVyxxQkFBV0EsUUFBWCxDQUFvQixJQUFwQixDQUFqQixDQUVBLEdBQU1DLG9CQUFxQixDQUN6QixjQUFnQixhQURTLENBRXpCLGVBQWdCLGNBRlMsQ0FHekIsUUFBZ0IsWUFIUyxDQUEzQixDLEdBT3FCQyxzQiw4REE4Qm5CO0FBQ0EsZ0NBQWMsZ0xBRWIsQ0E1QkQ7dUVBK0JRLENBQ04sTUFBTyxNQUFLQyxPQUFaLENBQ0EsTUFBTyxNQUFLQyxRQUFaLENBQ0EsTUFBTyxLQUFQLENBQ0QsQyx5UEFLU0MsVyxDQUFnQixJLENBQWhCQSxXLElBRUhBLFcsOEJBQ0csSUFBSUMsTUFBSixDQUFVLG1DQUFWLEMsUUFHUjtBQUNBLElBQVdDLElBQVgsR0FBbUJOLG1CQUFuQixDQUF1QyxDQUMvQk8sU0FEK0IsQ0FDbkJQLG1CQUFtQk0sSUFBbkIsQ0FEbUIsQ0FFckMsR0FBSSxDQUFDRixZQUFZRSxJQUFaLENBQUwsQ0FBd0IsQ0FDdEJGLFlBQVlFLElBQVosRUFBb0JGLFlBQVlHLFNBQVosQ0FBcEIsQ0FDRCxDQUNGLENBRUQ7QUFDQUMsT0FBT0MsSUFBUCxDQUFZVCxrQkFBWixFQUNHVSxPQURILENBQ1csY0FBUSxDQUNmLEdBQUksQ0FBQ04sWUFBWU8sSUFBWixDQUFMLENBQXdCLENBQ3RCLEtBQU0sSUFBSU4sTUFBSixhQUFzQk0sSUFBdEIscUNBQU4sQ0FDRCxDQUNGLENBTEgsRUFPQSxLQUFLVCxPQUFMLENBQWdCLEdBQUlELHVCQUFzQlcsYUFBMUIsQ0FBd0NSLFdBQXhDLENBQWhCLENBQ0EsS0FBS0QsUUFBTCxDQUFnQixHQUFJRix1QkFBc0JZLE9BQTFCLENB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QixTQUF1QyxRQVZuQixDQVdwQixZQUF1QyxjQVhuQixDQVlwQixjQUF1QyxnQkFabkIsQ0FhcEIsaUJBQXVDLGlCQWJuQixDQWNwQixhQUF1QyxZQWRuQixDQWVwQixpQkFBdUMsZ0JBZm5CLENBZ0JwQixnQkFBdUMsZ0JBaEJuQixDQWlCcEIsY0FBdUMsY0FqQm5CLENBa0JwQixVQUF1QyxTQWxCbkIsQ0FtQnBCLE1BQXVDLFVBbkJuQixDQW9CcEIsY0FBdUMsYUFwQm5CLENBcUJwQixVQUF1QyxZQXJCbkIsQyxpQkFOSHJCLHFCIiwiZmlsZSI6ImNsQWRhcHRlcnMvZ29vZ2xlLWNhbGVuZGFyL2luZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGdvb2dsZWFwaXMgZnJvbSAnZ29vZ2xlYXBpcyc7XG5pbXBvcnQgbW9tZW50ICAgICBmcm9tICdtb21lbnQnO1xuaW1wb3J0IF8gICAgICAgICAgZnJvbSAnbG9kYXNoJztcbmltcG9ydCB7IEFkYXB0ZXIsIENvbmZpZ3VyYXRpb24sIFNlcnZpY2UgfSBmcm9tICcuLi9iYXNlL2luZGV4JztcblxuLy8gZ29vZ2xlIGNhbGVuZGFyIGFwaVxuY29uc3QgY2FsZW5kYXIgPSBnb29nbGVhcGlzLmNhbGVuZGFyKCd2MycpO1xuXG5jb25zdCBjcmVkZW50aWFsTWFwcGluZ3MgPSB7XG4gICdjZXJ0aWZpY2F0ZScgOiAncHJpdmF0ZV9rZXknLFxuICAnc2VydmljZUVtYWlsJzogJ2NsaWVudF9lbWFpbCcsXG4gICdlbWFpbCcgICAgICAgOiAnYWRtaW5FbWFpbCdcbn07XG5cblxuZXhwb3J0IGRlZmF1bHQgY2xhc3MgR29vZ2xlQ2FsZW5kYXJBZGFwdGVyIGV4dGVuZHMgQWRhcHRlciB7XG5cbiAgc3RhdGljIENvbmZpZ3VyYXRpb24gPSBDb25maWd1cmF0aW9uO1xuICBzdGF0aWMgU2VydmljZSA9IFNlcnZpY2U7XG5cbiAgLy8gY29udmVydCB0aGUgbmFtZXMgb2YgdGhlIGFwaSByZXNwb25zZSBkYXRhXG4gIHN0YXRpYyBmaWVsZE5hbWVNYXAgPSB7XG4gICAgLy8gRGVzaXJlZC4uLiAgICAgICAgICAgICAgICAgICAgICAgICAgLy8gR2l2ZW4uLi5cbiAgICAnZXZlbnRJZCc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnaWQnLFxuICAgICdhdHRlbmRlZXMnOiAgICAgICAgICAgICAgICAgICAgICAgICAgICdhdHRlbmRlZXMnLFxuICAgICdkYXRlVGltZUNyZWF0ZWQnOiAgICAgICAgICAgICAgICAgICAgICdjcmVhdGVkJyxcbiAgICAnZGF0ZVRpbWVMYXN0TW9kaWZpZWQnOiAgICAgICAgICAgICAgICAndXBkYXRlZCcsXG4gICAgJ2F0dGVuZGVlQWRkcmVzcyc6ICAgICAgICAgICAgICAgICAgICAgJ0VtYWlsQWRkcmVzcy5BZGRyZXNzJyxcbiAgICAnYXR0ZW5kZWVOYW1lJzogICAgICAgICAgICAgICAgICAgICAgICAnRW1haWxBZGRyZXNzLk5hbWUnLFxuICAgICdpQ2FsVUlkJzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICdpQ2FsVUlEJyxcbiAgICAnbG9jYXRpb24nOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAnbG9jYXRpb24nLFxuICAgICdzdGF0dXMnOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdzdGF0dXMnLFxuICAgICdpc0NyZWF0b3InOiAgICAgICAgICAgICAgICAgICAgICAgICAgICdjcmVhdG9yLnNlbGYnLFxuICAgICdpc09yZ2FuaXplcic6ICAgICAgICAgICAgICAgICAgICAgICAgICdvcmdhbml6ZXIuc2VsZicsXG4gICAgJ29yZ2FuaXplckVtYWlsJzogICAgICAgICAgICAgICAgICAgICAgJ29yZ2FuaXplci5lbWFpbCcsXG4gICAgJ3JlY3VycmFuY2UnOiAgICAgICAgICAgICAgICAgICAgICAgICAgJ3JlY3VycmFuY2UnLFxuICAgICdyZXNwb25zZVN0YXR1cyc6ICAgICAgICAgICAgICAgICAgICAgICdyZXNwb25zZVN0YXR1cycsXG4gICAgJ2RhdGVUaW1lU3RhcnQnOiAgICAgICAgICAgICAgICAgICAgICAgJ3N0YXJ0LmRhdGVUaW1lJyxcbiAgICAnZGF0ZVRpbWVFbmQnOiAgICAgICAgICAgICAgICAgICAgICAgICAnZW5kLmRhdGVUaW1lJyxcbiAgICAnc3ViamVjdCc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnc3VtbWFyeScsXG4gICAgJ3VybCc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ2h0bWxMaW5rJyxcbiAgICAnaGFuZ291dExpbmsnOiAgICAgICAgICAgICAgICAgICAgICAgICAnaGFuZ291dExpbmsnLFxuICAgICdwcml2YWN5JzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICd2aXNpYmlsaXR5J1xuICB9XG5cbiAgLy8gY29uc3RydWN0b3IgbmVlZHMgdG8gY2FsbCBzdXBlclxuICBjb25zdHJ1Y3RvcigpIHtcbiAgICBzdXBlcigpO1xuICB9XG5cblxuICByZXNldCgpIHtcbiAgICBkZWxldGUgdGhpcy5fY29uZmlnO1xuICAgIGRlbGV0ZSB0aGlzLl9zZXJ2aWNlO1xuICAgIHJldHVybiB0aGlzO1xuICB9XG5cblxuICBhc3luYyBpbml0KCkge1xuXG4gICAgY29uc3QgeyBjcmVkZW50aWFscyB9ID0gdGhpcztcblxuICAgIGlmICghY3JlZGVudGlhbHMpIHtcbiAgICAgIHRocm93IG5ldyBFcnJvcignY3JlZGVudGlhbHMgcmVxdWlyZWQgZm9yIGFkYXB0ZXIuJyk7XG4gICAgfVxuXG4gICAgLy8gbWFwIEdvb2dsZSBqc29uIGtleXMgdG8ga2V5cyB1c2VkIGluIHRoaXMgbGlicmFyeVxuICAgIGZvciAoY29uc3Qgd2FudCBpbiBjcmVkZW50aWFsTWFwcGluZ3MpIHtcbiAgICAgIGNvbnN0IGFsdGVybmF0ZSA9IGNyZWRlbnRpYWxNYXBwaW5nc1t3YW50XTtcbiAgICAgIGlmICghY3JlZGVudGlhbHNbd2FudF0pIHtcbiAgICAgICAgY3JlZGVudGlhbHNbd2FudF0gPSBjcmVkZW50aWFsc1thbHRlcm5hdGVdO1xuICAgICAgfVxuICAgIH1cblxuICAgIC8vIHZhbGlkYXRlIHJlcXVpcmVkIGNyZWRlbnRpYWwgcHJvcGVydGllc1xuICAgIE9iamVjdC5rZXlzKGNyZWRlbnRpYWxNYXBwaW5ncylcbiAgICAgIC5mb3JFYWNoKHByb3AgPT4ge1xuICAgICAgICBpZiAoIWNyZWRlbnRpYWxzW3Byb3BdKSB7XG4gICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBQcm9wZXJ0eSAke3Byb3B9IHJlcXVpcmVkIGluIGFkYXB0ZXIgY3JlZGVudGlhbHMhYCk7XG4gICAgICAgIH1cbiAgICAgIH0pO1xuXG4gICAgdGhpcy5fY29uZmlnICA9IG5ldyBHb29nbGVDYWxlbmRhckFkYXB0ZXIuQ29uZmlndXJhdGlvbihjcmVkZW50aWFscyk7XG4gICAgdGhpcy5fc2VydmljZSA9IG5ldyBHb29nbGVDYWxlbmRhckFkYXB0ZXIuU2VydmljZSh0aGlzLl9jb25maWcpO1xuXG4gICAgYXdhaXQgdGhpcy5fc2VydmljZS5pbml0KCk7XG5cbiAgICBjb25zdCB7IHNlcnZpY2VFbWFpbDogZW1haWwgfSA9IGNyZWRlbnRpYWxzO1xuXG4gICAgY29uc29sZS5sb2coXG4gICAgICBgU3VjY2Vzc2Z1bGx5IGluaXRpYWxpemVkIGdvb2dsZSBjYWxlbmRhciBhZGFwdGVyIGZvciBlbWFpbDogJHtlbWFpbH1gXG4gICAgKTtcblxuICAgIHJldHVybiB0aGlzO1xuICB9XG5cblxuICAvLyBjdXJyZW50bHkgZG9pbmcgbm90aGluZyB3aXRoIGZpZWxkcyBoZXJlLCBidXQga2VlcGluZyBhcyBwbGFjZWhvbGRlclxuICBhc3luYyBnZXRCYXRjaERhdGEodXNlclByb2ZpbGVzID0gW10sIGZpbHRlclN0YXJ0RGF0ZSwgZmlsdGVyRW5kRGF0ZSAvKiwgZmllbGRzICovKSB7XG5cbiAgICBjb25zdCB7IGZpZWxkTmFtZU1hcCB9ID0gdGhpcy5jb25zdHJ1Y3RvcjtcblxuICAgIC8vIGFwaSBvcHRpb25zLi4uXG4gICAgLy8gaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vZ29vZ2xlLWFwcHMvY2FsZW5kYXIvdjMvXG4gICAgY29uc3Qgb3B0cyA9IHtcbiAgICAgIGFsd2F5c0luY2x1ZGVFbWFpbDogICB0cnVlLFxuICAgICAgY2FsZW5kYXJJZDogICAgICAgICAgICdwcmltYXJ5JyxcbiAgICAgIHNpbmdsZUV2ZW50czogICAgICAgICB0cnVlLFxuICAgICAgdGltZU1heDogICAgICAgICAgICAgIGZpbHRlckVuZERhdGUudG9JU09TdHJpbmcoKSxcbiAgICAgIHRpbWVNaW46ICAgICAgICAgICAgICBmaWx0ZXJTdGFydERhdGUudG9JU09TdHJpbmcoKSxcbiAgICAgIG9yZGVyQnk6ICAgICAgICAgICAgICAnc3RhcnRUaW1lJ1xuICAgIH07XG5cblxuICAgIGNvbnN0IGdyb3VwUnVuU3RhdHMgPSB7XG4gICAgICBzdWNjZXNzOiB0cnVlLFxuICAgICAgcnVuRGF0ZTogbW9tZW50KCkudXRjKCkudG9EYXRlKCksXG4gICAgICBmaWx0ZXJTdGFydERhdGU6IGZpbHRlclN0YXJ0RGF0ZSxcbiAgICAgIGZpbHRlckVuZERhdGU6IGZpbHRlckVuZERhdGUsXG4gICAgICBlbWFpbHM6IHVzZXJQcm9maWxlc1xuICAgIH07XG5cblxuICAgIHRyeSB7XG5cbiAgICAgIC8vIGNvbGxlY3QgZXZlbnRzIGZvciB0aGlzIGdyb3VwIG9mIGVtYWlsc1xuICAgICAgY29uc3QgcmVzdWx0cyA9IGF3YWl0IFByb21pc2UuYWxsKHVzZXJQcm9maWxlcy5tYXAoYXN5bmModXNlclByb2ZpbGUpID0+IHtcblxuICAgICAgICBjb25zdCBpbmRpdmlkdWFsUnVuU3RhdHMgPSB7XG4gICAgICAgICAgZmlsdGVyU3RhcnREYXRlLFxuICAgICAgICAgIGZpbHRlckVuZERhdGUsXG4gICAgICAgICAgLi4udXNlclByb2ZpbGUsXG4gICAgICAgICAgc3VjY2VzczogdHJ1ZSxcbiAgICAgICAgICBydW5EYXRlOiBtb21lbnQoKS51dGMoKS50b0RhdGUoKVxuICAgICAgICB9O1xuXG4gICAgICAgIHRyeSB7XG4gICAgICAgICAgLy8gYWRkIGF1dGggdG9rZW5zIHRvIHJlcXVlc3RcbiAgICAgICAgICBvcHRzLmF1dGggPSBhd2FpdCB0aGlzLmF1dGhvcml6ZSh1c2VyUHJvZmlsZS5lbWFpbEFmdGVyTWFwcGluZyk7XG5cbiAgICAgICAgICAvLyBmdW5jdGlvbiB0byByZWN1cnNlIHRocm91Z2ggcGFnZVRva2Vuc1xuICAgICAgICAgIGNvbnN0IGdldEV2ZW50cyA9IGFzeW5jKGRhdGEpID0+IHtcblxuICAgICAgICAgICAgLy8gcmVxdWVzdCBmaXJzdCByZXN1bHRzLi4uXG4gICAgICAgICAgICBjb25zdCBldmVudHMgPSBhd2FpdCBuZXcgUHJvbWlzZSgocmVzLCByZWopID0+IHtcbiAgICAgICAgICAgICAgLy8gYWRkIHBhZ2UgdG9rZW4gaWYgZ2l2ZW5cbiAgICAgICAgICAgICAgaWYgKGRhdGEgJiYgZGF0YS5uZXh0UGFnZVRva2VuKSB7XG4gICAgICAgICAgICAgICAgb3B0cy5wYWdlVG9rZW4gPSBkYXRhLm5leHRQYWdlVG9rZW47XG4gICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICBjYWxlbmRhci5ldmVudHMubGlzdChcbiAgICAgICAgICAgICAgICBvcHRzLCAoZXJyLCBkKSA9PiBlcnIgPyByZWooZXJyKSA6IHJlcyhkKVxuICAgICAgICAgICAgICApO1xuICAgICAgICAgICAgfSk7XG5cbiAgICAgICAgICAgIC8vIGlmIHdlIGFscmVhZHkgaGF2ZSBkYXRhIGJlaW5nIGFjY3VtdWxhdGVkLCBhZGQgdG8gaXRlbXNcbiAgICAgICAgICAgIGlmIChkYXRhKSB7XG4gICAgICAgICAgICAgIGRhdGEuaXRlbXMucHVzaCguLi5ldmVudHMuaXRlbXMpO1xuICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgZGF0YSA9IGV2ZW50cztcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLy8gaWYgdGhlcmUgaXMgYSB0b2tlbiBmb3IgdGhlIG5leHQgcGFnZSwgY29udGludWUuLi5cbiAgICAgICAgICAgIGlmIChldmVudHMubmV4dFBhZ2VUb2tlbikge1xuICAgICAgICAgICAgICBkYXRhLm5leHRQYWdlVG9rZW4gPSBldmVudHMubmV4dFBhZ2VUb2tlbjtcbiAgICAgICAgICAgICAgcmV0dXJuIGF3YWl0IGdldEV2ZW50cyhkYXRhKTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgcmV0dXJuIGRhdGE7XG4gICAgICAgICAgfTtcblxuICAgICAgICAgIGNvbnN0IHsgaXRlbXMgfSA9IGF3YWl0IGdldEV2ZW50cygpO1xuXG4gICAgICAgICAgY29uc3QgZGF0YSA9IF8ubWFwKGl0ZW1zLCBpdGVtID0+IHtcblxuICAgICAgICAgICAgY29uc3Qgb3V0ID0ge307XG5cbiAgICAgICAgICAgIF8uZWFjaChmaWVsZE5hbWVNYXAsIChoYXZlLCB3YW50KSA9PiB7XG4gICAgICAgICAgICAgIGxldCBtb2RpZmllZCA9IF8uZ2V0KGl0ZW0sIGhhdmUpO1xuICAgICAgICAgICAgICBpZiAoL15kYXRlVGltZS8udGVzdCh3YW50KSkge1xuICAgICAgICAgICAgICAgIG1vZGlmaWVkID0gbmV3IERhdGUobW9kaWZpZWQpO1xuICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgIGlmIChtb2RpZmllZCAhPT0gdW5kZWZpbmVkKSB7XG4gICAgICAgICAgICAgICAgb3V0W3dhbnRdID0gbW9kaWZpZWQ7XG4gICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0pO1xuXG5cbiAgICAgICAgICAgIGNvbnN0IGF0dGVuZGVlU2VsZiA9IF8uZmluZChvdXQuYXR0ZW5kZWVzLCAoYXR0ZW5kZWUpID0+IHtcbiAgICAgICAgICAgICAgcmV0dXJuIGF0dGVuZGVlLnNlbGY7XG4gICAgICAgICAgICB9KTtcblxuICAgICAgICAgICAgaWYgKGF0dGVuZGVlU2VsZikge1xuICAgICAgICAgICAgICBvdXQucmVzcG9uc2VTdGF0dXMgPSBhdHRlbmRlZVNlbGYucmVzcG9uc2VTdGF0dXM7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIG91dC5hdHRlbmRlZXMgPSBfLm1hcChvdXQuYXR0ZW5kZWVzLCBhdHRlbmRlZSA9PiB7XG4gICAgICAgICAgICAgIGNvbnN0IHsgZW1haWwsIHJlc3BvbnNlU3RhdHVzIH0gPSBhdHRlbmRlZTtcbiAgICAgICAgICAgICAgcmV0dXJuIHsgYWRkcmVzczogZW1haWwsIHJlc3BvbnNlOiByZXNwb25zZVN0YXR1cyB9O1xuICAgICAgICAgICAgfSk7XG5cbiAgICAgICAgICAgIHJldHVybiBvdXQ7XG4gICAgICAgICAgfSk7XG5cbiAgICAgICAgICAvLyByZXF1ZXN0IGFsbCBldmVudHMgZm9yIHRoaXMgdXNlciBpbiB0aGUgZ2l2ZW4gdGltZSBmcmFtZVxuICAgICAgICAgIHJldHVybiBPYmplY3QuYXNzaWduKGluZGl2aWR1YWxSdW5TdGF0cywgeyBkYXRhIH0pO1xuXG4gICAgICAgIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgICAgICAgLy8gaWYgdGhlIGJhdGNoIGNvbGxlY3Rpb24gZmFpbGVkLi4uXG4gICAgICAgICAgY29uc29sZS5sb2coJ0dvb2dsZUNhbGVuZGFyQWRhcHRlci5nZXRCYXRjaERhdGEgRXJyb3I6JywgZXJyb3Iuc3RhY2spO1xuXG4gICAgICAgICAgbGV0IGVycm9yTWVzc2FnZSA9IGVycm9yO1xuXG4gICAgICAgICAgaWYgKC9pbnZhbGlkX2dyYW50Ly50ZXN0KGVycm9yTWVzc2FnZS50b1N0cmluZygpKSkge1xuICAgICAgICAgICAgZXJyb3JNZXNzYWdlID0gYEVtYWlsIGFkZHJlc3M6ICR7dXNlclByb2ZpbGUuZW1haWxBZnRlck1hcHBpbmd9IG5vdCBmb3VuZCBpbiB0aGlzIEdvb2dsZSBDYWxlbmRhciBhY2NvdW50LmA7XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgcmV0dXJuIE9iamVjdC5hc3NpZ24oaW5kaXZpZHVhbFJ1blN0YXRzLCB7XG4gICAgICAgICAgICBlcnJvck1lc3NhZ2UsXG4gICAgICAgICAgICBzdWNjZXNzOiBmYWxzZSxcbiAgICAgICAgICAgIGRhdGE6IFtdXG4gICAgICAgICAgfSk7XG4gICAgICAgIH1cblxuICAgICAgfSkpO1xuXG4gICAgICByZXR1cm4gT2JqZWN0LmFzc2lnbihncm91cFJ1blN0YXRzLCB7IHJlc3VsdHMgfSk7XG4gICAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICAgIHJldHVybiBPYmplY3QuYXNzaWduKGdyb3VwUnVuU3RhdHMsIHtcbiAgICAgICAgZXJyb3JNZXNzYWdlOiBlcnJvcixcbiAgICAgICAgc3VjY2VzczogZmFsc2VcbiAgICAgIH0pO1xuICAgIH1cblxuICB9XG5cblxuICBhc3luYyBydW5Db25uZWN0aW9uVGVzdCgpIHtcbiAgICBjb25zdCB7IGNyZWRlbnRpYWxzOiB7IGVtYWlsIH0gfSA9IHRoaXM7XG5cbiAgICB0cnkge1xuICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHRoaXMuZ2V0QmF0Y2hEYXRhKFxuICAgICAgICBbIHsgZW1haWwsIGVtYWlsQWZ0ZXJNYXBwaW5nOiBlbWFpbCB9IF0sXG4gICAgICAgIG1vbWVudCgpLnRvRGF0ZSgpLFxuICAgICAgICBtb21lbnQoKS5hZGQoLTEsICdkYXknKS50b0RhdGUoKVxuICAgICAgKTtcblxuICAgICAgcmV0dXJuIGRhdGE7XG4gICAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICAgIGNvbnNvbGUubG9nKGVycm9yLnN0YWNrIHx8IGVycm9yKTtcbiAgICAgIHJldHVybiB7XG4gICAgICAgIGVycm9yLFxuICAgICAgICBzdWNjZXNzOiBmYWxzZVxuICAgICAgfTtcbiAgICB9XG4gIH1cblxuXG4gIGFzeW5jIHJ1bk1lc3NhZ2VUZXN0KCkge1xuICAgIC8vIFRPRE86IGRvZXMgdGhpcyBuZWVkIHRvIGJlIGRpZmZlcmVudD9cbiAgICBjb25zb2xlLndhcm4oJ05vdGU6IHJ1bk1lc3NhZ2VUZXN0KCkgY3VycmVudGx5IGNhbGxzIHJ1bkNvbm5lY3Rpb25UZXN0KCknKTtcbiAgICByZXR1cm4gdGhpcy5ydW5Db25uZWN0aW9uVGVzdCgpO1xuICB9XG5cblxuICAvLyBjcmVhdGUgYXV0aGVudGljYXRlZCB0b2tlbiBmb3IgYXBpIHJlcXVlc3RzIGZvciBnaXZlbiB1c2VyXG4gIGFzeW5jIGF1dGhvcml6ZShlbWFpbCkge1xuXG4gICAgY29uc3QgeyBjcmVkZW50aWFsczogeyBzZXJ2aWNlRW1haWwsIGNlcnRpZmljYXRlIH0gfSA9IHRoaXM7XG5cbiAgICBjb25zdCBhdXRoID0gbmV3IGdvb2dsZWFwaXMuYXV0aC5KV1QoXG4gICAgICAvLyBlbWFpbCBvZiBnb29nbGUgYXBwIGFkbWluLi4uXG4gICAgICBzZXJ2aWNlRW1haWwsXG4gICAgICAvLyBubyBuZWVkIGZvciBrZXlGaWxlLi4uXG4gICAgICBudWxsLFxuICAgICAgLy8gdGhlIHByaXZhdGUga2V5IGl0c2VsZi4uLlxuICAgICAgY2VydGlmaWNhdGUsXG4gICAgICAvLyBzY29wZXMuLi5cbiAgICAgIFsnaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vYXV0aC9jYWxlbmRhci5yZWFkb25seSddLFxuICAgICAgLy8gdGhlIGVtYWlsIG9mIHRoZSBpbmRpdmlkdWFsIHdlIHdhbnQgdG8gYXV0aGVudGljYXRlXG4gICAgICAvLyAoJ3N1YicgcHJvcGVydHkgb2YgdGhlIGpzb24gd2ViIHRva2VuKVxuICAgICAgZW1haWxcbiAgICApO1xuXG4gICAgLy8gYXdhaXQgYXV0aG9yaXphdGlvblxuICAgIHJldHVybiBuZXcgUHJvbWlzZSgocmVzLCByZWopID0+IGF1dGguYXV0aG9yaXplKGVyciA9PiB7XG4gICAgICBlcnIgPyByZWooZXJyKSA6IHJlcyhhdXRoKTtcbiAgICB9KSk7XG4gIH1cblxufVxuIl19
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _googleapis = require('googleapis');
+
+var googleapis = _interopRequireWildcard(_googleapis);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+var _index = require('../base/index');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// google calendar api
+var calendar = googleapis.calendar('v3');
+
+var credentialMappings = {
+  'certificate': 'private_key',
+  'serviceEmail': 'client_email',
+  'email': 'adminEmail'
+};
+
+var GoogleCalendarAdapter = function (_Adapter) {
+  _inherits(GoogleCalendarAdapter, _Adapter);
+
+  // constructor needs to call super
+  function GoogleCalendarAdapter() {
+    _classCallCheck(this, GoogleCalendarAdapter);
+
+    return _possibleConstructorReturn(this, (GoogleCalendarAdapter.__proto__ || Object.getPrototypeOf(GoogleCalendarAdapter)).call(this));
+  }
+
+  // convert the names of the api response data
+
+
+  _createClass(GoogleCalendarAdapter, [{
+    key: 'reset',
+    value: function reset() {
+      delete this._config;
+      delete this._service;
+      return this;
+    }
+  }, {
+    key: 'init',
+    value: function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+        var credentials, want, alternate, email;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                credentials = this.credentials;
+
+                if (credentials) {
+                  _context.next = 3;
+                  break;
+                }
+
+                throw new Error('credentials required for adapter.');
+
+              case 3:
+
+                // map Google json keys to keys used in this library
+                for (want in credentialMappings) {
+                  alternate = credentialMappings[want];
+
+                  if (!credentials[want]) {
+                    credentials[want] = credentials[alternate];
+                  }
+                }
+
+                // validate required credential properties
+                Object.keys(credentialMappings).forEach(function (prop) {
+                  if (!credentials[prop]) {
+                    throw new Error('Property ' + prop + ' required in adapter credentials!');
+                  }
+                });
+
+                this._config = new GoogleCalendarAdapter.Configuration(credentials);
+                this._service = new GoogleCalendarAdapter.Service(this._config);
+
+                _context.next = 9;
+                return this._service.init();
+
+              case 9:
+                email = credentials.serviceEmail;
+
+
+                console.log('Successfully initialized google calendar adapter for email: ' + email);
+
+                return _context.abrupt('return', this);
+
+              case 12:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function init() {
+        return _ref.apply(this, arguments);
+      }
+
+      return init;
+    }()
+
+    // currently doing nothing with fields here, but keeping as placeholder
+
+  }, {
+    key: 'getBatchData',
+    value: function () {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+        var userProfiles = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+        var _this2 = this;
+
+        var filterStartDate = arguments[1];
+        var filterEndDate /*, fields */ = arguments[2];
+        var fieldNameMap, opts, groupRunStats, results;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                fieldNameMap = this.constructor.fieldNameMap;
+
+                // api options...
+                // https://developers.google.com/google-apps/calendar/v3/
+
+                opts = {
+                  alwaysIncludeEmail: true,
+                  calendarId: 'primary',
+                  singleEvents: true,
+                  timeMax: filterEndDate.toISOString(),
+                  timeMin: filterStartDate.toISOString(),
+                  orderBy: 'startTime'
+                };
+                groupRunStats = {
+                  success: true,
+                  runDate: (0, _moment2.default)().utc().toDate(),
+                  filterStartDate: filterStartDate,
+                  filterEndDate: filterEndDate,
+                  emails: userProfiles
+                };
+                _context5.prev = 3;
+                _context5.next = 6;
+                return Promise.all(userProfiles.map(function () {
+                  var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4(userProfile) {
+                    var individualRunStats, _ret, errorMessage;
+
+                    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                      while (1) {
+                        switch (_context4.prev = _context4.next) {
+                          case 0:
+                            individualRunStats = _extends({
+                              filterStartDate: filterStartDate,
+                              filterEndDate: filterEndDate
+                            }, userProfile, {
+                              success: true,
+                              runDate: (0, _moment2.default)().utc().toDate()
+                            });
+                            _context4.prev = 1;
+                            return _context4.delegateYield(regeneratorRuntime.mark(function _callee3() {
+                              var getEvents, _ref5, items, data;
+
+                              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                                while (1) {
+                                  switch (_context3.prev = _context3.next) {
+                                    case 0:
+                                      _context3.next = 2;
+                                      return _this2.authorize(userProfile.emailAfterMapping);
+
+                                    case 2:
+                                      opts.auth = _context3.sent;
+
+                                      // function to recurse through pageTokens
+                                      getEvents = function () {
+                                        var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(data) {
+                                          var events, _data$items;
+
+                                          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                                            while (1) {
+                                              switch (_context2.prev = _context2.next) {
+                                                case 0:
+                                                  _context2.next = 2;
+                                                  return new Promise(function (res, rej) {
+                                                    // add page token if given
+                                                    if (data && data.nextPageToken) {
+                                                      opts.pageToken = data.nextPageToken;
+                                                    }
+
+                                                    calendar.events.list(opts, function (err, d) {
+                                                      return err ? rej(err) : res(d);
+                                                    });
+                                                  });
+
+                                                case 2:
+                                                  events = _context2.sent;
+
+
+                                                  // if we already have data being accumulated, add to items
+                                                  if (data) {
+                                                    (_data$items = data.items).push.apply(_data$items, _toConsumableArray(events.items));
+                                                  } else {
+                                                    data = events;
+                                                  }
+
+                                                  // if there is a token for the next page, continue...
+
+                                                  if (!events.nextPageToken) {
+                                                    _context2.next = 9;
+                                                    break;
+                                                  }
+
+                                                  data.nextPageToken = events.nextPageToken;
+                                                  _context2.next = 8;
+                                                  return getEvents(data);
+
+                                                case 8:
+                                                  return _context2.abrupt('return', _context2.sent);
+
+                                                case 9:
+                                                  return _context2.abrupt('return', data);
+
+                                                case 10:
+                                                case 'end':
+                                                  return _context2.stop();
+                                              }
+                                            }
+                                          }, _callee2, _this2);
+                                        }));
+
+                                        return function getEvents(_x3) {
+                                          return _ref4.apply(this, arguments);
+                                        };
+                                      }();
+
+                                      _context3.next = 6;
+                                      return getEvents();
+
+                                    case 6:
+                                      _ref5 = _context3.sent;
+                                      items = _ref5.items;
+                                      data = _.map(items, function (item) {
+
+                                        var out = {};
+
+                                        _.each(fieldNameMap, function (have, want) {
+                                          var modified = _.get(item, have);
+                                          if (/^dateTime/.test(want)) {
+                                            modified = new Date(modified);
+                                          }
+                                          if (modified !== undefined) {
+                                            out[want] = modified;
+                                          }
+                                        });
+
+                                        var attendeeSelf = _.find(out.attendees, function (attendee) {
+                                          return attendee.self;
+                                        });
+
+                                        if (attendeeSelf) {
+                                          out.responseStatus = attendeeSelf.responseStatus;
+                                        }
+
+                                        out.attendees = _.map(out.attendees, function (attendee) {
+                                          var email = attendee.email;
+                                          var responseStatus = attendee.responseStatus;
+
+                                          return { address: email, response: responseStatus };
+                                        });
+
+                                        return out;
+                                      });
+
+                                      // request all events for this user in the given time frame
+
+                                      return _context3.abrupt('return', {
+                                        v: Object.assign(individualRunStats, { data: data })
+                                      });
+
+                                    case 10:
+                                    case 'end':
+                                      return _context3.stop();
+                                  }
+                                }
+                              }, _callee3, _this2);
+                            })(), 't0', 3);
+
+                          case 3:
+                            _ret = _context4.t0;
+
+                            if (!((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object")) {
+                              _context4.next = 6;
+                              break;
+                            }
+
+                            return _context4.abrupt('return', _ret.v);
+
+                          case 6:
+                            _context4.next = 14;
+                            break;
+
+                          case 8:
+                            _context4.prev = 8;
+                            _context4.t1 = _context4['catch'](1);
+
+                            // if the batch collection failed...
+                            console.log('GoogleCalendarAdapter.getBatchData Error:', _context4.t1.stack);
+
+                            errorMessage = _context4.t1;
+
+
+                            if (/invalid_grant/.test(errorMessage.toString())) {
+                              errorMessage = 'Email address: ' + userProfile.emailAfterMapping + ' not found in this Google Calendar account.';
+                            }
+
+                            return _context4.abrupt('return', Object.assign(individualRunStats, {
+                              errorMessage: errorMessage,
+                              success: false,
+                              data: []
+                            }));
+
+                          case 14:
+                          case 'end':
+                            return _context4.stop();
+                        }
+                      }
+                    }, _callee4, _this2, [[1, 8]]);
+                  }));
+
+                  return function (_x2) {
+                    return _ref3.apply(this, arguments);
+                  };
+                }()));
+
+              case 6:
+                results = _context5.sent;
+                return _context5.abrupt('return', Object.assign(groupRunStats, { results: results }));
+
+              case 10:
+                _context5.prev = 10;
+                _context5.t0 = _context5['catch'](3);
+                return _context5.abrupt('return', Object.assign(groupRunStats, {
+                  errorMessage: _context5.t0,
+                  success: false
+                }));
+
+              case 13:
+              case 'end':
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[3, 10]]);
+      }));
+
+      function getBatchData() {
+        return _ref2.apply(this, arguments);
+      }
+
+      return getBatchData;
+    }()
+  }, {
+    key: 'runConnectionTest',
+    value: function () {
+      var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6() {
+        var email, data;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                email = this.credentials.email;
+                _context6.prev = 1;
+                _context6.next = 4;
+                return this.getBatchData([{ email: email, emailAfterMapping: email }], (0, _moment2.default)().toDate(), (0, _moment2.default)().add(-1, 'day').toDate());
+
+              case 4:
+                data = _context6.sent;
+                return _context6.abrupt('return', data);
+
+              case 8:
+                _context6.prev = 8;
+                _context6.t0 = _context6['catch'](1);
+
+                console.log(_context6.t0.stack || _context6.t0);
+                return _context6.abrupt('return', {
+                  error: _context6.t0,
+                  success: false
+                });
+
+              case 12:
+              case 'end':
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this, [[1, 8]]);
+      }));
+
+      function runConnectionTest() {
+        return _ref6.apply(this, arguments);
+      }
+
+      return runConnectionTest;
+    }()
+  }, {
+    key: 'runMessageTest',
+    value: function () {
+      var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7() {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                // TODO: does this need to be different?
+                console.warn('Note: runMessageTest() currently calls runConnectionTest()');
+                return _context7.abrupt('return', this.runConnectionTest());
+
+              case 2:
+              case 'end':
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this);
+      }));
+
+      function runMessageTest() {
+        return _ref7.apply(this, arguments);
+      }
+
+      return runMessageTest;
+    }()
+
+    // create authenticated token for api requests for given user
+
+  }, {
+    key: 'authorize',
+    value: function () {
+      var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(email) {
+        var _credentials, serviceEmail, certificate, auth;
+
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _credentials = this.credentials;
+                serviceEmail = _credentials.serviceEmail;
+                certificate = _credentials.certificate;
+                auth = new googleapis.auth.JWT(
+                // email of google app admin...
+                serviceEmail,
+                // no need for keyFile...
+                null,
+                // the private key itself...
+                certificate,
+                // scopes...
+                ['https://www.googleapis.com/auth/calendar.readonly'],
+                // the email of the individual we want to authenticate
+                // ('sub' property of the json web token)
+                email);
+
+                // await authorization
+
+                return _context8.abrupt('return', new Promise(function (res, rej) {
+                  return auth.authorize(function (err) {
+                    err ? rej(err) : res(auth);
+                  });
+                }));
+
+              case 5:
+              case 'end':
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this);
+      }));
+
+      function authorize(_x4) {
+        return _ref8.apply(this, arguments);
+      }
+
+      return authorize;
+    }()
+  }]);
+
+  return GoogleCalendarAdapter;
+}(_index.Adapter);
+
+GoogleCalendarAdapter.Configuration = _index.Configuration;
+GoogleCalendarAdapter.Service = _index.Service;
+GoogleCalendarAdapter.fieldNameMap = {
+  // Desired...                          // Given...
+  'eventId': 'id',
+  'attendees': 'attendees',
+  'dateTimeCreated': 'created',
+  'dateTimeLastModified': 'updated',
+  'attendeeAddress': 'EmailAddress.Address',
+  'attendeeName': 'EmailAddress.Name',
+  'iCalUId': 'iCalUID',
+  'location': 'location',
+  'status': 'status',
+  'isCreator': 'creator.self',
+  'isOrganizer': 'organizer.self',
+  'organizerEmail': 'organizer.email',
+  'recurrance': 'recurrance',
+  'responseStatus': 'responseStatus',
+  'dateTimeStart': 'start.dateTime',
+  'dateTimeEnd': 'end.dateTime',
+  'subject': 'summary',
+  'url': 'htmlLink',
+  'hangoutLink': 'hangoutLink',
+  'privacy': 'visibility'
+};
+exports.default = GoogleCalendarAdapter;
 //# sourceMappingURL=../../clAdapters/google-calendar/index.js.map

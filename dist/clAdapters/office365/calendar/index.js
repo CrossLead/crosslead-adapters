@@ -1,12 +1,202 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){for(var i=1;i<arguments.length;i++){var source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _moment=require('moment');var _moment2=_interopRequireDefault(_moment);var _lodash=require('lodash');var _lodash2=_interopRequireDefault(_lodash);var _Adapter=require('../base/Adapter');var _Adapter2=_interopRequireDefault(_Adapter);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _asyncToGenerator(fn){return function(){var gen=fn.apply(this,arguments);return new Promise(function(resolve,reject){function step(key,arg){try{var info=gen[key](arg);var value=info.value;}catch(error){reject(error);return;}if(info.done){resolve(value);}else{return Promise.resolve(value).then(function(value){return step("next",value);},function(err){return step("throw",err);});}}return step("next");});};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}/**
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+var _Adapter = require('../base/Adapter');
+
+var _Adapter2 = _interopRequireDefault(_Adapter);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
  * Office 365 Calendar adapter
- */var Office365CalendarAdapter=function(_Office365BaseAdapter){_inherits(Office365CalendarAdapter,_Office365BaseAdapter);function Office365CalendarAdapter(){_classCallCheck(this,Office365CalendarAdapter);return _possibleConstructorReturn(this,(Office365CalendarAdapter.__proto__||Object.getPrototypeOf(Office365CalendarAdapter)).apply(this,arguments));}_createClass(Office365CalendarAdapter,[{key:'getBatchData',// collect these fields always...
-value:function(){var _ref=_asyncToGenerator(regeneratorRuntime.mark(function _callee(userProfiles,filterStartDate,filterEndDate,additionalFields){var _this2=this;var fieldNameMap,dataAdapterRunStats,eventData,results;return regeneratorRuntime.wrap(function _callee$(_context){while(1){switch(_context.prev=_context.next){case 0:fieldNameMap=this.constructor.fieldNameMap;dataAdapterRunStats={emails:userProfiles,filterStartDate:filterStartDate,filterEndDate:filterEndDate,success:false,runDate:(0,_moment2.default)().utc().toDate()};_context.prev=2;_context.next=5;return Promise.all(userProfiles.map(function(userProfile){return _this2.getUserData({userProfile:userProfile,filterStartDate:filterStartDate,filterEndDate:filterEndDate,additionalFields:additionalFields,apiType:'calendarview'});}));case 5:eventData=_context.sent;// replace data keys with desired mappings...
-results=_lodash2.default.map(eventData,function(user){return _extends({},user.userProfile,{filterStartDate:user.filterStartDate,filterEndDate:user.filterEndDate,success:user.success,errorMessage:user.errorMessage,// map data with desired key names...
-data:_lodash2.default.map(user.data||[],function(originalEvent){var mappedEvent={};// change to desired names
-_lodash2.default.each(fieldNameMap,function(have,want){var mapped=_lodash2.default.get(originalEvent,have);if(mapped!==undefined){mappedEvent[want]=/^dateTime/.test(want)?new Date(mapped):mapped;}});if(mappedEvent.responseStatus&&mappedEvent.responseStatus.Response){mappedEvent.responseStatus=mappedEvent.responseStatus.Response;}mappedEvent['attendees']=originalEvent[fieldNameMap['attendees']].map(function(attendee){return{address:_lodash2.default.get(attendee,fieldNameMap['attendeeAddress']),name:_lodash2.default.get(attendee,fieldNameMap['attendeeName']),response:_lodash2.default.get(attendee,'Status')};});return mappedEvent;})});});// return results and success!
-return _context.abrupt('return',_extends({},dataAdapterRunStats,{results:results,success:true}));case 10:_context.prev=10;_context.t0=_context['catch'](2);console.log(_context.t0.stack);console.log('Office365 GetBatchData Error: '+JSON.stringify(_context.t0));return _context.abrupt('return',_extends({},dataAdapterRunStats,{errorMessage:_context.t0}));case 15:case'end':return _context.stop();}}},_callee,this,[[2,10]]);}));function getBatchData(_x,_x2,_x3,_x4){return _ref.apply(this,arguments);}return getBatchData;}()// convert the names of the api response data
-}]);return Office365CalendarAdapter;}(_Adapter2.default);Office365CalendarAdapter.baseFields=['Id','Attendees','Calendar','Categories','DateTimeCreated','DateTimeLastModified','End','EndTimeZone','HasAttachments','Importance','iCalUID','IsAllDay','IsCancelled','IsOrganizer','Location','Organizer','Recurrence','ResponseRequested','ResponseStatus','SeriesMasterId','ShowAs','Start','StartTimeZone','Subject','Type','WebLink','Sensitivity'];Office365CalendarAdapter.fieldNameMap={// Desired...                          // Given...
-'eventId':'Id','attendees':'Attendees','calendarName':'Calendar','categories':'Categories','dateTimeCreated':'DateTimeCreated','dateTimeLastModified':'DateTimeLastModified','attendeeAddress':'EmailAddress.Address','attendeeName':'EmailAddress.Name','hasAttachments':'HasAttachments','importance':'Importance','iCalUId':'iCalUId','allDay':'IsAllDay','canceled':'IsCancelled','isOrganizer':'IsOrganizer','locationName':'Location.DisplayName','locationAddressStreet':'Location.Address.Street','locationAddressCity':'Location.Address.City','locationAddressState':'Location.Address.State','locationAddressCountryOrRegion':'Location.Address.CountryOrRegion','locationCoordinatesAccuracy':'Location.Coordinates.Accuracy','locationCoordinatesAltitude':'Location.Coordinates.Altitude','locationCoordinatesAltitudeAccuracy':'Location.Coordinates.AltitudeAccuracy','locationCoordinatesLatitude':'Location.Coordinates.Latitude','locationCoordinatesLongitude':'Location.Coordinates.Longitude','organizerName':'Organizer.EmailAddress.Name','organizerEmail':'Organizer.EmailAddress.Address','recurrance':'Recurrance','responseRequested':'ResponseRequested','responseStatus':'ResponseStatus','seriesMasterId':'SeriesMasterId','showAs':'ShowAs','dateTimeStart':'Start','startTimeZone':'StartTimeZone','dateTimeEnd':'End','endTimeZone':'EndTimeZone','subject':'Subject','type':'Type','url':'WebLink','privacy':'Sensitivity'};exports.default=Office365CalendarAdapter;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvb2ZmaWNlMzY1L2NhbGVuZGFyL2luZGV4LmpzIl0sIm5hbWVzIjpbIk9mZmljZTM2NUNhbGVuZGFyQWRhcHRlciIsInVzZXJQcm9maWxlcyIsImZpbHRlclN0YXJ0RGF0ZSIsImZpbHRlckVuZERhdGUiLCJhZGRpdGlvbmFsRmllbGRzIiwiZmllbGROYW1lTWFwIiwiY29uc3RydWN0b3IiLCJkYXRhQWRhcHRlclJ1blN0YXRzIiwiZW1haWxzIiwic3VjY2VzcyIsInJ1bkRhdGUiLCJ1dGMiLCJ0b0RhdGUiLCJQcm9taXNlIiwiYWxsIiwibWFwIiwiZ2V0VXNlckRhdGEiLCJ1c2VyUHJvZmlsZSIsImFwaVR5cGUiLCJldmVudERhdGEiLCJyZXN1bHRzIiwidXNlciIsImVycm9yTWVzc2FnZSIsImRhdGEiLCJtYXBwZWRFdmVudCIsImVhY2giLCJoYXZlIiwid2FudCIsIm1hcHBlZCIsImdldCIsIm9yaWdpbmFsRXZlbnQiLCJ1bmRlZmluZWQiLCJ0ZXN0IiwiRGF0ZSIsInJlc3BvbnNlU3RhdHVzIiwiUmVzcG9uc2UiLCJhZGRyZXNzIiwiYXR0ZW5kZWUiLCJuYW1lIiwicmVzcG9uc2UiLCJjb25zb2xlIiwibG9nIiwic3RhY2siLCJKU09OIiwic3RyaW5naWZ5IiwiYmFzZUZpZWxkcyJdLCJtYXBwaW5ncyI6Im95QkFBQSw4Qiw2Q0FDQSw4Qiw2Q0FDQSx3QyxpMUNBR0E7O01BR3FCQSx5Qiw4WEFFbkI7cUZBNEVtQkMsWSxDQUFjQyxlLENBQWlCQyxhLENBQWVDLGdCLHdMQUV2REMsWSxDQUFpQixLQUFLQyxXLENBQXRCRCxZLENBQ0ZFLG1CLENBQXdCLENBQ3RCQyxPQUFRUCxZQURjLENBRXRCQywrQkFGc0IsQ0FHdEJDLDJCQUhzQixDQUl0Qk0sUUFBUyxLQUphLENBS3RCQyxRQUFTLHVCQUFTQyxHQUFULEdBQWVDLE1BQWYsRUFMYSxDLHVDQVNKQyxTQUFRQyxHQUFSLENBQVliLGFBQWFjLEdBQWIsQ0FBaUIsNEJBQWUsUUFBS0Ms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cEIsYUFBdUMsWUFYbkIsQ0FZcEIsVUFBdUMsU0FabkIsQ0FhcEIsU0FBdUMsVUFibkIsQ0FjcEIsV0FBdUMsYUFkbkIsQ0FlcEIsY0FBdUMsYUFmbkIsQ0FnQnBCLGVBQXVDLHNCQWhCbkIsQ0FpQnBCLHdCQUF1Qyx5QkFqQm5CLENBa0JwQixzQkFBdUMsdUJBbEJuQixDQW1CcEIsdUJBQXVDLHdCQW5CbkIsQ0FvQnBCLGlDQUF1QyxrQ0FwQm5CLENBcUJwQiw4QkFBdUMsK0JBckJuQixDQXNCcEIsOEJBQXVDLCtCQXRCbkIsQ0F1QnBCLHNDQUF1Qyx1Q0F2Qm5CLENBd0JwQiw4QkFBdUMsK0JBeEJuQixDQXlCcEIsK0JBQXVDLGdDQXpCbkIsQ0EwQnBCLGdCQUF1Qyw2QkExQm5CLENBMkJwQixpQkFBdUMsZ0NBM0JuQixDQTRCcEIsYUFBdUMsWUE1Qm5CLENBNkJwQixvQkFBdUMsbUJBN0JuQixDQThCcEIsaUJBQXVDLGdCQTlCbkIsQ0ErQnBCLGlCQUF1QyxnQkEvQm5CLENBZ0NwQixTQUF1QyxRQWhDbkIsQ0FpQ3BCLGdCQUF1QyxPQWpDbkIsQ0FrQ3BCLGdCQUF1QyxlQWxDbkIsQ0FtQ3BCLGNBQXVDLEtBbkNuQixDQW9DcEIsY0FBdUMsYUFwQ25CLENBcUNwQixVQUF1QyxTQXJDbkIsQ0FzQ3BCLE9BQXVDLE1BdENuQixDQXVDcEIsTUFBdUMsU0F2Q25CLENBd0NwQixVQUF1QyxhQXhDbkIsQyxpQkFsQ0hMLHdCIiwiZmlsZSI6ImNsQWRhcHRlcnMvb2ZmaWNlMzY1L2NhbGVuZGFyL2luZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IG1vbWVudCAgICAgICAgICAgICAgICAgICAgIGZyb20gJ21vbWVudCc7XG5pbXBvcnQgXyAgICAgICAgICAgICAgICAgICAgICAgICAgZnJvbSAnbG9kYXNoJztcbmltcG9ydCBPZmZpY2UzNjVCYXNlQWRhcHRlciAgICAgICBmcm9tICcuLi9iYXNlL0FkYXB0ZXInO1xuXG5cbi8qKlxuICogT2ZmaWNlIDM2NSBDYWxlbmRhciBhZGFwdGVyXG4gKi9cbmV4cG9ydCBkZWZhdWx0IGNsYXNzIE9mZmljZTM2NUNhbGVuZGFyQWRhcHRlciBleHRlbmRzIE9mZmljZTM2NUJhc2VBZGFwdGVyIHtcblxuICAvLyBjb2xsZWN0IHRoZXNlIGZpZWxkcyBhbHdheXMuLi5cbiAgc3RhdGljIGJhc2VGaWVsZHMgPSBbXG4gICAgJ0lkJyxcbiAgICAnQXR0ZW5kZWVzJyxcbiAgICAnQ2FsZW5kYXInLFxuICAgICdDYXRlZ29yaWVzJyxcbiAgICAnRGF0ZVRpbWVDcmVhdGVkJyxcbiAgICAnRGF0ZVRpbWVMYXN0TW9kaWZpZWQnLFxuICAgICdFbmQnLFxuICAgICdFbmRUaW1lWm9uZScsXG4gICAgJ0hhc0F0dGFjaG1lbnRzJyxcbiAgICAnSW1wb3J0YW5jZScsXG4gICAgJ2lDYWxVSUQnLFxuICAgICdJc0FsbERheScsXG4gICAgJ0lzQ2FuY2VsbGVkJyxcbiAgICAnSXNPcmdhbml6ZXInLFxuICAgICdMb2NhdGlvbicsXG4gICAgJ09yZ2FuaXplcicsXG4gICAgJ1JlY3VycmVuY2UnLFxuICAgICdSZXNwb25zZVJlcXVlc3RlZCcsXG4gICAgJ1Jlc3BvbnNlU3RhdHVzJyxcbiAgICAnU2VyaWVzTWFzdGVySWQnLFxuICAgICdTaG93QXMnLFxuICAgICdTdGFydCcsXG4gICAgJ1N0YXJ0VGltZVpvbmUnLFxuICAgICdTdWJqZWN0JyxcbiAgICAnVHlwZScsXG4gICAgJ1dlYkxpbmsnLFxuICAgICdTZW5zaXRpdml0eSdcbiAgXVxuXG4gIC8vIGNvbnZlcnQgdGhlIG5hbWVzIG9mIHRoZSBhcGkgcmVzcG9uc2UgZGF0YVxuICBzdGF0aWMgZmllbGROYW1lTWFwID0ge1xuICAgIC8vIERlc2lyZWQuLi4gICAgICAgICAgICAgICAgICAgICAgICAgIC8vIEdpdmVuLi4uXG4gICAgJ2V2ZW50SWQnOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0lkJyxcbiAgICAnYXR0ZW5kZWVzJzogICAgICAgICAgICAgICAgICAgICAgICAgICAnQXR0ZW5kZWVzJyxcbiAgICAnY2FsZW5kYXJOYW1lJzogICAgICAgICAgICAgICAgICAgICAgICAnQ2FsZW5kYXInLFxuICAgICdjYXRlZ29yaWVzJzogICAgICAgICAgICAgICAgICAgICAgICAgICdDYXRlZ29yaWVzJyxcbiAgICAnZGF0ZVRpbWVDcmVhdGVkJzogICAgICAgICAgICAgICAgICAgICAnRGF0ZVRpbWVDcmVhdGVkJyxcbiAgICAnZGF0ZVRpbWVMYXN0TW9kaWZpZWQnOiAgICAgICAgICAgICAgICAnRGF0ZVRpbWVMYXN0TW9kaWZpZWQnLFxuICAgICdhdHRlbmRlZUFkZHJlc3MnOiAgICAgICAgICAgICAgICAgICAgICdFbWFpbEFkZHJlc3MuQWRkcmVzcycsXG4gICAgJ2F0dGVuZGVlTmFtZSc6ICAgICAgICAgICAgICAgICAgICAgICAgJ0VtYWlsQWRkcmVzcy5OYW1lJyxcbiAgICAnaGFzQXR0YWNobWVudHMnOiAgICAgICAgICAgICAgICAgICAgICAnSGFzQXR0YWNobWVudHMnLFxuICAgICdpbXBvcnRhbmNlJzogICAgICAgICAgICAgICAgICAgICAgICAgICdJbXBvcnRhbmNlJyxcbiAgICAnaUNhbFVJZCc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnaUNhbFVJZCcsXG4gICAgJ2FsbERheSc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0lzQWxsRGF5JyxcbiAgICAnY2FuY2VsZWQnOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAnSXNDYW5jZWxsZWQnLFxuICAgICdpc09yZ2FuaXplcic6ICAgICAgICAgICAgICAgICAgICAgICAgICdJc09yZ2FuaXplcicsXG4gICAgJ2xvY2F0aW9uTmFtZSc6ICAgICAgICAgICAgICAgICAgICAgICAgJ0xvY2F0aW9uLkRpc3BsYXlOYW1lJyxcbiAgICAnbG9jYXRpb25BZGRyZXNzU3RyZWV0JzogICAgICAgICAgICAgICAnTG9jYXRpb24uQWRkcmVzcy5TdHJlZXQnLFxuICAgICdsb2NhdGlvbkFkZHJlc3NDaXR5JzogICAgICAgICAgICAgICAgICdMb2NhdGlvbi5BZGRyZXNzLkNpdHknLFxuICAgICdsb2NhdGlvbkFkZHJlc3NTdGF0ZSc6ICAgICAgICAgICAgICAgICdMb2NhdGlvbi5BZGRyZXNzLlN0YXRlJyxcbiAgICAnbG9jYXRpb25BZGRyZXNzQ291bnRyeU9yUmVnaW9uJzogICAgICAnTG9jYXRpb24uQWRkcmVzcy5Db3VudHJ5T3JSZWdpb24nLFxuICAgICdsb2NhdGlvbkNvb3JkaW5hdGVzQWNjdXJhY3knOiAgICAgICAgICdMb2NhdGlvbi5Db29yZGluYXRlcy5BY2N1cmFjeScsXG4gICAgJ2xvY2F0aW9uQ29vcmRpbmF0ZXNBbHRpdHVkZSc6ICAgICAgICAgJ0xvY2F0aW9uLkNvb3JkaW5hdGVzLkFsdGl0dWRlJyxcbiAgICAnbG9jYXRpb25Db29yZGluYXRlc0FsdGl0dWRlQWNjdXJhY3knOiAnTG9jYXRpb24uQ29vcmRpbmF0ZXMuQWx0aXR1ZGVBY2N1cmFjeScsXG4gICAgJ2xvY2F0aW9uQ29vcmRpbmF0ZXNMYXRpdHVkZSc6ICAgICAgICAgJ0xvY2F0aW9uLkNvb3JkaW5hdGVzLkxhdGl0dWRlJyxcbiAgICAnbG9jYXRpb25Db29yZGluYXRlc0xvbmdpdHVkZSc6ICAgICAgICAnTG9jYXRpb24uQ29vcmRpbmF0ZXMuTG9uZ2l0dWRlJyxcbiAgICAnb3JnYW5pemVyTmFtZSc6ICAgICAgICAgICAgICAgICAgICAgICAnT3JnYW5pemVyLkVtYWlsQWRkcmVzcy5OYW1lJyxcbiAgICAnb3JnYW5pemVyRW1haWwnOiAgICAgICAgICAgICAgICAgICAgICAnT3JnYW5pemVyLkVtYWlsQWRkcmVzcy5BZGRyZXNzJyxcbiAgICAncmVjdXJyYW5jZSc6ICAgICAgICAgICAgICAgICAgICAgICAgICAnUmVjdXJyYW5jZScsXG4gICAgJ3Jlc3BvbnNlUmVxdWVzdGVkJzogICAgICAgICAgICAgICAgICAgJ1Jlc3BvbnNlUmVxdWVzdGVkJyxcbiAgICAncmVzcG9uc2VTdGF0dXMnOiAgICAgICAgICAgICAgICAgICAgICAnUmVzcG9uc2VTdGF0dXMnLFxuICAgICdzZXJpZXNNYXN0ZXJJZCc6ICAgICAgICAgICAgICAgICAgICAgICdTZXJpZXNNYXN0ZXJJZCcsXG4gICAgJ3Nob3dBcyc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ1Nob3dBcycsXG4gICAgJ2RhdGVUaW1lU3RhcnQnOiAgICAgICAgICAgICAgICAgICAgICAgJ1N0YXJ0JyxcbiAgICAnc3RhcnRUaW1lWm9uZSc6ICAgICAgICAgICAgICAgICAgICAgICAnU3RhcnRUaW1lWm9uZScsXG4gICAgJ2RhdGVUaW1lRW5kJzogICAgICAgICAgICAgICAgICAgICAgICAgJ0VuZCcsXG4gICAgJ2VuZFRpbWVab25lJzogICAgICAgICAgICAgICAgICAgICAgICAgJ0VuZFRpbWVab25lJyxcbiAgICAnc3ViamVjdCc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnU3ViamVjdCcsXG4gICAgJ3R5cGUnOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ1R5cGUnLFxuICAgICd1cmwnOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdXZWJMaW5rJyxcbiAgICAncHJpdmFjeSc6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnU2Vuc2l0aXZpdHknXG4gIH1cblxuXG4gIGFzeW5jIGdldEJhdGNoRGF0YSh1c2VyUHJvZmlsZXMsIGZpbHRlclN0YXJ0RGF0ZSwgZmlsdGVyRW5kRGF0ZSwgYWRkaXRpb25hbEZpZWxkcykge1xuXG4gICAgY29uc3QgeyBmaWVsZE5hbWVNYXAgfSA9IHRoaXMuY29uc3RydWN0b3IsXG4gICAgICAgICAgZGF0YUFkYXB0ZXJSdW5TdGF0cyAgID0ge1xuICAgICAgICAgICAgZW1haWxzOiB1c2VyUHJvZmlsZXMsXG4gICAgICAgICAgICBmaWx0ZXJTdGFydERhdGUsXG4gICAgICAgICAgICBmaWx0ZXJFbmREYXRlLFxuICAgICAgICAgICAgc3VjY2VzczogZmFsc2UsXG4gICAgICAgICAgICBydW5EYXRlOiBtb21lbnQoKS51dGMoKS50b0RhdGUoKVxuICAgICAgICAgIH07XG5cbiAgICB0cnkge1xuICAgICAgY29uc3QgZXZlbnREYXRhID0gYXdhaXQgUHJvbWlzZS5hbGwodXNlclByb2ZpbGVzLm1hcCh1c2VyUHJvZmlsZSA9PiB0aGlzLmdldFVzZXJEYXRhKHtcbiAgICAgICAgdXNlclByb2ZpbGUsXG4gICAgICAgIGZpbHRlclN0YXJ0RGF0ZSxcbiAgICAgICAgZmlsdGVyRW5kRGF0ZSxcbiAgICAgICAgYWRkaXRpb25hbEZpZWxkcyxcbiAgICAgICAgYXBpVHlwZTogJ2NhbGVuZGFydmlldydcbiAgICAgIH0pKSk7XG5cbiAgICAgIC8vIHJlcGxhY2UgZGF0YSBrZXlzIHdpdGggZGVzaXJlZCBtYXBwaW5ncy4uLlxuICAgICAgY29uc3QgcmVzdWx0cyA9IF8ubWFwKGV2ZW50RGF0YSwgdXNlciA9PiB7XG4gICAgICAgIHJldHVybiB7XG4gICAgICAgICAgLi4udXNlci51c2VyUHJvZmlsZSxcbiAgICAgICAgICBmaWx0ZXJTdGFydERhdGU6ICB1c2VyLmZpbHRlclN0YXJ0RGF0ZSxcbiAgICAgICAgICBmaWx0ZXJFbmREYXRlOiAgICB1c2VyLmZpbHRlckVuZERhdGUsXG4gICAgICAgICAgc3VjY2VzczogICAgICAgICAgdXNlci5zdWNjZXNzLFxuICAgICAgICAgIGVycm9yTWVzc2FnZTogICAgIHVzZXIuZXJyb3JNZXNzYWdlLFxuICAgICAgICAgIC8vIG1hcCBkYXRhIHdpdGggZGVzaXJlZCBrZXkgbmFtZXMuLi5cbiAgICAgICAgICBkYXRhOiBfLm1hcCh1c2VyLmRhdGEgfHwgW10sIG9yaWdpbmFsRXZlbnQgPT4ge1xuICAgICAgICAgICAgY29uc3QgbWFwcGVkRXZlbnQgPSB7fTtcblxuICAgICAgICAgICAgLy8gY2hhbmdlIHRvIGRlc2lyZWQgbmFtZXNcbiAgICAgICAgICAgIF8uZWFjaChmaWVsZE5hbWVNYXAsIChoYXZlLCB3YW50KSA9PiB7XG4gICAgICAgICAgICAgIGNvbnN0IG1hcHBlZCA9IF8uZ2V0KG9yaWdpbmFsRXZlbnQsIGhhdmUpO1xuICAgICAgICAgICAgICBpZiAobWFwcGVkICE9PSB1bmRlZmluZWQpIHtcbiAgICAgICAgICAgICAgICBtYXBwZWRFdmVudFt3YW50XSA9IC9eZGF0ZVRpbWUvLnRlc3Qod2FudCkgPyBuZXcgRGF0ZShtYXBwZWQpIDogbWFwcGVkO1xuICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9KTtcblxuICAgICAgICAgICAgaWYgKG1hcHBlZEV2ZW50LnJlc3BvbnNlU3RhdHVzICYmIG1hcHBlZEV2ZW50LnJlc3BvbnNlU3RhdHVzLlJlc3BvbnNlKSB7XG4gICAgICAgICAgICAgIG1hcHBlZEV2ZW50LnJlc3BvbnNlU3RhdHVzID0gbWFwcGVkRXZlbnQucmVzcG9uc2VTdGF0dXMuUmVzcG9uc2U7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIG1hcHBlZEV2ZW50W2BhdHRlbmRlZXNgXSA9IG9yaWdpbmFsRXZlbnRbZmllbGROYW1lTWFwW2BhdHRlbmRlZXNgXV1cbiAgICAgICAgICAgICAgLm1hcChhdHRlbmRlZSA9PiB7XG4gICAgICAgICAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgICAgICAgIGFkZHJlc3M6ICBfLmdldChhdHRlbmRlZSwgZmllbGROYW1lTWFwW2BhdHRlbmRlZUFkZHJlc3NgXSksXG4gICAgICAgICAgICAgICAgICBuYW1lOiAgICAgXy5nZXQoYXR0ZW5kZWUsIGZpZWxkTmFtZU1hcFtgYXR0ZW5kZWVOYW1lYF0pLFxuICAgICAgICAgICAgICAgICAgcmVzcG9uc2U6IF8uZ2V0KGF0dGVuZGVlLCAnU3RhdHVzJylcbiAgICAgICAgICAgICAgICB9O1xuICAgICAgICAgICAgICB9KTtcblxuICAgICAgICAgICAgcmV0dXJuIG1hcHBlZEV2ZW50O1xuICAgICAgICAgIH0pXG4gICAgICAgIH07XG4gICAgICB9KTtcblxuICAgICAgLy8gcmV0dXJuIHJlc3VsdHMgYW5kIHN1Y2Nlc3MhXG4gICAgICByZXR1cm4ge1xuICAgICAgICAuLi5kYXRhQWRhcHRlclJ1blN0YXRzLFxuICAgICAgICByZXN1bHRzLFxuICAgICAgICBzdWNjZXNzOiB0cnVlXG4gICAgICB9O1xuXG4gICAgfSBjYXRjaCAoZXJyb3JNZXNzYWdlKSB7XG4gICAgICBjb25zb2xlLmxvZyhlcnJvck1lc3NhZ2Uuc3RhY2spO1xuICAgICAgY29uc29sZS5sb2coJ09mZmljZTM2NSBHZXRCYXRjaERhdGEgRXJyb3I6ICcgKyBKU09OLnN0cmluZ2lmeShlcnJvck1lc3NhZ2UpKTtcbiAgICAgIHJldHVybiB7IC4uLmRhdGFBZGFwdGVyUnVuU3RhdHMsIGVycm9yTWVzc2FnZSB9O1xuICAgIH1cblxuICB9XG5cblxufVxuIl19
+ */
+var Office365CalendarAdapter = function (_Office365BaseAdapter) {
+  _inherits(Office365CalendarAdapter, _Office365BaseAdapter);
+
+  function Office365CalendarAdapter() {
+    _classCallCheck(this, Office365CalendarAdapter);
+
+    return _possibleConstructorReturn(this, (Office365CalendarAdapter.__proto__ || Object.getPrototypeOf(Office365CalendarAdapter)).apply(this, arguments));
+  }
+
+  _createClass(Office365CalendarAdapter, [{
+    key: 'getBatchData',
+
+
+    // collect these fields always...
+    value: function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(userProfiles, filterStartDate, filterEndDate, additionalFields) {
+        var _this2 = this;
+
+        var fieldNameMap, dataAdapterRunStats, eventData, results;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                fieldNameMap = this.constructor.fieldNameMap;
+                dataAdapterRunStats = {
+                  emails: userProfiles,
+                  filterStartDate: filterStartDate,
+                  filterEndDate: filterEndDate,
+                  success: false,
+                  runDate: (0, _moment2.default)().utc().toDate()
+                };
+                _context.prev = 2;
+                _context.next = 5;
+                return Promise.all(userProfiles.map(function (userProfile) {
+                  return _this2.getUserData({
+                    userProfile: userProfile,
+                    filterStartDate: filterStartDate,
+                    filterEndDate: filterEndDate,
+                    additionalFields: additionalFields,
+                    apiType: 'calendarview'
+                  });
+                }));
+
+              case 5:
+                eventData = _context.sent;
+
+
+                // replace data keys with desired mappings...
+                results = _.map(eventData, function (user) {
+                  return _extends({}, user.userProfile, {
+                    filterStartDate: user.filterStartDate,
+                    filterEndDate: user.filterEndDate,
+                    success: user.success,
+                    errorMessage: user.errorMessage,
+                    // map data with desired key names...
+                    data: _.map(user.data || [], function (originalEvent) {
+                      var mappedEvent = {};
+
+                      // change to desired names
+                      _.each(fieldNameMap, function (have, want) {
+                        var mapped = _.get(originalEvent, have);
+                        if (mapped !== undefined) {
+                          mappedEvent[want] = /^dateTime/.test(want) ? new Date(mapped) : mapped;
+                        }
+                      });
+
+                      if (mappedEvent.responseStatus && mappedEvent.responseStatus.Response) {
+                        mappedEvent.responseStatus = mappedEvent.responseStatus.Response;
+                      }
+
+                      mappedEvent['attendees'] = originalEvent[fieldNameMap['attendees']].map(function (attendee) {
+                        return {
+                          address: _.get(attendee, fieldNameMap['attendeeAddress']),
+                          name: _.get(attendee, fieldNameMap['attendeeName']),
+                          response: _.get(attendee, 'Status')
+                        };
+                      });
+
+                      return mappedEvent;
+                    })
+                  });
+                });
+
+                // return results and success!
+
+                return _context.abrupt('return', _extends({}, dataAdapterRunStats, {
+                  results: results,
+                  success: true
+                }));
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context['catch'](2);
+
+                console.log(_context.t0.stack);
+                console.log('Office365 GetBatchData Error: ' + JSON.stringify(_context.t0));
+                return _context.abrupt('return', _extends({}, dataAdapterRunStats, { errorMessage: _context.t0 }));
+
+              case 15:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[2, 10]]);
+      }));
+
+      function getBatchData(_x, _x2, _x3, _x4) {
+        return _ref.apply(this, arguments);
+      }
+
+      return getBatchData;
+    }()
+
+    // convert the names of the api response data
+
+  }]);
+
+  return Office365CalendarAdapter;
+}(_Adapter2.default);
+
+Office365CalendarAdapter.baseFields = ['Id', 'Attendees', 'Calendar', 'Categories', 'DateTimeCreated', 'DateTimeLastModified', 'End', 'EndTimeZone', 'HasAttachments', 'Importance', 'iCalUID', 'IsAllDay', 'IsCancelled', 'IsOrganizer', 'Location', 'Organizer', 'Recurrence', 'ResponseRequested', 'ResponseStatus', 'SeriesMasterId', 'ShowAs', 'Start', 'StartTimeZone', 'Subject', 'Type', 'WebLink', 'Sensitivity'];
+Office365CalendarAdapter.fieldNameMap = {
+  // Desired...                          // Given...
+  'eventId': 'Id',
+  'attendees': 'Attendees',
+  'calendarName': 'Calendar',
+  'categories': 'Categories',
+  'dateTimeCreated': 'DateTimeCreated',
+  'dateTimeLastModified': 'DateTimeLastModified',
+  'attendeeAddress': 'EmailAddress.Address',
+  'attendeeName': 'EmailAddress.Name',
+  'hasAttachments': 'HasAttachments',
+  'importance': 'Importance',
+  'iCalUId': 'iCalUId',
+  'allDay': 'IsAllDay',
+  'canceled': 'IsCancelled',
+  'isOrganizer': 'IsOrganizer',
+  'locationName': 'Location.DisplayName',
+  'locationAddressStreet': 'Location.Address.Street',
+  'locationAddressCity': 'Location.Address.City',
+  'locationAddressState': 'Location.Address.State',
+  'locationAddressCountryOrRegion': 'Location.Address.CountryOrRegion',
+  'locationCoordinatesAccuracy': 'Location.Coordinates.Accuracy',
+  'locationCoordinatesAltitude': 'Location.Coordinates.Altitude',
+  'locationCoordinatesAltitudeAccuracy': 'Location.Coordinates.AltitudeAccuracy',
+  'locationCoordinatesLatitude': 'Location.Coordinates.Latitude',
+  'locationCoordinatesLongitude': 'Location.Coordinates.Longitude',
+  'organizerName': 'Organizer.EmailAddress.Name',
+  'organizerEmail': 'Organizer.EmailAddress.Address',
+  'recurrance': 'Recurrance',
+  'responseRequested': 'ResponseRequested',
+  'responseStatus': 'ResponseStatus',
+  'seriesMasterId': 'SeriesMasterId',
+  'showAs': 'ShowAs',
+  'dateTimeStart': 'Start',
+  'startTimeZone': 'StartTimeZone',
+  'dateTimeEnd': 'End',
+  'endTimeZone': 'EndTimeZone',
+  'subject': 'Subject',
+  'type': 'Type',
+  'url': 'WebLink',
+  'privacy': 'Sensitivity'
+};
+exports.default = Office365CalendarAdapter;
 //# sourceMappingURL=../../../clAdapters/office365/calendar/index.js.map

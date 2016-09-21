@@ -1,4 +1,47 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=NetSuiteAdapter;var _lodash=require('lodash');var _lodash2=_interopRequireDefault(_lodash);var _util=require('util');var _util2=_interopRequireDefault(_util);var _Adapter=require('../base/Adapter');var _Adapter2=_interopRequireDefault(_Adapter);var _fields=require('../fields');var Fields=_interopRequireWildcard(_fields);var _netsuiteJs=require('netsuite-js');var _netsuiteJs2=_interopRequireDefault(_netsuiteJs);function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj.default=obj;return newObj;}}function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}var implementedFields={};implementedFields[Fields.Types.USER]={'department#internalId':true,'supervisor#internalId':true};implementedFields[Fields.Types.EXT_ENTITY]={'customer#balance':true,'customer#overdueBalance':true,'customer#daysOverdue':true};/**
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = NetSuiteAdapter;
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+var _util = require('util');
+
+var util = _interopRequireWildcard(_util);
+
+var _Adapter = require('../base/Adapter');
+
+var _Adapter2 = _interopRequireDefault(_Adapter);
+
+var _fields = require('../fields');
+
+var Fields = _interopRequireWildcard(_fields);
+
+var _netsuiteJs = require('netsuite-js');
+
+var NetSuite = _interopRequireWildcard(_netsuiteJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var implementedFields = {};
+
+implementedFields[Fields.Types.USER] = {
+  'department#internalId': true,
+  'supervisor#internalId': true
+};
+implementedFields[Fields.Types.EXT_ENTITY] = {
+  'customer#balance': true,
+  'customer#overdueBalance': true,
+  'customer#daysOverdue': true
+};
+
+/**
  * NetSuiteAdapter
  *
  * `credentials` format:
@@ -12,27 +55,198 @@
  * ```
  * @class
  * @return {NetSuiteAdapter}
- */function NetSuiteAdapter(){_Adapter2.default.call(this);/**
+ */
+function NetSuiteAdapter() {
+  _Adapter2.default.call(this);
+
+  /**
    * @override
-   */Object.defineProperty(this,'extEntityKey',{get:function get(){return this.credentials.account;}});// SearchId cache, one per field
-this._searchIds={};// Cache results by field type -> limit (pagesize) -> skip, e.g.:
-// this._cachedDataByFieldType[Fields.Types.USER][10][3]
-// represents all user records for search page size 10 starting at index 3.
-// EXT_ENTITY fields are have an additional layer for entityType, e.g.:
-// this._cachedDataByFieldType[Fields.Types.EXT_ENTITY]['customer'][10][3]
-this._cachedDataByFieldType={};};_util2.default.inherits(NetSuiteAdapter,_Adapter2.default);/**
+   */
+  Object.defineProperty(this, 'extEntityKey', {
+    get: function get() {
+      return this.credentials.account;
+    }
+  });
+
+  // SearchId cache, one per field
+  this._searchIds = {};
+
+  // Cache results by field type -> limit (pagesize) -> skip, e.g.:
+  // this._cachedDataByFieldType[Fields.Types.USER][10][3]
+  // represents all user records for search page size 10 starting at index 3.
+  // EXT_ENTITY fields are have an additional layer for entityType, e.g.:
+  // this._cachedDataByFieldType[Fields.Types.EXT_ENTITY]['customer'][10][3]
+  this._cachedDataByFieldType = {};
+};
+
+util.inherits(NetSuiteAdapter, _Adapter2.default);
+
+/**
  * @override
- */NetSuiteAdapter.prototype.init=function(){var _this=this;this._config=new _netsuiteJs2.default.Configuration(this.credentials);this._service=new _netsuiteJs2.default.Service(this._config);return this._service.init().then(function()/*client*/{var msg='Successfully initialized NetSuiteAdapter for email: %s, account: %s, role: %d';console.log(msg,_this.credentials.email,_this.credentials.account,_this.credentials.role);return _this;});};/**
+ */
+NetSuiteAdapter.prototype.init = function () {
+  var _this = this;
+  this._config = new NetSuite.Configuration(this.credentials);
+  this._service = new NetSuite.Service(this._config);
+  return this._service.init().then(function () /*client*/{
+    var msg = 'Successfully initialized NetSuiteAdapter for email: %s, account: %s, role: %d';
+    console.log(msg, _this.credentials.email, _this.credentials.account, _this.credentials.role);
+    return _this;
+  });
+};
+
+/**
  * @override
- */NetSuiteAdapter.prototype.reset=function(){this._searchIds={};this._cachedDataByFieldType={};delete this._config;delete this._service;};NetSuiteAdapter.prototype._setCacheValue=function(field,limit,skip,data){var fieldCache=this._cachedDataByFieldType[field.type]=this._cachedDataByFieldType[field.type]||{};if(field.type===Fields.Types.EXT_ENTITY){fieldCache=this._cachedDataByFieldType[field.type][field.entityType]=this._cachedDataByFieldType[field.type][field.entityType]||{};}fieldCache[limit]=fieldCache[limit]||{};fieldCache[limit][skip]=_lodash2.default.cloneDeep(data);};NetSuiteAdapter.prototype._getCacheValue=function(field,limit,skip){var fieldCache=this._cachedDataByFieldType[field.type];if(!fieldCache){return undefined;}if(field.type===Fields.Types.EXT_ENTITY){fieldCache=fieldCache[field.entityType];}return fieldCache&&fieldCache[limit]&&fieldCache[limit][skip];};/**
+ */
+NetSuiteAdapter.prototype.reset = function () {
+  this._searchIds = {};
+  this._cachedDataByFieldType = {};
+  delete this._config;
+  delete this._service;
+};
+
+NetSuiteAdapter.prototype._setCacheValue = function (field, limit, skip, data) {
+  var fieldCache = this._cachedDataByFieldType[field.type] = this._cachedDataByFieldType[field.type] || {};
+
+  if (field.type === Fields.Types.EXT_ENTITY) {
+    fieldCache = this._cachedDataByFieldType[field.type][field.entityType] = this._cachedDataByFieldType[field.type][field.entityType] || {};
+  }
+
+  fieldCache[limit] = fieldCache[limit] || {};
+  fieldCache[limit][skip] = _.cloneDeep(data);
+};
+
+NetSuiteAdapter.prototype._getCacheValue = function (field, limit, skip) {
+  var fieldCache = this._cachedDataByFieldType[field.type];
+  if (!fieldCache) {
+    return undefined;
+  }
+
+  if (field.type === Fields.Types.EXT_ENTITY) {
+    fieldCache = fieldCache[field.entityType];
+  }
+  return fieldCache && fieldCache[limit] && fieldCache[limit][skip];
+};
+
+/**
  * @override
- */NetSuiteAdapter.prototype.getFieldData=function(field,query){console.log(field);var _this=this;return new Promise(function(resolve,reject){query=query||{};var preferences=new _netsuiteJs2.default.Search.SearchPreferences();preferences.pageSize=query.limit||10;_this._service.setSearchPreferences(preferences);if(!implementedFields[field.type]||!implementedFields[field.type][field.extId]){return reject(new Error('Unknown field or retrieval NYI by NetSuiteAdapter:',field));}// Cache hit?
-var cached=_this._getCacheValue(field,preferences.pageSize,query.skip);if(cached){return resolve(cached);}var pageIndex=void 0,search=void 0;if(field.type===Fields.Types.USER){if(query.skip){if(!_this._searchIds[field.extId]){throw new Error('NetSuite paged searches must start with an initial search to generate a search session');}// Round down then add 1 since netsuite page indices are one-based
-pageIndex=Math.floor(query.skip/preferences.pageSize)+1;console.log('searchMoreWithId with pageIndex "%d"',pageIndex);return _this._service.searchMoreWithId(_this._searchIds[field.extId],pageIndex).then(function(result){var data={count:result.searchResult.totalRecords,results:result.searchResult.recordList.record};_this._setCacheValue(field,preferences.pageSize,query.skip,data);return resolve(data);});}else{// No criteria right now
-search=new _netsuiteJs2.default.Search.EmployeeSearchBasic();return _this._service.search(search).then(function(result){if(result.searchResult.totalPages>1){_this._searchIds[field.extId]=result.searchResult.searchId;}var data={count:result.searchResult.totalRecords,results:result.searchResult.recordList.record};_this._setCacheValue(field,preferences.pageSize,query.skip,data);return resolve(data);});}}else if(field.type===Fields.Types.EXT_ENTITY){if(field.entityType==='customer'){if(query.skip){if(!_this._searchIds[field.extId]){throw new Error('NetSuite paged searches must start with an initial search to generate a search session');}// Round down then add 1 since netsuite page indices are one-based
-pageIndex=Math.floor(query.skip/preferences.pageSize)+1;console.log('searchMoreWithId with pageIndex "%d"',pageIndex);return _this._service.searchMoreWithId(_this._searchIds[field.extId],pageIndex).then(function(result){var data={count:result.searchResult.totalRecords,results:result.searchResult.searchRowList.searchRow};_this._setCacheValue(field,preferences.pageSize,query.skip,data);return resolve(data);});}else{// No criteria right now
-search=new _netsuiteJs2.default.Search.CustomerSearchAdvanced();search.columns=new _netsuiteJs2.default.Search.CustomerSearchRow();search.columns.basic=new _netsuiteJs2.default.Search.CustomerSearchRowBasic();// For now, always include all SearchColumn fields since storing an extra field
-// is far less costly than having to do another roundtrip to retrieve another field
-var entityIdField=new _netsuiteJs2.default.Search.Fields.SearchColumnStringField();entityIdField.field='entityId';search.columns.basic.searchColumnFields.push(entityIdField);var internalIdField=new _netsuiteJs2.default.Search.Fields.SearchColumnSelectField();internalIdField.field='internalId';search.columns.basic.searchColumnFields.push(internalIdField);var balanceField=new _netsuiteJs2.default.Search.Fields.SearchColumnDoubleField();balanceField.field='balance';search.columns.basic.searchColumnFields.push(balanceField);var overdueBalanceField=new _netsuiteJs2.default.Search.Fields.SearchColumnDoubleField();overdueBalanceField.field='overdueBalance';search.columns.basic.searchColumnFields.push(overdueBalanceField);var daysOverdueField=new _netsuiteJs2.default.Search.Fields.SearchColumnLongField();daysOverdueField.field='daysOverdue';search.columns.basic.searchColumnFields.push(daysOverdueField);return _this._service.search(search).then(function(result){if(result.searchResult.totalPages>1){_this._searchIds[field.extId]=result.searchResult.searchId;}var data={count:result.searchResult.totalRecords,results:result.searchResult.searchRowList.searchRow};_this._setCacheValue(field,preferences.pageSize,query.skip,data);return resolve(data);});}}else{return reject(new Error('Unknown EXT_ENTITY entityType:',field.entityType));}}});};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvbmV0c3VpdGUvaW5kZXguanMiXSwibmFtZXMiOlsiTmV0U3VpdGVBZGFwdGVyIiwiRmllbGRzIiwiaW1wbGVtZW50ZWRGaWVsZHMiLCJUeXBlcyIsIlVTRVIiLCJFWFRfRU5USVRZIiwiY2FsbCIsIk9iamVjdCIsImRlZmluZVByb3BlcnR5IiwiZ2V0IiwiY3JlZGVudGlhbHMiLCJhY2NvdW50IiwiX3NlYXJjaElkcyIsIl9jYWNoZWREYXRhQnlGaWVsZFR5cGUiLCJpbmhlcml0cyIsInByb3RvdHlwZSIsImluaXQiLCJfdGhpcyIsIl9jb25maWciLCJDb25maWd1cmF0aW9uIiwiX3NlcnZpY2UiLCJTZXJ2aWNlIiwidGhlbiIsIm1zZyIsImNvbnNvbGUiLCJsb2ciLCJlbWFpbCIsInJvbGUiLCJyZXNldCIsIl9zZXRDYWNoZVZhbHVlIiwiZmllbGQiLCJsaW1pdCIsInNraXAiLCJkYXRhIiwiZmllbGRDYWNoZSIsInR5cGUiLCJlbnRpdHlUeXBlIiwiY2xvbmVEZWVwIiwiX2dldENhY2hlVmFsdWUiLCJ1bmRlZmluZWQiLCJnZXRGaWVsZERhdGEiLCJxdWVyeSIsIlByb21pc2UiLCJyZXNvbHZlIiwicmVqZWN0IiwicHJlZmVyZW5jZXMiLCJTZWFyY2giLCJTZWFyY2hQcmVmZXJlbmNlcyIsInBhZ2VTaXplIiwic2V0U2VhcmNoUHJlZmVyZW5jZXMiLCJleHRJZCIsIkVycm9yIiwiY2FjaGVkIiwicGFnZUluZGV4Iiwic2VhcmNoIiwiTWF0aCIsImZsb29yIiwic2VhcmNoTW9yZVdpdGhJZCIsInJlc3VsdCIsImNvdW50Iiwic2VhcmNoUmVzdWx0IiwidG90YWxSZWNvcmRzIiwicmVzdWx0cyIsInJlY29yZExpc3QiLCJyZWNvcmQiLCJFbXBsb3llZVNlYXJjaEJhc2ljIiwidG90YWxQYWdlcyIsInNlYXJjaElkIiwic2VhcmNoUm93TGlzdCIsInNlYXJjaFJvdyIsIkN1c3RvbWVyU2VhcmNoQWR2YW5jZWQiLCJjb2x1bW5zIiwiQ3VzdG9tZXJTZWFyY2hSb3ciLCJiYXNpYyIsIkN1c3RvbWVyU2VhcmNoUm93QmFzaWMiLCJlbnRpdHlJZEZpZWxkIiwiU2VhcmNoQ29sdW1uU3RyaW5nRmllbGQiLCJzZWFyY2hDb2x1bW5GaWVsZHMiLCJwdXNoIiwiaW50ZXJuYWxJZEZpZWxkIiwiU2VhcmNoQ29sdW1uU2VsZWN0RmllbGQiLCJiYWxhbmNlRmllbGQiLCJTZWFyY2hDb2x1bW5Eb3VibGVGaWVsZCIsIm92ZXJkdWVCYWxhbmNlRmllbGQiLCJkYXlzT3ZlcmR1ZUZpZWxkIiwiU2VhcmNoQ29sdW1uTG9uZ0ZpZWxkIl0sIm1hcHBpbmdzIjoic0ZBaUN3QkEsZSxDQWpDeEIsOEIsNkNBQ0EsMEIseUNBQ0Esd0MsK0NBQ0EsaUMsR0FBWUMsTyxrQ0FDWix1QyxrWEFFQSxHQUFNQyxtQkFBb0IsRUFBMUIsQ0FFQUEsa0JBQWtCRCxPQUFPRSxLQUFQLENBQWFDLElBQS9CLEVBQXVDLENBQ3JDLHdCQUF5QixJQURZLENBRXJDLHdCQUF5QixJQUZZLENBQXZDLENBSUFGLGtCQUFrQkQsT0FBT0UsS0FBUCxDQUFhRSxVQUEvQixFQUE2QyxDQUMzQyxtQkFBb0IsSUFEdUIsQ0FFM0MsMEJBQTJCLElBRmdCLENBRzNDLHVCQUF3QixJQUhtQixDQUE3QyxDQU1BOzs7Ozs7Ozs7Ozs7OztHQWVlLFFBQVNMLGdCQUFULEVBQTJCLENBQ3hDLGtCQUFZTSxJQUFaLENBQWlCLElBQWpCLEVBRUE7O0tBR0FDLE9BQU9DLGNBQVAsQ0FBc0IsSUFBdEIsQ0FBNEIsY0FBNUIsQ0FBNEMsQ0FDMUNDLElBQUssY0FBVyxDQUNkLE1BQU8sTUFBS0MsV0FBTCxDQUFpQkMsT0FBeEIsQ0FDRCxDQUh5QyxDQUE1QyxFQU1BO0FBQ0EsS0FBS0MsVUFBTCxDQUFrQixFQUFsQixDQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLQyxzQkFBTCxDQUE4QixFQUE5QixDQUNELEVBRUQsZUFBS0MsUUFBTCxDQUFjZCxlQUFkLG9CQUVBOztHQUdBQSxnQkFBZ0JlLFNBQWhC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LE9BQU9FLFlBQVAsQ0FBb0JDLFlBRGhCLENBRVhDLFFBQVNKLE9BQU9FLFlBQVAsQ0FBb0JRLGFBQXBCLENBQWtDQyxTQUZoQyxDQUFiLENBSUFwRCxNQUFNWSxjQUFOLENBQXFCQyxLQUFyQixDQUE0QmUsWUFBWUcsUUFBeEMsQ0FBa0RQLE1BQU1ULElBQXhELENBQThEQyxJQUE5RCxFQUNBLE1BQU9VLFNBQVFWLElBQVIsQ0FBUCxDQUNELENBWkksQ0FBUCxDQWFELENBQ0YsQ0EzREQsSUEyRE8sQ0FDTCxNQUFPVyxRQUFPLEdBQUlPLE1BQUosQ0FBVSxnQ0FBVixDQUE0Q3JCLE1BQU1NLFVBQWxELENBQVAsQ0FBUCxDQUNELENBQ0YsQ0FDRixDQXBITSxDQUFQLENBcUhELENBeEhEIiwiZmlsZSI6ImNsQWRhcHRlcnMvbmV0c3VpdGUvaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgXyBmcm9tICdsb2Rhc2gnO1xuaW1wb3J0IHV0aWwgZnJvbSAndXRpbCc7XG5pbXBvcnQgQmFzZUFkYXB0ZXIgZnJvbSAnLi4vYmFzZS9BZGFwdGVyJztcbmltcG9ydCAqIGFzIEZpZWxkcyBmcm9tICcuLi9maWVsZHMnO1xuaW1wb3J0IE5ldFN1aXRlIGZyb20gJ25ldHN1aXRlLWpzJztcblxuY29uc3QgaW1wbGVtZW50ZWRGaWVsZHMgPSB7fTtcblxuaW1wbGVtZW50ZWRGaWVsZHNbRmllbGRzLlR5cGVzLlVTRVJdID0ge1xuICAnZGVwYXJ0bWVudCNpbnRlcm5hbElkJzogdHJ1ZSxcbiAgJ3N1cGVydmlzb3IjaW50ZXJuYWxJZCc6IHRydWVcbn07XG5pbXBsZW1lbnRlZEZpZWxkc1tGaWVsZHMuVHlwZXMuRVhUX0VOVElUWV0gPSB7XG4gICdjdXN0b21lciNiYWxhbmNlJzogdHJ1ZSxcbiAgJ2N1c3RvbWVyI292ZXJkdWVCYWxhbmNlJzogdHJ1ZSxcbiAgJ2N1c3RvbWVyI2RheXNPdmVyZHVlJzogdHJ1ZVxufTtcblxuLyoqXG4gKiBOZXRTdWl0ZUFkYXB0ZXJcbiAqXG4gKiBgY3JlZGVudGlhbHNgIGZvcm1hdDpcbiAqIGBgYFxuICoge1xuICogICBlbWFpbDogJ3Rlc3RAdGVzdC5jb20nLFxuICogICBwYXNzd29yZDogJ3Bhc3N3b3JkJyxcbiAqICAgYWNjb3VudDogMTIzNDU2LFxuICogICByb2xlOiAzXG4gKiB9XG4gKiBgYGBcbiAqIEBjbGFzc1xuICogQHJldHVybiB7TmV0U3VpdGVBZGFwdGVyfVxuICovXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBOZXRTdWl0ZUFkYXB0ZXIoKSB7XG4gIEJhc2VBZGFwdGVyLmNhbGwodGhpcyk7XG5cbiAgLyoqXG4gICAqIEBvdmVycmlkZVxuICAgKi9cbiAgT2JqZWN0LmRlZmluZVByb3BlcnR5KHRoaXMsICdleHRFbnRpdHlLZXknLCB7XG4gICAgZ2V0OiBmdW5jdGlvbigpIHtcbiAgICAgIHJldHVybiB0aGlzLmNyZWRlbnRpYWxzLmFjY291bnQ7XG4gICAgfVxuICB9KTtcblxuICAvLyBTZWFyY2hJZCBjYWNoZSwgb25lIHBlciBmaWVsZFxuICB0aGlzLl9zZWFyY2hJZHMgPSB7fTtcblxuICAvLyBDYWNoZSByZXN1bHRzIGJ5IGZpZWxkIHR5cGUgLT4gbGltaXQgKHBhZ2VzaXplKSAtPiBza2lwLCBlLmcuOlxuICAvLyB0aGlzLl9jYWNoZWREYXRhQnlGaWVsZFR5cGVbRmllbGRzLlR5cGVzLlVTRVJdWzEwXVszXVxuICAvLyByZXByZXNlbnRzIGFsbCB1c2VyIHJlY29yZHMgZm9yIHNlYXJjaCBwYWdlIHNpemUgMTAgc3RhcnRpbmcgYXQgaW5kZXggMy5cbiAgLy8gRVhUX0VOVElUWSBmaWVsZHMgYXJlIGhhdmUgYW4gYWRkaXRpb25hbCBsYXllciBmb3IgZW50aXR5VHlwZSwgZS5nLjpcbiAgLy8gdGhpcy5fY2FjaGVkRGF0YUJ5RmllbGRUeXBlW0ZpZWxkcy5UeXBlcy5FWFRfRU5USVRZXVsnY3VzdG9tZXInXVsxMF1bM11cbiAgdGhpcy5fY2FjaGVkRGF0YUJ5RmllbGRUeXBlID0ge307XG59O1xuXG51dGlsLmluaGVyaXRzKE5ldFN1aXRlQWRhcHRlciwgQmFzZUFkYXB0ZXIpO1xuXG4vKipcbiAqIEBvdmVycmlkZVxuICovXG5OZXRTdWl0ZUFkYXB0ZXIucHJvdG90eXBlLmluaXQgPSBmdW5jdGlvbigpIHtcbiAgY29uc3QgX3RoaXMgPSB0aGlzO1xuICB0aGlzLl9jb25maWcgPSBuZXcgTmV0U3VpdGUuQ29uZmlndXJhdGlvbih0aGlzLmNyZWRlbnRpYWxzKTtcbiAgdGhpcy5fc2VydmljZSA9IG5ldyBOZXRTdWl0ZS5TZXJ2aWNlKHRoaXMuX2NvbmZpZyk7XG4gIHJldHVybiB0aGlzLl9zZXJ2aWNlXG4gICAgLmluaXQoKVxuICAgIC50aGVuKCggLypjbGllbnQqLyApID0+IHtcbiAgICAgIGNvbnN0IG1zZyA9ICdTdWNjZXNzZnVsbHkgaW5pdGlhbGl6ZWQgTmV0U3VpdGVBZGFwdGVyIGZvciBlbWFpbDogJXMsIGFjY291bnQ6ICVzLCByb2xlOiAlZCc7XG4gICAgICBjb25zb2xlLmxvZyhtc2csIF90aGlzLmNyZWRlbnRpYWxzLmVtYWlsLCBfdGhpcy5jcmVkZW50aWFscy5hY2NvdW50LCBfdGhpcy5jcmVkZW50aWFscy5yb2xlKTtcbiAgICAgIHJldHVybiBfdGhpcztcbiAgICB9KTtcbn07XG5cbi8qKlxuICogQG92ZXJyaWRlXG4gKi9cbk5ldFN1aXRlQWRhcHRlci5wcm90b3R5cGUucmVzZXQgPSBmdW5jdGlvbigpIHtcbiAgdGhpcy5fc2VhcmNoSWRzID0ge307XG4gIHRoaXMuX2NhY2hlZERhdGFCeUZpZWxkVHlwZSA9IHt9O1xuICBkZWxldGUgdGhpcy5fY29uZmlnO1xuICBkZWxldGUgdGhpcy5fc2VydmljZTtcbn07XG5cbk5ldFN1aXRlQWRhcHRlci5wcm90b3R5cGUuX3NldENhY2hlVmFsdWUgPSBmdW5jdGlvbihmaWVsZCwgbGltaXQsIHNraXAsIGRhdGEpIHtcbiAgbGV0IGZpZWxkQ2FjaGUgPSB0aGlzLl9jYWNoZWREYXRhQnlGaWVsZFR5cGVbZmllbGQudHlwZV0gPSB0aGlzLl9jYWNoZWREYXRhQnlGaWVsZFR5cGVbZmllbGQudHlwZV0gfHwge307XG5cbiAgaWYgKGZpZWxkLnR5cGUgPT09IEZpZWxkcy5UeXBlcy5FWFRfRU5USVRZKSB7XG4gICAgZmllbGRDYWNoZVxuICAgICAgPSB0aGlzLl9jYWNoZWREYXRhQnlGaWVsZFR5cGVbZmllbGQudHlwZV1bZmllbGQuZW50aXR5VHlwZV1cbiAgICAgID0gdGhpcy5fY2FjaGVkRGF0YUJ5RmllbGRUeXBlW2ZpZWxkLnR5cGVdW2ZpZWxkLmVudGl0eVR5cGVdIHx8IHt9O1xuICB9XG5cbiAgZmllbGRDYWNoZVtsaW1pdF0gPSBmaWVsZENhY2hlW2xpbWl0XSB8fCB7fTtcbiAgZmllbGRDYWNoZVtsaW1pdF1bc2tpcF0gPSBfLmNsb25lRGVlcChkYXRhKTtcbn07XG5cbk5ldFN1aXRlQWRhcHRlci5wcm90b3R5cGUuX2dldENhY2hlVmFsdWUgPSBmdW5jdGlvbihmaWVsZCwgbGltaXQsIHNraXApIHtcbiAgbGV0IGZpZWxkQ2FjaGUgPSB0aGlzLl9jYWNoZWREYXRhQnlGaWVsZFR5cGVbZmllbGQudHlwZV07XG4gIGlmICghZmllbGRDYWNoZSkge1xuICAgIHJldHVybiB1bmRlZmluZWQ7XG4gIH1cblxuICBpZiAoZmllbGQudHlwZSA9PT0gRmllbGRzLlR5cGVzLkVYVF9FTlRJVFkpIHtcbiAgICBmaWVsZENhY2hlID0gZmllbGRDYWNoZVtmaWVsZC5lbnRpdHlUeXBlXTtcbiAgfVxuICByZXR1cm4gZmllbGRDYWNoZSAmJlxuICAgIGZpZWxkQ2FjaGVbbGltaXRdICYmXG4gICAgZmllbGRDYWNoZVtsaW1pdF1bc2tpcF07XG59O1xuXG4vKipcbiAqIEBvdmVycmlkZVxuICovXG5OZXRTdWl0ZUFkYXB0ZXIucHJvdG90eXBlLmdldEZpZWxkRGF0YSA9IGZ1bmN0aW9uKGZpZWxkLCBxdWVyeSkge1xuICBjb25zb2xlLmxvZyhmaWVsZCk7XG4gIGNvbnN0IF90aGlzID0gdGhpcztcbiAgcmV0dXJuIG5ldyBQcm9taXNlKChyZXNvbHZlLCByZWplY3QpID0+IHtcbiAgICBxdWVyeSA9IHF1ZXJ5IHx8IHt9O1xuXG4gICAgY29uc3QgcHJlZmVyZW5jZXMgPSBuZXcgTmV0U3VpdGUuU2VhcmNoLlNlYXJjaFByZWZlcmVuY2VzKCk7XG4gICAgcHJlZmVyZW5jZXMucGFnZVNpemUgPSBxdWVyeS5saW1pdCB8fCAxMDtcbiAgICBfdGhpcy5fc2VydmljZS5zZXRTZWFyY2hQcmVmZXJlbmNlcyhwcmVmZXJlbmNlcyk7XG5cbiAgICBpZiAoIWltcGxlbWVudGVkRmllbGRzW2ZpZWxkLnR5cGVdIHx8ICFpbXBsZW1lbnRlZEZpZWxkc1tmaWVsZC50eXBlXVtmaWVsZC5leHRJZF0pIHtcbiAgICAgIHJldHVybiByZWplY3QobmV3IEVycm9yKCdVbmtub3duIGZpZWxkIG9yIHJldHJpZXZhbCBOWUkgYnkgTmV0U3VpdGVBZGFwdGVyOicsIGZpZWxkKSk7XG4gICAgfVxuXG4gICAgLy8gQ2FjaGUgaGl0P1xuICAgIGNvbnN0IGNhY2hlZCA9IF90aGlzLl9nZXRDYWNoZVZhbHVlKGZpZWxkLCBwcmVmZXJlbmNlcy5wYWdlU2l6ZSwgcXVlcnkuc2tpcCk7XG4gICAgaWYgKGNhY2hlZCkge1xuICAgICAgcmV0dXJuIHJlc29sdmUoY2FjaGVkKTtcbiAgICB9XG5cbiAgICBsZXQgcGFnZUluZGV4LCBzZWFyY2g7XG4gICAgaWYgKGZpZWxkLnR5cGUgPT09IEZpZWxkcy5UeXBlcy5VU0VSKSB7XG4gICAgICBpZiAocXVlcnkuc2tpcCkge1xuICAgICAgICBpZiAoIV90aGlzLl9zZWFyY2hJZHNbZmllbGQuZXh0SWRdKSB7XG4gICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdOZXRTdWl0ZSBwYWdlZCBzZWFyY2hlcyBtdXN0IHN0YXJ0IHdpdGggYW4gaW5pdGlhbCBzZWFyY2ggdG8gZ2VuZXJhdGUgYSBzZWFyY2ggc2Vzc2lvbicpO1xuICAgICAgICB9XG4gICAgICAgIC8vIFJvdW5kIGRvd24gdGhlbiBhZGQgMSBzaW5jZSBuZXRzdWl0ZSBwYWdlIGluZGljZXMgYXJlIG9uZS1iYXNlZFxuICAgICAgICBwYWdlSW5kZXggPSBNYXRoLmZsb29yKHF1ZXJ5LnNraXAgLyBwcmVmZXJlbmNlcy5wYWdlU2l6ZSkgKyAxO1xuICAgICAgICBjb25zb2xlLmxvZygnc2VhcmNoTW9yZVdpdGhJZCB3aXRoIHBhZ2VJbmRleCBcIiVkXCInLCBwYWdlSW5kZXgpO1xuICAgICAgICByZXR1cm4gX3RoaXMuX3NlcnZpY2Uuc2VhcmNoTW9yZVdpdGhJZChfdGhpcy5fc2VhcmNoSWRzW2ZpZWxkLmV4dElkXSwgcGFnZUluZGV4KVxuICAgICAgICAgIC50aGVuKChyZXN1bHQpID0+IHtcbiAgICAgICAgICAgIGNvbnN0IGRhdGEgPSB7XG4gICAgICAgICAgICAgIGNvdW50OiByZXN1bHQuc2VhcmNoUmVzdWx0LnRvdGFsUmVjb3JkcyxcbiAgICAgICAgICAgICAgcmVzdWx0czogcmVzdWx0LnNlYXJjaFJlc3VsdC5yZWNvcmRMaXN0LnJlY29yZFxuICAgICAgICAgICAgfTtcbiAgICAgICAgICAgIF90aGlzLl9zZXRDYWNoZVZhbHVlKGZpZWxkLCBwcmVmZXJlbmNlcy5wYWdlU2l6ZSwgcXVlcnkuc2tpcCwgZGF0YSk7XG4gICAgICAgICAgICByZXR1cm4gcmVzb2x2ZShkYXRhKTtcbiAgICAgICAgICB9KTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIC8vIE5vIGNyaXRlcmlhIHJpZ2h0IG5vd1xuICAgICAgICBzZWFyY2ggPSBuZXcgTmV0U3VpdGUuU2VhcmNoLkVtcGxveWVlU2VhcmNoQmFzaWMoKTtcbiAgICAgICAgcmV0dXJuIF90aGlzLl9zZXJ2aWNlLnNlYXJjaChzZWFyY2gpXG4gICAgICAgICAgLnRoZW4oKHJlc3VsdCkgPT4ge1xuICAgICAgICAgICAgaWYgKHJlc3VsdC5zZWFyY2hSZXN1bHQudG90YWxQYWdlcyA+IDEpIHtcbiAgICAgICAgICAgICAgX3RoaXMuX3NlYXJjaElkc1tmaWVsZC5leHRJZF0gPSByZXN1bHQuc2VhcmNoUmVzdWx0LnNlYXJjaElkO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICBjb25zdCBkYXRhID0ge1xuICAgICAgICAgICAgICBjb3VudDogcmVzdWx0LnNlYXJjaFJlc3VsdC50b3RhbFJlY29yZHMsXG4gICAgICAgICAgICAgIHJlc3VsdHM6IHJlc3VsdC5zZWFyY2hSZXN1bHQucmVjb3JkTGlzdC5yZWNvcmRcbiAgICAgICAgICAgIH07XG4gICAgICAgICAgICBfdGhpcy5fc2V0Q2FjaGVWYWx1ZShmaWVsZCwgcHJlZmVyZW5jZXMucGFnZVNpemUsIHF1ZXJ5LnNraXAsIGRhdGEpO1xuICAgICAgICAgICAgcmV0dXJuIHJlc29sdmUoZGF0YSk7XG4gICAgICAgICAgfSk7XG4gICAgICB9XG4gICAgfSBlbHNlIGlmIChmaWVsZC50eXBlID09PSBGaWVsZHMuVHlwZXMuRVhUX0VOVElUWSkge1xuICAgICAgaWYgKGZpZWxkLmVudGl0eVR5cGUgPT09ICdjdXN0b21lcicpIHtcbiAgICAgICAgaWYgKHF1ZXJ5LnNraXApIHtcbiAgICAgICAgICBpZiAoIV90aGlzLl9zZWFyY2hJZHNbZmllbGQuZXh0SWRdKSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoJ05ldFN1aXRlIHBhZ2VkIHNlYXJjaGVzIG11c3Qgc3RhcnQgd2l0aCBhbiBpbml0aWFsIHNlYXJjaCB0byBnZW5lcmF0ZSBhIHNlYXJjaCBzZXNzaW9uJyk7XG4gICAgICAgICAgfVxuICAgICAgICAgIC8vIFJvdW5kIGRvd24gdGhlbiBhZGQgMSBzaW5jZSBuZXRzdWl0ZSBwYWdlIGluZGljZXMgYXJlIG9uZS1iYXNlZFxuICAgICAgICAgIHBhZ2VJbmRleCA9IE1hdGguZmxvb3IocXVlcnkuc2tpcCAvIHByZWZlcmVuY2VzLnBhZ2VTaXplKSArIDE7XG4gICAgICAgICAgY29uc29sZS5sb2coJ3NlYXJjaE1vcmVXaXRoSWQgd2l0aCBwYWdlSW5kZXggXCIlZFwiJywgcGFnZUluZGV4KTtcbiAgICAgICAgICByZXR1cm4gX3RoaXMuX3NlcnZpY2Uuc2VhcmNoTW9yZVdpdGhJZChfdGhpcy5fc2VhcmNoSWRzW2ZpZWxkLmV4dElkXSwgcGFnZUluZGV4KVxuICAgICAgICAgICAgLnRoZW4oKHJlc3VsdCkgPT4ge1xuICAgICAgICAgICAgICBjb25zdCBkYXRhID0ge1xuICAgICAgICAgICAgICAgIGNvdW50OiByZXN1bHQuc2VhcmNoUmVzdWx0LnRvdGFsUmVjb3JkcyxcbiAgICAgICAgICAgICAgICByZXN1bHRzOiByZXN1bHQuc2VhcmNoUmVzdWx0LnNlYXJjaFJvd0xpc3Quc2VhcmNoUm93XG4gICAgICAgICAgICAgIH07XG4gICAgICAgICAgICAgIF90aGlzLl9zZXRDYWNoZVZhbHVlKGZpZWxkLCBwcmVmZXJlbmNlcy5wYWdlU2l6ZSwgcXVlcnkuc2tpcCwgZGF0YSk7XG4gICAgICAgICAgICAgIHJldHVybiByZXNvbHZlKGRhdGEpO1xuICAgICAgICAgICAgfSk7XG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgLy8gTm8gY3JpdGVyaWEgcmlnaHQgbm93XG4gICAgICAgICAgc2VhcmNoID0gbmV3IE5ldFN1aXRlLlNlYXJjaC5DdXN0b21lclNlYXJjaEFkdmFuY2VkKCk7XG4gICAgICAgICAgc2VhcmNoLmNvbHVtbnMgPSBuZXcgTmV0U3VpdGUuU2VhcmNoLkN1c3RvbWVyU2VhcmNoUm93KCk7XG4gICAgICAgICAgc2VhcmNoLmNvbHVtbnMuYmFzaWMgPSBuZXcgTmV0U3VpdGUuU2VhcmNoLkN1c3RvbWVyU2VhcmNoUm93QmFzaWMoKTtcblxuICAgICAgICAgIC8vIEZvciBub3csIGFsd2F5cyBpbmNsdWRlIGFsbCBTZWFyY2hDb2x1bW4gZmllbGRzIHNpbmNlIHN0b3JpbmcgYW4gZXh0cmEgZmllbGRcbiAgICAgICAgICAvLyBpcyBmYXIgbGVzcyBjb3N0bHkgdGhhbiBoYXZpbmcgdG8gZG8gYW5vdGhlciByb3VuZHRyaXAgdG8gcmV0cmlldmUgYW5vdGhlciBmaWVsZFxuICAgICAgICAgIGNvbnN0IGVudGl0eUlkRmllbGQgPSBuZXcgTmV0U3VpdGUuU2VhcmNoLkZpZWxkcy5TZWFyY2hDb2x1bW5TdHJpbmdGaWVsZCgpO1xuICAgICAgICAgIGVudGl0eUlkRmllbGQuZmllbGQgPSAnZW50aXR5SWQnO1xuICAgICAgICAgIHNlYXJjaC5jb2x1bW5zLmJhc2ljLnNlYXJjaENvbHVtbkZpZWxkcy5wdXNoKGVudGl0eUlkRmllbGQpO1xuXG4gICAgICAgICAgY29uc3QgaW50ZXJuYWxJZEZpZWxkID0gbmV3IE5ldFN1aXRlLlNlYXJjaC5GaWVsZHMuU2VhcmNoQ29sdW1uU2VsZWN0RmllbGQoKTtcbiAgICAgICAgICBpbnRlcm5hbElkRmllbGQuZmllbGQgPSAnaW50ZXJuYWxJZCc7XG4gICAgICAgICAgc2VhcmNoLmNvbHVtbnMuYmFzaWMuc2VhcmNoQ29sdW1uRmllbGRzLnB1c2goaW50ZXJuYWxJZEZpZWxkKTtcblxuICAgICAgICAgIGNvbnN0IGJhbGFuY2VGaWVsZCA9IG5ldyBOZXRTdWl0ZS5TZWFyY2guRmllbGRzLlNlYXJjaENvbHVtbkRvdWJsZUZpZWxkKCk7XG4gICAgICAgICAgYmFsYW5jZUZpZWxkLmZpZWxkID0gJ2JhbGFuY2UnO1xuICAgICAgICAgIHNlYXJjaC5jb2x1bW5zLmJhc2ljLnNlYXJjaENvbHVtbkZpZWxkcy5wdXNoKGJhbGFuY2VGaWVsZCk7XG5cbiAgICAgICAgICBjb25zdCBvdmVyZHVlQmFsYW5jZUZpZWxkID0gbmV3IE5ldFN1aXRlLlNlYXJjaC5GaWVsZHMuU2VhcmNoQ29sdW1uRG91YmxlRmllbGQoKTtcbiAgICAgICAgICBvdmVyZHVlQmFsYW5jZUZpZWxkLmZpZWxkID0gJ292ZXJkdWVCYWxhbmNlJztcbiAgICAgICAgICBzZWFyY2guY29sdW1ucy5iYXNpYy5zZWFyY2hDb2x1bW5GaWVsZHMucHVzaChvdmVyZHVlQmFsYW5jZUZpZWxkKTtcblxuICAgICAgICAgIGNvbnN0IGRheXNPdmVyZHVlRmllbGQgPSBuZXcgTmV0U3VpdGUuU2VhcmNoLkZpZWxkcy5TZWFyY2hDb2x1bW5Mb25nRmllbGQoKTtcbiAgICAgICAgICBkYXlzT3ZlcmR1ZUZpZWxkLmZpZWxkID0gJ2RheXNPdmVyZHVlJztcbiAgICAgICAgICBzZWFyY2guY29sdW1ucy5iYXNpYy5zZWFyY2hDb2x1bW5GaWVsZHMucHVzaChkYXlzT3ZlcmR1ZUZpZWxkKTtcblxuICAgICAgICAgIHJldHVybiBfdGhpcy5fc2VydmljZS5zZWFyY2goc2VhcmNoKVxuICAgICAgICAgICAgLnRoZW4oKHJlc3VsdCkgPT4ge1xuICAgICAgICAgICAgICBpZiAocmVzdWx0LnNlYXJjaFJlc3VsdC50b3RhbFBhZ2VzID4gMSkge1xuICAgICAgICAgICAgICAgIF90aGlzLl9zZWFyY2hJZHNbZmllbGQuZXh0SWRdID0gcmVzdWx0LnNlYXJjaFJlc3VsdC5zZWFyY2hJZDtcbiAgICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAgIGNvbnN0IGRhdGEgPSB7XG4gICAgICAgICAgICAgICAgY291bnQ6IHJlc3VsdC5zZWFyY2hSZXN1bHQudG90YWxSZWNvcmRzLFxuICAgICAgICAgICAgICAgIHJlc3VsdHM6IHJlc3VsdC5zZWFyY2hSZXN1bHQuc2VhcmNoUm93TGlzdC5zZWFyY2hSb3dcbiAgICAgICAgICAgICAgfTtcbiAgICAgICAgICAgICAgX3RoaXMuX3NldENhY2hlVmFsdWUoZmllbGQsIHByZWZlcmVuY2VzLnBhZ2VTaXplLCBxdWVyeS5za2lwLCBkYXRhKTtcbiAgICAgICAgICAgICAgcmV0dXJuIHJlc29sdmUoZGF0YSk7XG4gICAgICAgICAgICB9KTtcbiAgICAgICAgfVxuICAgICAgfSBlbHNlIHtcbiAgICAgICAgcmV0dXJuIHJlamVjdChuZXcgRXJyb3IoJ1Vua25vd24gRVhUX0VOVElUWSBlbnRpdHlUeXBlOicsIGZpZWxkLmVudGl0eVR5cGUpKTtcbiAgICAgIH1cbiAgICB9XG4gIH0pO1xufTtcbiJdfQ==
+ */
+NetSuiteAdapter.prototype.getFieldData = function (field, query) {
+  console.log(field);
+  var _this = this;
+  return new Promise(function (resolve, reject) {
+    query = query || {};
+
+    var preferences = new NetSuite.Search.SearchPreferences();
+    preferences.pageSize = query.limit || 10;
+    _this._service.setSearchPreferences(preferences);
+
+    if (!implementedFields[field.type] || !implementedFields[field.type][field.extId]) {
+      return reject(new Error('Unknown field or retrieval NYI by NetSuiteAdapter:', field));
+    }
+
+    // Cache hit?
+    var cached = _this._getCacheValue(field, preferences.pageSize, query.skip);
+    if (cached) {
+      return resolve(cached);
+    }
+
+    var pageIndex = void 0,
+        search = void 0;
+    if (field.type === Fields.Types.USER) {
+      if (query.skip) {
+        if (!_this._searchIds[field.extId]) {
+          throw new Error('NetSuite paged searches must start with an initial search to generate a search session');
+        }
+        // Round down then add 1 since netsuite page indices are one-based
+        pageIndex = Math.floor(query.skip / preferences.pageSize) + 1;
+        console.log('searchMoreWithId with pageIndex "%d"', pageIndex);
+        return _this._service.searchMoreWithId(_this._searchIds[field.extId], pageIndex).then(function (result) {
+          var data = {
+            count: result.searchResult.totalRecords,
+            results: result.searchResult.recordList.record
+          };
+          _this._setCacheValue(field, preferences.pageSize, query.skip, data);
+          return resolve(data);
+        });
+      } else {
+        // No criteria right now
+        search = new NetSuite.Search.EmployeeSearchBasic();
+        return _this._service.search(search).then(function (result) {
+          if (result.searchResult.totalPages > 1) {
+            _this._searchIds[field.extId] = result.searchResult.searchId;
+          }
+
+          var data = {
+            count: result.searchResult.totalRecords,
+            results: result.searchResult.recordList.record
+          };
+          _this._setCacheValue(field, preferences.pageSize, query.skip, data);
+          return resolve(data);
+        });
+      }
+    } else if (field.type === Fields.Types.EXT_ENTITY) {
+      if (field.entityType === 'customer') {
+        if (query.skip) {
+          if (!_this._searchIds[field.extId]) {
+            throw new Error('NetSuite paged searches must start with an initial search to generate a search session');
+          }
+          // Round down then add 1 since netsuite page indices are one-based
+          pageIndex = Math.floor(query.skip / preferences.pageSize) + 1;
+          console.log('searchMoreWithId with pageIndex "%d"', pageIndex);
+          return _this._service.searchMoreWithId(_this._searchIds[field.extId], pageIndex).then(function (result) {
+            var data = {
+              count: result.searchResult.totalRecords,
+              results: result.searchResult.searchRowList.searchRow
+            };
+            _this._setCacheValue(field, preferences.pageSize, query.skip, data);
+            return resolve(data);
+          });
+        } else {
+          // No criteria right now
+          search = new NetSuite.Search.CustomerSearchAdvanced();
+          search.columns = new NetSuite.Search.CustomerSearchRow();
+          search.columns.basic = new NetSuite.Search.CustomerSearchRowBasic();
+
+          // For now, always include all SearchColumn fields since storing an extra field
+          // is far less costly than having to do another roundtrip to retrieve another field
+          var entityIdField = new NetSuite.Search.Fields.SearchColumnStringField();
+          entityIdField.field = 'entityId';
+          search.columns.basic.searchColumnFields.push(entityIdField);
+
+          var internalIdField = new NetSuite.Search.Fields.SearchColumnSelectField();
+          internalIdField.field = 'internalId';
+          search.columns.basic.searchColumnFields.push(internalIdField);
+
+          var balanceField = new NetSuite.Search.Fields.SearchColumnDoubleField();
+          balanceField.field = 'balance';
+          search.columns.basic.searchColumnFields.push(balanceField);
+
+          var overdueBalanceField = new NetSuite.Search.Fields.SearchColumnDoubleField();
+          overdueBalanceField.field = 'overdueBalance';
+          search.columns.basic.searchColumnFields.push(overdueBalanceField);
+
+          var daysOverdueField = new NetSuite.Search.Fields.SearchColumnLongField();
+          daysOverdueField.field = 'daysOverdue';
+          search.columns.basic.searchColumnFields.push(daysOverdueField);
+
+          return _this._service.search(search).then(function (result) {
+            if (result.searchResult.totalPages > 1) {
+              _this._searchIds[field.extId] = result.searchResult.searchId;
+            }
+
+            var data = {
+              count: result.searchResult.totalRecords,
+              results: result.searchResult.searchRowList.searchRow
+            };
+            _this._setCacheValue(field, preferences.pageSize, query.skip, data);
+            return resolve(data);
+          });
+        }
+      } else {
+        return reject(new Error('Unknown EXT_ENTITY entityType:', field.entityType));
+      }
+    }
+  });
+};
 //# sourceMappingURL=../../clAdapters/netsuite/index.js.map

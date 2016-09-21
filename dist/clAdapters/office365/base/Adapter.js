@@ -1,14 +1,457 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _nodeUuid=require('node-uuid');var _nodeUuid2=_interopRequireDefault(_nodeUuid);var _crypto=require('crypto');var _crypto2=_interopRequireDefault(_crypto);var _requestPromise=require('request-promise');var _requestPromise2=_interopRequireDefault(_requestPromise);var _moment=require('moment');var _moment2=_interopRequireDefault(_moment);var _lodash=require('lodash');var _lodash2=_interopRequireDefault(_lodash);var _Adapter2=require('../../base/Adapter');var _Adapter3=_interopRequireDefault(_Adapter2);var _Service=require('./Service');var _Service2=_interopRequireDefault(_Service);var _Configuration=require('./Configuration');var _Configuration2=_interopRequireDefault(_Configuration);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}function _asyncToGenerator(fn){return function(){var gen=fn.apply(this,arguments);return new Promise(function(resolve,reject){function step(key,arg){try{var info=gen[key](arg);var value=info.value;}catch(error){reject(error);return;}if(info.done){resolve(value);}else{return Promise.resolve(value).then(function(value){return step("next",value);},function(err){return step("throw",err);});}}return step("next");});};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}/**
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodeUuid = require('node-uuid');
+
+var uuid = _interopRequireWildcard(_nodeUuid);
+
+var _crypto = require('crypto');
+
+var crypto = _interopRequireWildcard(_crypto);
+
+var _requestPromise = require('request-promise');
+
+var _requestPromise2 = _interopRequireDefault(_requestPromise);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+var _Adapter2 = require('../../base/Adapter');
+
+var _Adapter3 = _interopRequireDefault(_Adapter2);
+
+var _Service = require('./Service');
+
+var _Service2 = _interopRequireDefault(_Service);
+
+var _Configuration = require('./Configuration');
+
+var _Configuration2 = _interopRequireDefault(_Configuration);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
  * Common reset, runConnectionTest, and getAccessToken methods...
- */var Office365BaseAdapter=function(_Adapter){_inherits(Office365BaseAdapter,_Adapter);function Office365BaseAdapter(){_classCallCheck(this,Office365BaseAdapter);return _possibleConstructorReturn(this,(Office365BaseAdapter.__proto__||Object.getPrototypeOf(Office365BaseAdapter)).apply(this,arguments));}_createClass(Office365BaseAdapter,[{key:'reset',value:function reset(){delete this._config;delete this._service;return this;}},{key:'init',value:function(){var _ref=_asyncToGenerator(regeneratorRuntime.mark(function _callee(){return regeneratorRuntime.wrap(function _callee$(_context){while(1){switch(_context.prev=_context.next){case 0:this._config=new _Configuration2.default(this.credentials);this._service=new _Service2.default(this._config);_context.next=4;return this._service.init();case 4:console.log('Successfully initialized '+this.constructor.name+' for email: '+this.credentials.email);return _context.abrupt('return',this);case 6:case'end':return _context.stop();}}},_callee,this);}));function init(){return _ref.apply(this,arguments);}return init;}()},{key:'runConnectionTest',value:function(){var _ref2=_asyncToGenerator(regeneratorRuntime.mark(function _callee2(connectionData){var today,filterStartDate,filterEndDate,data;return regeneratorRuntime.wrap(function _callee2$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:this._config=new _Configuration2.default(connectionData.credentials);today=function today(){return(0,_moment2.default)().utc().startOf('day');};filterStartDate=today().add(-1,'days').toDate();filterEndDate=today().toDate();_context2.next=6;return this.getBatchData([{email:this._config.credentials.email,emailAfterMapping:this._config.credentials.email}],filterStartDate,filterEndDate,'');case 6:data=_context2.sent;return _context2.abrupt('return',data.success&&data.results[0]?data.results[0]:data);case 8:case'end':return _context2.stop();}}},_callee2,this);}));function runConnectionTest(_x){return _ref2.apply(this,arguments);}return runConnectionTest;}()},{key:'getAccessToken',value:function(){var _ref3=_asyncToGenerator(regeneratorRuntime.mark(function _callee3(){var _config,_config$credentials,clientId,tenantId,certificate,certificateThumbprint,apiVersion,tokenRequestUrl,jwtHeader,accessTokenExpires,jwtPayload,encode,encodedJwtHeader,encodedJwtPayload,stringToSign,encodedSignedJwtInfo,tokenRequestFormData,tokenRequestOptions,tokenData,messageData;return regeneratorRuntime.wrap(function _callee3$(_context3){while(1){switch(_context3.prev=_context3.next){case 0:if(!(this.accessToken&&this.accessTokenExpires>new Date())){_context3.next=2;break;}return _context3.abrupt('return',this.accessToken);case 2:_config=this._config;_config$credentials=_config.credentials;clientId=_config$credentials.clientId;tenantId=_config$credentials.tenantId;certificate=_config$credentials.certificate;certificateThumbprint=_config$credentials.certificateThumbprint;apiVersion=_config.options.apiVersion;tokenRequestUrl='https://login.microsoftonline.com/'+tenantId+'/oauth2/token?api-version='+apiVersion;jwtHeader={'alg':'RS256','x5t':certificateThumbprint};// expire token in one hour
-accessTokenExpires=(new Date().getTime()+360000)/1000;// grab new access token 10 seconds before expiration
-this.accessTokenExpires=new Date(accessTokenExpires*1000-10000);jwtPayload={'aud':tokenRequestUrl,'exp':accessTokenExpires,'iss':clientId,'jti':_nodeUuid2.default.v4(),'nbf':accessTokenExpires-2*3600,// one hour before now
-'sub':clientId};encode=function encode(header){return new Buffer(JSON.stringify(header)).toString('base64');},encodedJwtHeader=encode(jwtHeader),encodedJwtPayload=encode(jwtPayload),stringToSign=encodedJwtHeader+'.'+encodedJwtPayload,encodedSignedJwtInfo=_crypto2.default.createSign('RSA-SHA256').update(stringToSign).sign(certificate,'base64');tokenRequestFormData={client_id:clientId,client_assertion_type:'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',grant_type:'client_credentials',resource:'https://outlook.office365.com/',client_assertion:encodedJwtHeader+'.'+encodedJwtPayload+'.'+encodedSignedJwtInfo};tokenRequestOptions={method:'POST',port:443,uri:tokenRequestUrl,formData:tokenRequestFormData};_context3.prev=17;_context3.t0=JSON;_context3.next=21;return(0,_requestPromise2.default)(tokenRequestOptions);case 21:_context3.t1=_context3.sent;tokenData=_context3.t0.parse.call(_context3.t0,_context3.t1);if(!(tokenData&&tokenData.access_token)){_context3.next=27;break;}return _context3.abrupt('return',this.accessToken=tokenData.access_token);case 27:throw new Error('Could not get access token.');case 28:_context3.next=38;break;case 30:_context3.prev=30;_context3.t2=_context3['catch'](17);if(!(_context3.t2.name==='StatusCodeError')){_context3.next=37;break;}messageData=JSON.parse(_context3.t2.message.replace(_context3.t2.statusCode+' - ','').replace(/\"/g,'"'));throw new Error(messageData);case 37:throw new Error(_context3.t2);case 38:case'end':return _context3.stop();}}},_callee3,this,[[17,30]]);}));function getAccessToken(){return _ref3.apply(this,arguments);}return getAccessToken;}()},{key:'getUserData',value:function(){var _ref4=_asyncToGenerator(regeneratorRuntime.mark(function _callee4(options,userData){var pageToGet=arguments.length<=2||arguments[2]===undefined?1:arguments[2];var userProfile,filterStartDate,filterEndDate,additionalFields,$filter,apiType,_options$maxPages,maxPages,_options$recordsPerPa,recordsPerPage,accessToken,apiVersion,skip,baseFields,params,urlParams,requestOptions,_ref5,records,e,recIter,rec,mid,attachmentOptions,attachmentData,_userData$data;return regeneratorRuntime.wrap(function _callee4$(_context4){while(1){switch(_context4.prev=_context4.next){case 0:userProfile=options.userProfile;filterStartDate=options.filterStartDate;filterEndDate=options.filterEndDate;additionalFields=options.additionalFields;$filter=options.$filter;apiType=options.apiType;_options$maxPages=options.maxPages;maxPages=_options$maxPages===undefined?20:_options$maxPages;_options$recordsPerPa=options.recordsPerPage;recordsPerPage=_options$recordsPerPa===undefined?25:_options$recordsPerPa;// accumulation of data
-userData=userData||{userProfile:userProfile,filterStartDate:filterStartDate,filterEndDate:filterEndDate};_context4.next=13;return this.getAccessToken();case 13:accessToken=_context4.sent;apiVersion=this._config.options.apiVersion;skip=(pageToGet-1)*recordsPerPage;// extract static property...
-baseFields=this.constructor.baseFields;// parameters to query email with...
-params={startDateTime:filterStartDate.toISOString(),endDateTime:filterEndDate.toISOString(),$top:recordsPerPage,$skip:skip,$select:baseFields.join(',')+(additionalFields?','+additionalFields:'')};if(apiType!=='calendarview'){params.$filter=$filter;}// format parameters for url
-urlParams=(0,_lodash2.default)(params).map(function(value,key){return key+'='+value;}).join('&');requestOptions={method:'GET',uri:'https://outlook.office365.com/api/v'+apiVersion+'/users(\''+userProfile.emailAfterMapping+'\')/'+apiType+'?'+urlParams,headers:{Authorization:'Bearer '+accessToken,Accept:'application/json;odata.metadata=none'}};_context4.prev=21;userData.success=true;_context4.t1=JSON;_context4.next=26;return(0,_requestPromise2.default)(requestOptions);case 26:_context4.t2=_context4.sent;_context4.t0=_context4.t1.parse.call(_context4.t1,_context4.t2);if(_context4.t0){_context4.next=30;break;}_context4.t0={};case 30:_ref5=_context4.t0;records=_ref5.value;e=userProfile.emailAfterMapping;if(!(userProfile.getAttachments&&records.length)){_context4.next=52;break;}recIter=0;case 35:if(!(recIter<records.length)){_context4.next=52;break;}rec=records[recIter];mid=rec.Id||'';rec.attachments=[];attachmentOptions={method:'GET',uri:'https://outlook.office365.com/api/v'+apiVersion+'/users(\''+e+'\')/messages/'+mid+'/attachments',headers:{Authorization:'Bearer '+accessToken,Accept:'application/json;odata.metadata=none'}};_context4.t4=JSON;_context4.next=43;return(0,_requestPromise2.default)(attachmentOptions);case 43:_context4.t5=_context4.sent;_context4.t3=_context4.t4.parse.call(_context4.t4,_context4.t5);if(_context4.t3){_context4.next=47;break;}_context4.t3={};case 47:attachmentData=_context4.t3;if(attachmentData.value&&attachmentData.value.length>0){rec.attachments=attachmentData.value;}case 49:recIter++;_context4.next=35;break;case 52:if(records&&pageToGet===1){userData.data=records;}if(records&&pageToGet>1){(_userData$data=userData.data).push.apply(_userData$data,_toConsumableArray(records));}// if the returned results are the maximum number of records per page,
-// we are not done yet, so recurse...
-if(!(records.length===recordsPerPage&&pageToGet<=maxPages)){_context4.next=58;break;}return _context4.abrupt('return',this.getUserData(options,userData,pageToGet+1));case 58:return _context4.abrupt('return',userData);case 59:_context4.next=65;break;case 61:_context4.prev=61;_context4.t6=_context4['catch'](21);Object.assign(userData,{success:false,errorMessage:_context4.t6.name!=='StatusCodeError'?JSON.stringify(_context4.t6):JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode+' - ','').replace(/\"/g,'"')).message});return _context4.abrupt('return',true);case 65:case'end':return _context4.stop();}}},_callee4,this,[[21,61]]);}));function getUserData(_x3,_x4){return _ref4.apply(this,arguments);}return getUserData;}()}]);return Office365BaseAdapter;}(_Adapter3.default);exports.default=Office365BaseAdapter;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvb2ZmaWNlMzY1L2Jhc2UvQWRhcHRlci5qcyJdLCJuYW1lcyI6WyJPZmZpY2UzNjVCYXNlQWRhcHRlciIsIl9jb25maWciLCJfc2VydmljZSIsImNyZWRlbnRpYWxzIiwiaW5pdCIsImNvbnNvbGUiLCJsb2ciLCJjb25zdHJ1Y3RvciIsIm5hbWUiLCJlbWFpbCIsImNvbm5lY3Rpb25EYXRhIiwidG9kYXkiLCJ1dGMiLCJzdGFydE9mIiwiZmlsdGVyU3RhcnREYXRlIiwiYWRkIiwidG9EYXRlIiwiZmlsdGVyRW5kRGF0ZSIsImdldEJhdGNoRGF0YSIsImVtYWlsQWZ0ZXJNYXBwaW5nIiwiZGF0YSIsInN1Y2Nlc3MiLCJyZXN1bHRzIiwiYWNjZXNzVG9rZW4iLCJhY2Nlc3NUb2tlbkV4cGlyZXMiLCJEYXRlIiwiY2xpZW50SWQiLCJ0ZW5hbnRJZCIsImNlcnRpZmljYXRlIiwiY2VydGlmaWNhdGVUaHVtYnByaW50IiwiYXBpVmVyc2lvbiIsIm9wdGlvbnMiLCJ0b2tlblJlcXVlc3RVcmwiLCJqd3RIZWFkZXIiLCJnZXRUaW1lIiwiand0UGF5bG9hZCIsInY0IiwiZW5jb2RlIiwiQnVmZmVyIiwiSlNPTiIsInN0cmluZ2lmeSIsImhlYWRlciIsInRvU3RyaW5nIiwiZW5jb2RlZEp3dEhlYWRlciIsImVuY29kZWRKd3RQYXlsb2FkIiwic3RyaW5nVG9TaWduIiwiZW5jb2RlZFNpZ25lZEp3dEluZm8iLCJjcmVhdGVTaWduIiwidXBkYXRlIiwic2lnbiIsInRva2VuUmVxdWVzdEZvcm1EYXRhIiwiY2xpZW50X2lkIiwiY2xpZW50X2Fzc2VydGlvbl90eXBlIiwiZ3JhbnRfdHlwZSIsInJlc291cmNlIiwiY2xpZW50X2Fzc2VydGlvbiIsInRva2VuUmVxdWVzdE9wdGlvbnMiLCJtZXRob2QiLCJwb3J0IiwidXJpIiwiZm9ybURhdGEiLCJ0b2tlbkRhdGEiLCJwYXJzZSIsImFjY2Vzc190b2tlbiIsIkVycm9yIiwibWVzc2FnZURhdGEiLCJtZXNzYWdlIiwicmVwbGFjZSIsInN0YXR1c0NvZGUiLCJ1c2VyRGF0YSIsInBhZ2VUb0dldCIsInVzZXJQcm9maWxlIiwiYWRkaXRpb25hbEZpZWxkcyIsIiRmaWx0ZXIiLCJhcGlUeXBlIiwibWF4UGFnZXMiLCJyZWNvcmRzUGVyUGFnZSIsImdldEFjY2Vzc1Rva2VuIiwic2tpcCIsImJhc2VGaWVsZHMiLCJwYXJhbXMiLCJzdGFydERhdGVUaW1lIiwidG9JU09TdHJpbmciLCJlbmREYXRlVGltZSIsIiR0b3AiLCIkc2tpcCIsIiRzZWxlY3QiLCJqb2luIiwidXJsUGFyYW1zIiwibWFwIiwidmFsdWUiLCJrZXkiLCJyZXF1ZXN0T3B0aW9ucyIsImhlYWRlcnMiLCJBdXRob3JpemF0aW9uIiwiQWNjZXB0IiwicmVjb3JkcyIsImUiLCJnZXRBdHRhY2htZW50cyIsImxlbmd0aCIsInJlY0l0ZXIiLCJyZWMiLCJtaWQiLCJJZCIsImF0dGFjaG1lbnRzIiwiYXR0YWNobWVudE9wdGlvbnMiLCJhdHRhY2htZW50RGF0YSIsInB1c2giLCJnZXRVc2VyRGF0YSIsIk9iamVjdCIsImFzc2lnbiIsImVycm9yTWVzc2FnZSJdLCJtYXBwaW5ncyI6Im9rQkFBQSxtQyxpREFDQSw4Qiw2Q0FDQSwrQyw2REFDQSw4Qiw2Q0FDQSw4Qiw2Q0FDQSw0QyxnREFDQSxrQywrQ0FDQSw4QyxxZ0RBRUE7O01BR3FCQSxxQiwyVkFHWCxDQUNOLE1BQU8sTUFBS0MsT0FBWixDQUNBLE1BQU8sTUFBS0MsUUFBWixDQUNBLE1BQU8sS0FBUCxDQUNELEMsb05BR0MsS0FBS0QsT0FBTCxDQUFnQiw0QkFBK0IsS0FBS0UsV0FBcEMsQ0FBaEIsQ0FDQSxLQUFLRCxRQUFMLENBQWdCLHNCQUF5QixLQUFLRCxPQUE5QixDQUFoQixDLHNCQUNNLE1BQUtDLFFBQUwsQ0FBY0UsSUFBZCxFLFFBQ05DLFFBQVFDLEdBQVIsNkJBQXdDLEtBQUtDLFdBQUwsQ0FBaUJDLElBQXpELGdCQUE0RSxLQUFLTCxXQUFMLENBQWlCTSxLQUE3RixFLGdDQUNPLEks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LElBQUlHLFdBQUosQ0FBa0JFLGVBQWVoQixLQUFqQyxDQUNELEMsUUFmNENVLFMsaUNBbUJqRCxHQUFJSixTQUFXMUIsWUFBYyxDQUE3QixDQUFnQyxDQUM5QkQsU0FBU2pELElBQVQsQ0FBZ0I0RSxPQUFoQixDQUNELENBRUQsR0FBSUEsU0FBVzFCLFVBQVksQ0FBM0IsQ0FBOEIsQ0FDNUIseUJBQVNsRCxJQUFULEVBQWN1RixJQUFkLHlDQUFzQlgsT0FBdEIsR0FDRCxDQUVEO0FBQ0E7S0FDSUEsUUFBUUcsTUFBUixHQUFtQnZCLGNBQW5CLEVBQXFDTixXQUFhSyxRLDZEQUM3QyxLQUFLaUMsV0FBTCxDQUFpQjdFLE9BQWpCLENBQTBCc0MsUUFBMUIsQ0FBb0NDLFVBQVksQ0FBaEQsQywyQ0FFQUQsUSxnR0FJVHdDLE9BQU9DLE1BQVAsQ0FBY3pDLFFBQWQsQ0FBd0IsQ0FDdEJoRCxRQUFTLEtBRGEsQ0FFdEIwRixhQUFjLGFBQUl2RyxJQUFKLEdBQWEsaUJBQWIsQ0FDRStCLEtBQUtDLFNBQUwsY0FERixDQUVFRCxLQUFLdUIsS0FBTCxDQUNNLGFBQUlJLE9BQUosQ0FDSUMsT0FESixDQUNZLGFBQUlDLFVBQUosQ0FBaUIsS0FEN0IsQ0FDb0MsRUFEcEMsRUFFSUQsT0FGSixDQUVZLEtBRlosQ0FFbUIsR0FGbkIsQ0FETixFQUtLRCxPQVRDLENBQXhCLEUsaUNBV08sSSwwT0FuT1FsRSxvQiIsImZpbGUiOiJjbEFkYXB0ZXJzL29mZmljZTM2NS9iYXNlL0FkYXB0ZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgdXVpZCAgICAgICAgICAgICAgICAgICAgICAgZnJvbSAnbm9kZS11dWlkJztcbmltcG9ydCBjcnlwdG8gICAgICAgICAgICAgICAgICAgICBmcm9tICdjcnlwdG8nO1xuaW1wb3J0IHJlcXVlc3QgICAgICAgICAgICAgICAgICAgIGZyb20gJ3JlcXVlc3QtcHJvbWlzZSc7XG5pbXBvcnQgbW9tZW50ICAgICAgICAgICAgICAgICAgICAgZnJvbSAnbW9tZW50JztcbmltcG9ydCBfICAgICAgICAgICAgICAgICAgICAgICAgICBmcm9tICdsb2Rhc2gnO1xuaW1wb3J0IEFkYXB0ZXIgICAgICAgICAgICAgICAgICAgIGZyb20gJy4uLy4uL2Jhc2UvQWRhcHRlcic7XG5pbXBvcnQgT2ZmaWNlMzY1QmFzZVNlcnZpY2UgICAgICAgZnJvbSAnLi9TZXJ2aWNlJztcbmltcG9ydCBPZmZpY2UzNjVCYXNlQ29uZmlndXJhdGlvbiBmcm9tICcuL0NvbmZpZ3VyYXRpb24nO1xuXG4vKipcbiAqIENvbW1vbiByZXNldCwgcnVuQ29ubmVjdGlvblRlc3QsIGFuZCBnZXRBY2Nlc3NUb2tlbiBtZXRob2RzLi4uXG4gKi9cbmV4cG9ydCBkZWZhdWx0IGNsYXNzIE9mZmljZTM2NUJhc2VBZGFwdGVyIGV4dGVuZHMgQWRhcHRlciB7XG5cblxuICByZXNldCgpIHtcbiAgICBkZWxldGUgdGhpcy5fY29uZmlnO1xuICAgIGRlbGV0ZSB0aGlzLl9zZXJ2aWNlO1xuICAgIHJldHVybiB0aGlzO1xuICB9XG5cbiAgYXN5bmMgaW5pdCgpIHtcbiAgICB0aGlzLl9jb25maWcgID0gbmV3IE9mZmljZTM2NUJhc2VDb25maWd1cmF0aW9uKHRoaXMuY3JlZGVudGlhbHMpO1xuICAgIHRoaXMuX3NlcnZpY2UgPSBuZXcgT2ZmaWNlMzY1QmFzZVNlcnZpY2UodGhpcy5fY29uZmlnKTtcbiAgICBhd2FpdCB0aGlzLl9zZXJ2aWNlLmluaXQoKTtcbiAgICBjb25zb2xlLmxvZyhgU3VjY2Vzc2Z1bGx5IGluaXRpYWxpemVkICR7dGhpcy5jb25zdHJ1Y3Rvci5uYW1lfSBmb3IgZW1haWw6ICR7dGhpcy5jcmVkZW50aWFscy5lbWFpbH1gKTtcbiAgICByZXR1cm4gdGhpcztcbiAgfVxuXG5cbiAgYXN5bmMgcnVuQ29ubmVjdGlvblRlc3QoY29ubmVjdGlvbkRhdGEpIHtcbiAgICB0aGlzLl9jb25maWcgPSBuZXcgT2ZmaWNlMzY1QmFzZUNvbmZpZ3VyYXRpb24oY29ubmVjdGlvbkRhdGEuY3JlZGVudGlhbHMpO1xuXG4gICAgY29uc3QgdG9kYXkgICAgICAgICAgID0gKCkgPT4gbW9tZW50KCkudXRjKCkuc3RhcnRPZignZGF5JyksXG4gICAgICAgICAgZmlsdGVyU3RhcnREYXRlID0gdG9kYXkoKS5hZGQoLTEsICdkYXlzJykudG9EYXRlKCksXG4gICAgICAgICAgZmlsdGVyRW5kRGF0ZSAgID0gdG9kYXkoKS50b0RhdGUoKSxcbiAgICAgICAgICBkYXRhICAgICAgICAgICAgPSBhd2FpdCB0aGlzLmdldEJhdGNoRGF0YShcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFsge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbWFpbDogdGhpcy5fY29uZmlnLmNyZWRlbnRpYWxzLmVtYWlsLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbWFpbEFmdGVyTWFwcGluZzogdGhpcy5fY29uZmlnLmNyZWRlbnRpYWxzLmVtYWlsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9IF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJTdGFydERhdGUsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJFbmREYXRlLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJydcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICApO1xuXG4gICAgLy90byBzZWUgaWYgaXQgcmVhbGx5IHdvcmtlZCwgd2UgbmVlZCB0byBwYXNzIGluIHRoZSBmaXJzdCByZXN1bHRcbiAgICByZXR1cm4gZGF0YS5zdWNjZXNzICYmIGRhdGEucmVzdWx0c1swXSA/IGRhdGEucmVzdWx0c1swXSA6IGRhdGE7XG4gIH1cblxuXG4gIGFzeW5jIGdldEFjY2Vzc1Rva2VuKCkge1xuXG4gICAgaWYgKHRoaXMuYWNjZXNzVG9rZW4gJiYgdGhpcy5hY2Nlc3NUb2tlbkV4cGlyZXMgPiBuZXcgRGF0ZSgpKSB7XG4gICAgICByZXR1cm4gdGhpcy5hY2Nlc3NUb2tlbjtcbiAgICB9XG5cbiAgICBjb25zdCB7XG4gICAgICBjcmVkZW50aWFscyA6IHtcbiAgICAgICAgY2xpZW50SWQsXG4gICAgICAgIHRlbmFudElkLFxuICAgICAgICBjZXJ0aWZpY2F0ZSxcbiAgICAgICAgY2VydGlmaWNhdGVUaHVtYnByaW50XG4gICAgICB9LFxuICAgICAgb3B0aW9ucyA6IHtcbiAgICAgICAgYXBpVmVyc2lvblxuICAgICAgfVxuICAgIH0gPSB0aGlzLl9jb25maWc7XG5cbiAgICBjb25zdCB0b2tlblJlcXVlc3RVcmwgPSBgaHR0cHM6Ly9sb2dpbi5taWNyb3NvZnRvbmxpbmUuY29tLyR7dGVuYW50SWR9L29hdXRoMi90b2tlbj9hcGktdmVyc2lvbj0ke2FwaVZlcnNpb259YDtcblxuICAgIGNvbnN0IGp3dEhlYWRlciA9IHtcbiAgICAgICdhbGcnOiAnUlMyNTYnLFxuICAgICAgJ3g1dCc6IGNlcnRpZmljYXRlVGh1bWJwcmludFxuICAgIH07XG5cbiAgICAvLyBleHBpcmUgdG9rZW4gaW4gb25lIGhvdXJcbiAgICBjb25zdCBhY2Nlc3NUb2tlbkV4cGlyZXMgPSAoKG5ldyBEYXRlKCkpLmdldFRpbWUoKSArIDM2MDAwMCkgLyAxMDAwO1xuXG4gICAgLy8gZ3JhYiBuZXcgYWNjZXNzIHRva2VuIDEwIHNlY29uZHMgYmVmb3JlIGV4cGlyYXRpb25cbiAgICB0aGlzLmFjY2Vzc1Rva2VuRXhwaXJlcyA9IG5ldyBEYXRlKGFjY2Vzc1Rva2VuRXhwaXJlcyAqIDEwMDAgLSAxMDAwMCk7XG5cbiAgICBjb25zdCBqd3RQYXlsb2FkID0ge1xuICAgICAgJ2F1ZCc6IHRva2VuUmVxdWVzdFVybCxcbiAgICAgICdleHAnOiBhY2Nlc3NUb2tlbkV4cGlyZXMsXG4gICAgICAnaXNzJzogY2xpZW50SWQsXG4gICAgICAnanRpJzogdXVpZC52NCgpLFxuICAgICAgJ25iZic6IGFjY2Vzc1Rva2VuRXhwaXJlcyAtIDIgKiAzNjAwLCAvLyBvbmUgaG91ciBiZWZvcmUgbm93XG4gICAgICAnc3ViJzogY2xpZW50SWRcbiAgICB9O1xuXG4gICAgY29uc3QgZW5jb2RlICAgICAgICAgICAgICAgPSBoZWFkZXIgPT4gbmV3IEJ1ZmZlcihKU09OLnN0cmluZ2lmeShoZWFkZXIpKS50b1N0cmluZygnYmFzZTY0JyksXG4gICAgICAgICAgZW5jb2RlZEp3dEhlYWRlciAgICAgPSBlbmNvZGUoand0SGVhZGVyKSxcbiAgICAgICAgICBlbmNvZGVkSnd0UGF5bG9hZCAgICA9IGVuY29kZShqd3RQYXlsb2FkKSxcbiAgICAgICAgICBzdHJpbmdUb1NpZ24gICAgICAgICA9IGVuY29kZWRKd3RIZWFkZXIgKyAnLicgKyBlbmNvZGVkSnd0UGF5bG9hZCxcbiAgICAgICAgICBlbmNvZGVkU2lnbmVkSnd0SW5mbyA9IGNyeXB0b1xuICAgICAgICAgICAgLmNyZWF0ZVNpZ24oJ1JTQS1TSEEyNTYnKVxuICAgICAgICAgICAgLnVwZGF0ZShzdHJpbmdUb1NpZ24pXG4gICAgICAgICAgICAuc2lnbihjZXJ0aWZpY2F0ZSwgJ2Jhc2U2NCcpO1xuXG4gICAgY29uc3QgdG9rZW5SZXF1ZXN0Rm9ybURhdGEgPSB7XG4gICAgICBjbGllbnRfaWQ6IGNsaWVudElkLFxuICAgICAgY2xpZW50X2Fzc2VydGlvbl90eXBlOiAndXJuOmlldGY6cGFyYW1zOm9hdXRoOmNsaWVudC1hc3NlcnRpb24tdHlwZTpqd3QtYmVhcmVyJyxcbiAgICAgIGdyYW50X3R5cGU6ICdjbGllbnRfY3JlZGVudGlhbHMnLFxuICAgICAgcmVzb3VyY2U6ICdodHRwczovL291dGxvb2sub2ZmaWNlMzY1LmNvbS8nLFxuICAgICAgY2xpZW50X2Fzc2VydGlvbjogZW5jb2RlZEp3dEhlYWRlciArICcuJyArIGVuY29kZWRKd3RQYXlsb2FkICsgJy4nICsgZW5jb2RlZFNpZ25lZEp3dEluZm9cbiAgICB9O1xuXG4gICAgY29uc3QgdG9rZW5SZXF1ZXN0T3B0aW9ucyA9IHtcbiAgICAgIG1ldGhvZDogJ1BPU1QnLFxuICAgICAgcG9ydDogNDQzLFxuICAgICAgdXJpOiB0b2tlblJlcXVlc3RVcmwsXG4gICAgICBmb3JtRGF0YTogdG9rZW5SZXF1ZXN0Rm9ybURhdGEsXG4gICAgfTtcblxuICAgIHRyeSB7XG4gICAgICBjb25zdCB0b2tlbkRhdGEgPSBKU09OLnBhcnNlKGF3YWl0IHJlcXVlc3QodG9rZW5SZXF1ZXN0T3B0aW9ucykpO1xuICAgICAgaWYgKHRva2VuRGF0YSAmJiB0b2tlbkRhdGEuYWNjZXNzX3Rva2VuKSB7XG4gICAgICAgIHJldHVybiB0aGlzLmFjY2Vzc1Rva2VuID0gdG9rZW5EYXRhLmFjY2Vzc190b2tlbjtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcignQ291bGQgbm90IGdldCBhY2Nlc3MgdG9rZW4uJyk7XG4gICAgICB9XG4gICAgfSBjYXRjaCAodG9rZW5EYXRhKSB7XG4gICAgICBpZiAodG9rZW5EYXRhLm5hbWUgPT09ICdTdGF0dXNDb2RlRXJyb3InKSB7XG4gICAgICAgIGNvbnN0IG1lc3NhZ2VEYXRhID0gSlNPTi5wYXJzZShcbiAgICAgICAgICB0b2tlbkRhdGFcbiAgICAgICAgICAgIC5tZXNzYWdlXG4gICAgICAgICAgICAucmVwbGFjZSh0b2tlbkRhdGEuc3RhdHVzQ29kZSArICcgLSAnLCAnJylcbiAgICAgICAgICAgIC5yZXBsYWNlKC9cXFwiL2csICdcIicpXG4gICAgICAgICk7XG5cbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKG1lc3NhZ2VEYXRhKTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcih0b2tlbkRhdGEpO1xuICAgICAgfVxuICAgIH1cbiAgfVxuXG5cbiAgYXN5bmMgZ2V0VXNlckRhdGEob3B0aW9ucywgdXNlckRhdGEsIHBhZ2VUb0dldCA9IDEpIHtcbiAgICBjb25zdCB7XG4gICAgICB1c2VyUHJvZmlsZSxcbiAgICAgIGZpbHRlclN0YXJ0RGF0ZSxcbiAgICAgIGZpbHRlckVuZERhdGUsXG4gICAgICBhZGRpdGlvbmFsRmllbGRzLFxuICAgICAgJGZpbHRlcixcbiAgICAgIGFwaVR5cGUsXG4gICAgICBtYXhQYWdlcyA9IDIwLFxuICAgICAgcmVjb3Jkc1BlclBhZ2UgPSAyNVxuICAgIH0gPSBvcHRpb25zO1xuXG4gICAgLy8gYWNjdW11bGF0aW9uIG9mIGRhdGFcbiAgICB1c2VyRGF0YSA9IHVzZXJEYXRhIHx8IHsgdXNlclByb2ZpbGUsIGZpbHRlclN0YXJ0RGF0ZSwgZmlsdGVyRW5kRGF0ZSB9O1xuXG4gICAgY29uc3QgYWNjZXNzVG9rZW4gICAgICAgICAgPSBhd2FpdCB0aGlzLmdldEFjY2Vzc1Rva2VuKCksXG4gICAgICAgICAgeyBhcGlWZXJzaW9uIH0gICAgICAgPSB0aGlzLl9jb25maWcub3B0aW9ucyxcbiAgICAgICAgICBza2lwICAgICAgICAgICAgICAgICA9IChwYWdlVG9HZXQgLSAxKSAqIHJlY29yZHNQZXJQYWdlLFxuICAgICAgICAgIC8vIGV4dHJhY3Qgc3RhdGljIHByb3BlcnR5Li4uXG4gICAgICAgICAgeyBiYXNlRmllbGRzIH0gICAgICAgPSB0aGlzLmNvbnN0cnVjdG9yLFxuICAgICAgICAgIC8vIHBhcmFtZXRlcnMgdG8gcXVlcnkgZW1haWwgd2l0aC4uLlxuICAgICAgICAgIHBhcmFtcyAgICAgICAgICAgICAgID0ge1xuICAgICAgICAgICAgc3RhcnREYXRlVGltZTogZmlsdGVyU3RhcnREYXRlLnRvSVNPU3RyaW5nKCksXG4gICAgICAgICAgICBlbmREYXRlVGltZTogZmlsdGVyRW5kRGF0ZS50b0lTT1N0cmluZygpLFxuICAgICAgICAgICAgJHRvcDogICAgIHJlY29yZHNQZXJQYWdlLFxuICAgICAgICAgICAgJHNraXA6ICAgIHNraXAsXG4gICAgICAgICAgICAkc2VsZWN0OiAgYmFzZUZpZWxkcy5qb2luKCcsJykgKyAoYWRkaXRpb25hbEZpZWxkcyA/IGAsJHthZGRpdGlvbmFsRmllbGRzfWAgOiAnJyksXG4gICAgICAgICAgfTtcbiAgICBpZihhcGlUeXBlICE9PSAnY2FsZW5kYXJ2aWV3Jykge1xuICAgICAgcGFyYW1zLiRmaWx0ZXIgPSAkZmlsdGVyO1xuICAgIH1cblxuICAgIC8vIGZvcm1hdCBwYXJhbWV0ZXJzIGZvciB1cmxcbiAgICBjb25zdCB1cmxQYXJhbXMgPSBfKHBhcmFtcylcbiAgICAgIC5tYXAoKHZhbHVlLCBrZXkpID0+IGAke2tleX09JHt2YWx1ZX1gKVxuICAgICAgLmpvaW4oJyYnKTtcblxuICAgIGNvbnN0IHJlcXVlc3RPcHRpb25zID0ge1xuICAgICAgbWV0aG9kOiAnR0VUJyxcbiAgICAgIHVyaTogYGh0dHBzOi8vb3V0bG9vay5vZmZpY2UzNjUuY29tL2FwaS92JHthcGlWZXJzaW9ufS91c2VycygnJHt1c2VyUHJvZmlsZS5lbWFpbEFmdGVyTWFwcGluZ30nKS8ke2FwaVR5cGV9PyR7dXJsUGFyYW1zfWAsXG4gICAgICBoZWFkZXJzIDoge1xuICAgICAgICBBdXRob3JpemF0aW9uOiBgQmVhcmVyICR7YWNjZXNzVG9rZW59YCxcbiAgICAgICAgQWNjZXB0OiAgICAgICAgJ2FwcGxpY2F0aW9uL2pzb247b2RhdGEubWV0YWRhdGE9bm9uZSdcbiAgICAgIH1cbiAgICB9O1xuXG4gICAgdHJ5IHtcbiAgICAgIHVzZXJEYXRhLnN1Y2Nlc3MgPSB0cnVlO1xuXG4gICAgICBjb25zdCB7IHZhbHVlOiByZWNvcmRzIH0gPSBKU09OLnBhcnNlKGF3YWl0IHJlcXVlc3QocmVxdWVzdE9wdGlvbnMpKSB8fCB7fTtcbiAgICAgIGNvbnN0IGUgPSB1c2VyUHJvZmlsZS5lbWFpbEFmdGVyTWFwcGluZztcblxuICAgICAgaWYodXNlclByb2ZpbGUuZ2V0QXR0YWNobWVudHMgJiYgcmVjb3Jkcy5sZW5ndGgpIHtcbiAgICAgICAgZm9yKGxldCByZWNJdGVyID0gMDsgcmVjSXRlciA8IHJlY29yZHMubGVuZ3RoOyByZWNJdGVyKyspIHtcbiAgICAgICAgICBjb25zdCByZWMgPSByZWNvcmRzW3JlY0l0ZXJdO1xuICAgICAgICAgIGNvbnN0IG1pZCA9IHJlYy5JZCB8fCAnJztcbiAgICAgICAgICByZWMuYXR0YWNobWVudHMgPSBbXTtcbiAgICAgICAgICBjb25zdCBhdHRhY2htZW50T3B0aW9ucyA9IHtcbiAgICAgICAgICAgIG1ldGhvZDogJ0dFVCcsXG4gICAgICAgICAgICB1cmk6IGBodHRwczovL291dGxvb2sub2ZmaWNlMzY1LmNvbS9hcGkvdiR7YXBpVmVyc2lvbn0vdXNlcnMoJyR7ZX0nKS9tZXNzYWdlcy8ke21pZH0vYXR0YWNobWVudHNgLFxuICAgICAgICAgICAgaGVhZGVycyA6IHtcbiAgICAgICAgICAgICAgQXV0aG9yaXphdGlvbjogYEJlYXJlciAke2FjY2Vzc1Rva2VufWAsXG4gICAgICAgICAgICAgIEFjY2VwdDogICAgICAgICdhcHBsaWNhdGlvbi9qc29uO29kYXRhLm1ldGFkYXRhPW5vbmUnXG4gICAgICAgICAgICB9XG4gICAgICAgICAgfTtcbiAgICAgICAgICBjb25zdCBhdHRhY2htZW50RGF0YSA9IEpTT04ucGFyc2UoYXdhaXQgcmVxdWVzdChhdHRhY2htZW50T3B0aW9ucykpIHx8IHt9O1xuICAgICAgICAgIGlmKGF0dGFjaG1lbnREYXRhLnZhbHVlICYmIGF0dGFjaG1lbnREYXRhLnZhbHVlLmxlbmd0aCA+IDApIHtcbiAgICAgICAgICAgIHJlYy5hdHRhY2htZW50cyA9IGF0dGFjaG1lbnREYXRhLnZhbHVlO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICBpZiAocmVjb3JkcyAmJiBwYWdlVG9HZXQgPT09IDEpIHtcbiAgICAgICAgdXNlckRhdGEuZGF0YSA9IHJlY29yZHM7XG4gICAgICB9XG5cbiAgICAgIGlmIChyZWNvcmRzICYmIHBhZ2VUb0dldCA+IDEpIHtcbiAgICAgICAgdXNlckRhdGEuZGF0YS5wdXNoKC4uLnJlY29yZHMpO1xuICAgICAgfVxuXG4gICAgICAvLyBpZiB0aGUgcmV0dXJuZWQgcmVzdWx0cyBhcmUgdGhlIG1heGltdW0gbnVtYmVyIG9mIHJlY29yZHMgcGVyIHBhZ2UsXG4gICAgICAvLyB3ZSBhcmUgbm90IGRvbmUgeWV0LCBzbyByZWN1cnNlLi4uXG4gICAgICBpZiAocmVjb3Jkcy5sZW5ndGggPT09IHJlY29yZHNQZXJQYWdlICYmIHBhZ2VUb0dldCA8PSBtYXhQYWdlcykge1xuICAgICAgICByZXR1cm4gdGhpcy5nZXRVc2VyRGF0YShvcHRpb25zLCB1c2VyRGF0YSwgcGFnZVRvR2V0ICsgMSk7XG4gICAgICB9IGVsc2Uge1xuICAgICAgICByZXR1cm4gdXNlckRhdGE7XG4gICAgICB9XG5cbiAgICB9IGNhdGNoIChlcnIpIHtcbiAgICAgIE9iamVjdC5hc3NpZ24odXNlckRhdGEsIHtcbiAgICAgICAgc3VjY2VzczogZmFsc2UsXG4gICAgICAgIGVycm9yTWVzc2FnZTogZXJyLm5hbWUgIT09ICdTdGF0dXNDb2RlRXJyb3InID9cbiAgICAgICAgICAgICAgICAgICAgICAgIEpTT04uc3RyaW5naWZ5KGVycikgICAgICAgICAgOlxuICAgICAgICAgICAgICAgICAgICAgICAgSlNPTi5wYXJzZShcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVyci5tZXNzYWdlXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAucmVwbGFjZShlcnIuc3RhdHVzQ29kZSArICcgLSAnLCAnJylcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5yZXBsYWNlKC9cXFwiL2csICdcIicpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5tZXNzYWdlXG4gICAgICB9KTtcbiAgICAgIHJldHVybiB0cnVlO1xuICAgIH1cblxuICB9XG5cbn1cbiJdfQ==
+ */
+var Office365BaseAdapter = function (_Adapter) {
+  _inherits(Office365BaseAdapter, _Adapter);
+
+  function Office365BaseAdapter() {
+    _classCallCheck(this, Office365BaseAdapter);
+
+    return _possibleConstructorReturn(this, (Office365BaseAdapter.__proto__ || Object.getPrototypeOf(Office365BaseAdapter)).apply(this, arguments));
+  }
+
+  _createClass(Office365BaseAdapter, [{
+    key: 'reset',
+    value: function reset() {
+      delete this._config;
+      delete this._service;
+      return this;
+    }
+  }, {
+    key: 'init',
+    value: function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this._config = new _Configuration2.default(this.credentials);
+                this._service = new _Service2.default(this._config);
+                _context.next = 4;
+                return this._service.init();
+
+              case 4:
+                console.log('Successfully initialized ' + this.constructor.name + ' for email: ' + this.credentials.email);
+                return _context.abrupt('return', this);
+
+              case 6:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function init() {
+        return _ref.apply(this, arguments);
+      }
+
+      return init;
+    }()
+  }, {
+    key: 'runConnectionTest',
+    value: function () {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(connectionData) {
+        var today, filterStartDate, filterEndDate, data;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                this._config = new _Configuration2.default(connectionData.credentials);
+
+                today = function today() {
+                  return (0, _moment2.default)().utc().startOf('day');
+                };
+
+                filterStartDate = today().add(-1, 'days').toDate();
+                filterEndDate = today().toDate();
+                _context2.next = 6;
+                return this.getBatchData([{
+                  email: this._config.credentials.email,
+                  emailAfterMapping: this._config.credentials.email
+                }], filterStartDate, filterEndDate, '');
+
+              case 6:
+                data = _context2.sent;
+                return _context2.abrupt('return', data.success && data.results[0] ? data.results[0] : data);
+
+              case 8:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function runConnectionTest(_x) {
+        return _ref2.apply(this, arguments);
+      }
+
+      return runConnectionTest;
+    }()
+  }, {
+    key: 'getAccessToken',
+    value: function () {
+      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+        var _config, _config$credentials, clientId, tenantId, certificate, certificateThumbprint, apiVersion, tokenRequestUrl, jwtHeader, accessTokenExpires, jwtPayload, encode, encodedJwtHeader, encodedJwtPayload, stringToSign, encodedSignedJwtInfo, tokenRequestFormData, tokenRequestOptions, tokenData, messageData;
+
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!(this.accessToken && this.accessTokenExpires > new Date())) {
+                  _context3.next = 2;
+                  break;
+                }
+
+                return _context3.abrupt('return', this.accessToken);
+
+              case 2:
+                _config = this._config;
+                _config$credentials = _config.credentials;
+                clientId = _config$credentials.clientId;
+                tenantId = _config$credentials.tenantId;
+                certificate = _config$credentials.certificate;
+                certificateThumbprint = _config$credentials.certificateThumbprint;
+                apiVersion = _config.options.apiVersion;
+                tokenRequestUrl = 'https://login.microsoftonline.com/' + tenantId + '/oauth2/token?api-version=' + apiVersion;
+                jwtHeader = {
+                  'alg': 'RS256',
+                  'x5t': certificateThumbprint
+                };
+
+                // expire token in one hour
+
+                accessTokenExpires = (new Date().getTime() + 360000) / 1000;
+
+                // grab new access token 10 seconds before expiration
+
+                this.accessTokenExpires = new Date(accessTokenExpires * 1000 - 10000);
+
+                jwtPayload = {
+                  'aud': tokenRequestUrl,
+                  'exp': accessTokenExpires,
+                  'iss': clientId,
+                  'jti': uuid.v4(),
+                  'nbf': accessTokenExpires - 2 * 3600, // one hour before now
+                  'sub': clientId
+                };
+                encode = function encode(header) {
+                  return new Buffer(JSON.stringify(header)).toString('base64');
+                }, encodedJwtHeader = encode(jwtHeader), encodedJwtPayload = encode(jwtPayload), stringToSign = encodedJwtHeader + '.' + encodedJwtPayload, encodedSignedJwtInfo = crypto.createSign('RSA-SHA256').update(stringToSign).sign(certificate, 'base64');
+                tokenRequestFormData = {
+                  client_id: clientId,
+                  client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+                  grant_type: 'client_credentials',
+                  resource: 'https://outlook.office365.com/',
+                  client_assertion: encodedJwtHeader + '.' + encodedJwtPayload + '.' + encodedSignedJwtInfo
+                };
+                tokenRequestOptions = {
+                  method: 'POST',
+                  port: 443,
+                  uri: tokenRequestUrl,
+                  formData: tokenRequestFormData
+                };
+                _context3.prev = 17;
+                _context3.t0 = JSON;
+                _context3.next = 21;
+                return (0, _requestPromise2.default)(tokenRequestOptions);
+
+              case 21:
+                _context3.t1 = _context3.sent;
+                tokenData = _context3.t0.parse.call(_context3.t0, _context3.t1);
+
+                if (!(tokenData && tokenData.access_token)) {
+                  _context3.next = 27;
+                  break;
+                }
+
+                return _context3.abrupt('return', this.accessToken = tokenData.access_token);
+
+              case 27:
+                throw new Error('Could not get access token.');
+
+              case 28:
+                _context3.next = 38;
+                break;
+
+              case 30:
+                _context3.prev = 30;
+                _context3.t2 = _context3['catch'](17);
+
+                if (!(_context3.t2.name === 'StatusCodeError')) {
+                  _context3.next = 37;
+                  break;
+                }
+
+                messageData = JSON.parse(_context3.t2.message.replace(_context3.t2.statusCode + ' - ', '').replace(/\"/g, '"'));
+                throw new Error(messageData);
+
+              case 37:
+                throw new Error(_context3.t2);
+
+              case 38:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[17, 30]]);
+      }));
+
+      function getAccessToken() {
+        return _ref3.apply(this, arguments);
+      }
+
+      return getAccessToken;
+    }()
+  }, {
+    key: 'getUserData',
+    value: function () {
+      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4(options, userData) {
+        var pageToGet = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
+
+        var userProfile, filterStartDate, filterEndDate, additionalFields, $filter, apiType, _options$maxPages, maxPages, _options$recordsPerPa, recordsPerPage, accessToken, apiVersion, skip, baseFields, params, urlParams, requestOptions, _ref5, records, e, recIter, rec, mid, attachmentOptions, attachmentData, _userData$data;
+
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                userProfile = options.userProfile;
+                filterStartDate = options.filterStartDate;
+                filterEndDate = options.filterEndDate;
+                additionalFields = options.additionalFields;
+                $filter = options.$filter;
+                apiType = options.apiType;
+                _options$maxPages = options.maxPages;
+                maxPages = _options$maxPages === undefined ? 20 : _options$maxPages;
+                _options$recordsPerPa = options.recordsPerPage;
+                recordsPerPage = _options$recordsPerPa === undefined ? 25 : _options$recordsPerPa;
+
+                // accumulation of data
+
+                userData = userData || { userProfile: userProfile, filterStartDate: filterStartDate, filterEndDate: filterEndDate };
+
+                _context4.next = 13;
+                return this.getAccessToken();
+
+              case 13:
+                accessToken = _context4.sent;
+                apiVersion = this._config.options.apiVersion;
+                skip = (pageToGet - 1) * recordsPerPage;
+
+                // extract static property...
+                baseFields = this.constructor.baseFields;
+
+                // parameters to query email with...
+                params = {
+                  startDateTime: filterStartDate.toISOString(),
+                  endDateTime: filterEndDate.toISOString(),
+                  $top: recordsPerPage,
+                  $skip: skip,
+                  $select: baseFields.join(',') + (additionalFields ? ',' + additionalFields : '')
+                };
+
+                if (apiType !== 'calendarview') {
+                  params.$filter = $filter;
+                }
+
+                // format parameters for url
+                urlParams = _(params).map(function (value, key) {
+                  return key + '=' + value;
+                }).join('&');
+                requestOptions = {
+                  method: 'GET',
+                  uri: 'https://outlook.office365.com/api/v' + apiVersion + '/users(\'' + userProfile.emailAfterMapping + '\')/' + apiType + '?' + urlParams,
+                  headers: {
+                    Authorization: 'Bearer ' + accessToken,
+                    Accept: 'application/json;odata.metadata=none'
+                  }
+                };
+                _context4.prev = 21;
+
+                userData.success = true;
+
+                _context4.t1 = JSON;
+                _context4.next = 26;
+                return (0, _requestPromise2.default)(requestOptions);
+
+              case 26:
+                _context4.t2 = _context4.sent;
+                _context4.t0 = _context4.t1.parse.call(_context4.t1, _context4.t2);
+
+                if (_context4.t0) {
+                  _context4.next = 30;
+                  break;
+                }
+
+                _context4.t0 = {};
+
+              case 30:
+                _ref5 = _context4.t0;
+                records = _ref5.value;
+                e = userProfile.emailAfterMapping;
+
+                if (!(userProfile.getAttachments && records.length)) {
+                  _context4.next = 52;
+                  break;
+                }
+
+                recIter = 0;
+
+              case 35:
+                if (!(recIter < records.length)) {
+                  _context4.next = 52;
+                  break;
+                }
+
+                rec = records[recIter];
+                mid = rec.Id || '';
+
+                rec.attachments = [];
+                attachmentOptions = {
+                  method: 'GET',
+                  uri: 'https://outlook.office365.com/api/v' + apiVersion + '/users(\'' + e + '\')/messages/' + mid + '/attachments',
+                  headers: {
+                    Authorization: 'Bearer ' + accessToken,
+                    Accept: 'application/json;odata.metadata=none'
+                  }
+                };
+                _context4.t4 = JSON;
+                _context4.next = 43;
+                return (0, _requestPromise2.default)(attachmentOptions);
+
+              case 43:
+                _context4.t5 = _context4.sent;
+                _context4.t3 = _context4.t4.parse.call(_context4.t4, _context4.t5);
+
+                if (_context4.t3) {
+                  _context4.next = 47;
+                  break;
+                }
+
+                _context4.t3 = {};
+
+              case 47:
+                attachmentData = _context4.t3;
+
+                if (attachmentData.value && attachmentData.value.length > 0) {
+                  rec.attachments = attachmentData.value;
+                }
+
+              case 49:
+                recIter++;
+                _context4.next = 35;
+                break;
+
+              case 52:
+
+                if (records && pageToGet === 1) {
+                  userData.data = records;
+                }
+
+                if (records && pageToGet > 1) {
+                  (_userData$data = userData.data).push.apply(_userData$data, _toConsumableArray(records));
+                }
+
+                // if the returned results are the maximum number of records per page,
+                // we are not done yet, so recurse...
+
+                if (!(records.length === recordsPerPage && pageToGet <= maxPages)) {
+                  _context4.next = 58;
+                  break;
+                }
+
+                return _context4.abrupt('return', this.getUserData(options, userData, pageToGet + 1));
+
+              case 58:
+                return _context4.abrupt('return', userData);
+
+              case 59:
+                _context4.next = 65;
+                break;
+
+              case 61:
+                _context4.prev = 61;
+                _context4.t6 = _context4['catch'](21);
+
+                Object.assign(userData, {
+                  success: false,
+                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? JSON.stringify(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
+                });
+                return _context4.abrupt('return', true);
+
+              case 65:
+              case 'end':
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[21, 61]]);
+      }));
+
+      function getUserData(_x3, _x4) {
+        return _ref4.apply(this, arguments);
+      }
+
+      return getUserData;
+    }()
+  }]);
+
+  return Office365BaseAdapter;
+}(_Adapter3.default);
+
+exports.default = Office365BaseAdapter;
 //# sourceMappingURL=../../../clAdapters/office365/base/Adapter.js.map

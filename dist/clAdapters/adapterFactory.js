@@ -1,12 +1,67 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _=require('./');var _2=_interopRequireDefault(_);var _adapterTypes=require('./adapterTypes');var _adapterTypes2=_interopRequireDefault(_adapterTypes);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}/**
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _ = require('./');
+
+var _2 = _interopRequireDefault(_);
+
+var _adapterTypes = require('./adapterTypes');
+
+var _adapterTypes2 = _interopRequireDefault(_adapterTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
  * Adapter factory
  *
  * @class
  * @return {AdapterFactory}
- */var AdapterFactory=function(){function AdapterFactory(){_classCallCheck(this,AdapterFactory);}_createClass(AdapterFactory,null,[{key:'createAdapter',/**
-   * Static factory
-   * @param  {AdapterType} type
-   * @return {BaseAdapter} concrete adapter subclass
-   */value:function createAdapter(type){switch(type){case _adapterTypes2.default.CUSTOM:throw new Error('Custom adapters provide their own approach');case _adapterTypes2.default.NETSUITE:return new _2.default.NetSuiteAdapter();case _adapterTypes2.default.CL_MOCK:return new _2.default.CLMockAdapter();case _adapterTypes2.default.OFFICE365:return new _2.default.Office365MailAdapter();case _adapterTypes2.default.OFFICE365_CALENDAR:return new _2.default.Office365CalendarAdapter();case _adapterTypes2.default.GOOGLE:return new _2.default.GoogleAdapter();case _adapterTypes2.default.GOOGLE_CALENDAR:return new _2.default.GoogleCalendarAdapter();default:throw new Error('Unknown type');}}}]);return AdapterFactory;}();exports.default=AdapterFactory;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvYWRhcHRlckZhY3RvcnkuanMiXSwibmFtZXMiOlsiQWRhcHRlckZhY3RvcnkiLCJ0eXBlIiwiQ1VTVE9NIiwiRXJyb3IiLCJORVRTVUlURSIsIk5ldFN1aXRlQWRhcHRlciIsIkNMX01PQ0siLCJDTE1vY2tBZGFwdGVyIiwiT0ZGSUNFMzY1IiwiT2ZmaWNlMzY1TWFpbEFkYXB0ZXIiLCJPRkZJQ0UzNjVfQ0FMRU5EQVIiLCJPZmZpY2UzNjVDYWxlbmRhckFkYXB0ZXIiLCJHT09HTEUiLCJHb29nbGVBZGFwdGVyIiwiR09PR0xFX0NBTEVOREFSIiwiR29vZ2xlQ2FsZW5kYXJBZGFwdGVyIl0sIm1hcHBpbmdzIjoib2tCQUFBLG9CLGlDQUNBLDRDLDZSQUVBOzs7OztNQU1xQkEsZSxtSUFFbkI7Ozs7a0NBS3FCQyxJLENBQU0sQ0FDekIsT0FBUUEsSUFBUixFQUNFLElBQUssd0JBQU1DLE1BQVgsQ0FDRSxLQUFNLElBQUlDLE1BQUosQ0FBVSw0Q0FBVixDQUFOLENBQ0YsSUFBSyx3QkFBTUMsUUFBWCxDQUNFLE1BQU8sSUFBSSxZQUFTQyxlQUFiLEVBQVAsQ0FDRixJQUFLLHdCQUFNQyxPQUFYLENBQ0UsTUFBTyxJQUFJLFlBQVNDLGFBQWIsRUFBUCxDQUNGLElBQUssd0JBQU1DLFNBQVgsQ0FDRSxNQUFPLElBQUksWUFBU0Msb0JBQWIsRUFBUCxDQUNGLElBQUssd0JBQU1DLGtCQUFYLENBQ0UsTUFBTyxJQUFJLFlBQVNDLHdCQUFiLEVBQVAsQ0FDRixJQUFLLHdCQUFNQyxNQUFYLENBQ0UsTUFBTyxJQUFJLFlBQVNDLGFBQWIsRUFBUCxDQUNGLElBQUssd0JBQU1DLGVBQVgsQ0FDRSxNQUFPLElBQUksWUFBU0MscUJBQWIsRUFBUCxDQUNGLFFBQ0UsS0FBTSxJQUFJWixNQUFKLENBQVUsY0FBVixDQUFOLENBaEJKLENBa0JELEMsOENBMUJrQkgsYyIsImZpbGUiOiJjbEFkYXB0ZXJzL2FkYXB0ZXJGYWN0b3J5LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGFkYXB0ZXJzIGZyb20gJy4vJztcbmltcG9ydCB0eXBlcyAgICBmcm9tICcuL2FkYXB0ZXJUeXBlcyc7XG5cbi8qKlxuICogQWRhcHRlciBmYWN0b3J5XG4gKlxuICogQGNsYXNzXG4gKiBAcmV0dXJuIHtBZGFwdGVyRmFjdG9yeX1cbiAqL1xuZXhwb3J0IGRlZmF1bHQgY2xhc3MgQWRhcHRlckZhY3Rvcnkge1xuXG4gIC8qKlxuICAgKiBTdGF0aWMgZmFjdG9yeVxuICAgKiBAcGFyYW0gIHtBZGFwdGVyVHlwZX0gdHlwZVxuICAgKiBAcmV0dXJuIHtCYXNlQWRhcHRlcn0gY29uY3JldGUgYWRhcHRlciBzdWJjbGFzc1xuICAgKi9cbiAgc3RhdGljIGNyZWF0ZUFkYXB0ZXIodHlwZSkge1xuICAgIHN3aXRjaCAodHlwZSkge1xuICAgICAgY2FzZSB0eXBlcy5DVVNUT006XG4gICAgICAgIHRocm93IG5ldyBFcnJvcignQ3VzdG9tIGFkYXB0ZXJzIHByb3ZpZGUgdGhlaXIgb3duIGFwcHJvYWNoJyk7XG4gICAgICBjYXNlIHR5cGVzLk5FVFNVSVRFOlxuICAgICAgICByZXR1cm4gbmV3IGFkYXB0ZXJzLk5ldFN1aXRlQWRhcHRlcigpO1xuICAgICAgY2FzZSB0eXBlcy5DTF9NT0NLOlxuICAgICAgICByZXR1cm4gbmV3IGFkYXB0ZXJzLkNMTW9ja0FkYXB0ZXIoKTtcbiAgICAgIGNhc2UgdHlwZXMuT0ZGSUNFMzY1OlxuICAgICAgICByZXR1cm4gbmV3IGFkYXB0ZXJzLk9mZmljZTM2NU1haWxBZGFwdGVyKCk7XG4gICAgICBjYXNlIHR5cGVzLk9GRklDRTM2NV9DQUxFTkRBUjpcbiAgICAgICAgcmV0dXJuIG5ldyBhZGFwdGVycy5PZmZpY2UzNjVDYWxlbmRhckFkYXB0ZXIoKTtcbiAgICAgIGNhc2UgdHlwZXMuR09PR0xFOlxuICAgICAgICByZXR1cm4gbmV3IGFkYXB0ZXJzLkdvb2dsZUFkYXB0ZXIoKTtcbiAgICAgIGNhc2UgdHlwZXMuR09PR0xFX0NBTEVOREFSOlxuICAgICAgICByZXR1cm4gbmV3IGFkYXB0ZXJzLkdvb2dsZUNhbGVuZGFyQWRhcHRlcigpO1xuICAgICAgZGVmYXVsdDpcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdVbmtub3duIHR5cGUnKTtcbiAgICB9XG4gIH1cbn1cbiJdfQ==
+ */
+var AdapterFactory = function () {
+  function AdapterFactory() {
+    _classCallCheck(this, AdapterFactory);
+  }
+
+  _createClass(AdapterFactory, null, [{
+    key: 'createAdapter',
+
+
+    /**
+     * Static factory
+     * @param  {AdapterType} type
+     * @return {BaseAdapter} concrete adapter subclass
+     */
+    value: function createAdapter(type) {
+      switch (type) {
+        case _adapterTypes2.default.CUSTOM:
+          throw new Error('Custom adapters provide their own approach');
+        case _adapterTypes2.default.NETSUITE:
+          return new _2.default.NetSuiteAdapter();
+        case _adapterTypes2.default.CL_MOCK:
+          return new _2.default.CLMockAdapter();
+        case _adapterTypes2.default.OFFICE365:
+          return new _2.default.Office365MailAdapter();
+        case _adapterTypes2.default.OFFICE365_CALENDAR:
+          return new _2.default.Office365CalendarAdapter();
+        case _adapterTypes2.default.GOOGLE:
+          return new _2.default.GoogleAdapter();
+        case _adapterTypes2.default.GOOGLE_CALENDAR:
+          return new _2.default.GoogleCalendarAdapter();
+        default:
+          throw new Error('Unknown type');
+      }
+    }
+  }]);
+
+  return AdapterFactory;
+}();
+
+exports.default = AdapterFactory;
 //# sourceMappingURL=../clAdapters/adapterFactory.js.map

@@ -1,14 +1,201 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _extends=Object.assign||function(target){for(var i=1;i<arguments.length;i++){var source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _moment=require('moment');var _moment2=_interopRequireDefault(_moment);var _lodash=require('lodash');var _lodash2=_interopRequireDefault(_lodash);var _Adapter=require('../base/Adapter');var _Adapter2=_interopRequireDefault(_Adapter);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _asyncToGenerator(fn){return function(){var gen=fn.apply(this,arguments);return new Promise(function(resolve,reject){function step(key,arg){try{var info=gen[key](arg);var value=info.value;}catch(error){reject(error);return;}if(info.done){resolve(value);}else{return Promise.resolve(value).then(function(value){return step("next",value);},function(err){return step("throw",err);});}}return step("next");});};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}/**
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+var _Adapter = require('../base/Adapter');
+
+var _Adapter2 = _interopRequireDefault(_Adapter);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
  * Office 365 Mail adapter
- */var Office365MailAdapter=function(_Office365BaseAdapter){_inherits(Office365MailAdapter,_Office365BaseAdapter);function Office365MailAdapter(){_classCallCheck(this,Office365MailAdapter);return _possibleConstructorReturn(this,(Office365MailAdapter.__proto__||Object.getPrototypeOf(Office365MailAdapter)).apply(this,arguments));}_createClass(Office365MailAdapter,[{key:'getBatchData',// collect these fields always...
-value:function(){var _ref=_asyncToGenerator(regeneratorRuntime.mark(function _callee(userProfiles,filterStartDate,filterEndDate,additionalFields){var _this2=this;var fieldNameMap,dataAdapterRunStats,emailData,results;return regeneratorRuntime.wrap(function _callee$(_context){while(1){switch(_context.prev=_context.next){case 0:fieldNameMap=this.constructor.fieldNameMap;dataAdapterRunStats={userProfiles:userProfiles,filterStartDate:filterStartDate,filterEndDate:filterEndDate,success:false,runDate:(0,_moment2.default)().utc().toDate()};_context.prev=2;_context.next=5;return Promise.all(userProfiles.map(function(userProfile){return _this2.getUserData({userProfile:userProfile,filterStartDate:filterStartDate,filterEndDate:filterEndDate,additionalFields:additionalFields,apiType:'messages',$filter:(' IsDraft eq false\n                        and DateTimeSent ge '+filterStartDate.toISOString().substring(0,10)+'\n                        and DateTimeSent lt '+filterEndDate.toISOString().substring(0,10)+'\n                    ').replace(/\s+/g,' ').trim()});}));case 5:emailData=_context.sent;// replace data keys with desired mappings...
-results=_lodash2.default.map(emailData,function(user){var emailArray=user.success&&user.data||[];return _extends({},user.userProfile,{filterStartDate:user.filterStartDate,filterEndDate:user.filterEndDate,success:user.success,errorMessage:user.errorMessage,// map data with desired key names...
-data:_lodash2.default.map(emailArray,function(originalEmailMessage){var mappedEmailMessage={};// change to desired names
-_lodash2.default.each(fieldNameMap,function(have,want){var mapped=_lodash2.default.get(originalEmailMessage,have);if(mapped!==undefined){mappedEmailMessage[want]=/^dateTime/.test(want)?new Date(mapped):mapped;}});// grab info from different correspondent types...
-// (since we're using an array literal here, 'for of' syntax will compile reasonably)
-var _arr=['to','cc','bcc'];var _loop=function _loop(){var type=_arr[_i];var key=type+'Recipient';mappedEmailMessage[key+'s']=originalEmailMessage[fieldNameMap[key+'s']].map(function(recipient){return{address:_lodash2.default.get(recipient,fieldNameMap[key+'Address']),name:_lodash2.default.get(recipient,fieldNameMap[key+'Name'])};});};for(var _i=0;_i<_arr.length;_i++){_loop();}return mappedEmailMessage;})});});// return results and success!
-return _context.abrupt('return',_extends({},dataAdapterRunStats,{results:results,success:true}));case 10:_context.prev=10;_context.t0=_context['catch'](2);console.log(_context.t0.stack);console.log('Office365 GetBatchData Error: '+JSON.stringify(_context.t0));return _context.abrupt('return',_extends({},dataAdapterRunStats,{errorMessage:_context.t0}));case 15:case'end':return _context.stop();}}},_callee,this,[[2,10]]);}));function getBatchData(_x,_x2,_x3,_x4){return _ref.apply(this,arguments);}return getBatchData;}()// convert the names of the api response data
-}]);return Office365MailAdapter;}(_Adapter2.default);Office365MailAdapter.baseFields=['Id','Categories','DateTimeCreated','Subject','Importance','HasAttachments','ParentFolderId','From','Sender','ToRecipients','CcRecipients','BccRecipients','ReplyTo','ConversationId','DateTimeReceived','DateTimeSent','IsDeliveryReceiptRequested','IsReadReceiptRequested','IsRead'];Office365MailAdapter.fieldNameMap={// Desired...                 // Given...
-'emails':'value','messageId':'Id','conversationId':'ConversationId','dateTimeSent':'DateTimeSent','dateTimeReceived':'DateTimeReceived','importance':'Importance','folderId':'ParentFolderId','categories':'Categories','contentType':'Body.ContentType','subject':'Subject','bodyPreview':'BodyPreview','body':'Body.Content','fromAddress':'From.EmailAddress.Address','fromName':'From.EmailAddress.Name','toRecipients':'ToRecipients','toRecipientAddress':'EmailAddress.Address','toRecipientName':'EmailAddress.Name','ccRecipients':'CcRecipients','ccRecipientAddress':'EmailAddress.Address','ccRecipientName':'EmailAddress.Name','bccRecipients':'BccRecipients','bccRecipientAddress':'EmailAddress.Address','bccRecipientName':'EmailAddress.Name','isDeliveryReceiptRequested':'IsDeliveryReceiptRequested','isReadReceiptRequested':'IsReadReceiptRequested','hasAttachments':'HasAttachments','isDraft':'IsDraft','isRead':'IsRead','attachments':'attachments'};exports.default=Office365MailAdapter;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsQWRhcHRlcnMvb2ZmaWNlMzY1L21haWwvaW5kZXguanMiXSwibmFtZXMiOlsiT2ZmaWNlMzY1TWFpbEFkYXB0ZXIiLCJ1c2VyUHJvZmlsZXMiLCJmaWx0ZXJTdGFydERhdGUiLCJmaWx0ZXJFbmREYXRlIiwiYWRkaXRpb25hbEZpZWxkcyIsImZpZWxkTmFtZU1hcCIsImNvbnN0cnVjdG9yIiwiZGF0YUFkYXB0ZXJSdW5TdGF0cyIsInN1Y2Nlc3MiLCJydW5EYXRlIiwidXRjIiwidG9EYXRlIiwiUHJvbWlzZSIsImFsbCIsIm1hcCIsImdldFVzZXJEYXRhIiwidXNlclByb2ZpbGUiLCJhcGlUeXBlIiwiJGZpbHRlciIsInRvSVNPU3RyaW5nIiwic3Vic3RyaW5nIiwicmVwbGFjZSIsInRyaW0iLCJlbWFpbERhdGEiLCJyZXN1bHRzIiwiZW1haWxBcnJheSIsInVzZXIiLCJkYXRhIiwiZXJyb3JNZXNzYWdlIiwibWFwcGVkRW1haWxNZXNzYWdlIiwiZWFjaCIsImhhdmUiLCJ3YW50IiwibWFwcGVkIiwiZ2V0Iiwib3JpZ2luYWxFbWFpbE1lc3NhZ2UiLCJ1bmRlZmluZWQiLCJ0ZXN0IiwiRGF0ZSIsInR5cGUiLCJrZXkiLCJhZGRyZXNzIiwicmVjaXBpZW50IiwibmFtZSIsImNvbnNvbGUiLCJsb2ciLCJzdGFjayIsIkpTT04iLCJzdHJpbmdpZnkiLCJiYXNlRmllbGRzIl0sIm1hcHBpbmdzIjoib3lCQUFBLDhCLDZDQUNBLDhCLDZDQUNBLHdDLGkxQ0FHQTs7TUFHcUJBLHFCLHNXQUduQjtxRkEyRG1CQyxZLENBQWNDLGUsQ0FBaUJDLGEsQ0FBZUMsZ0Isd0xBRXZEQyxZLENBQWlCLEtBQUtDLFcsQ0FBdEJELFksQ0FDRkUsbUIsQ0FBd0IsQ0FDdEJOLHlCQURzQixDQUV0QkMsK0JBRnNCLENBR3RCQywyQkFIc0IsQ0FJdEJLLFFBQVMsS0FKYSxDQUt0QkMsUUFBUyx1QkFBU0MsR0FBVCxHQUFlQyxNQUFmLEVBTGEsQyx1Q0FVSkMsU0FBUUMsR0FBUixD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QixDLENBSkRqRCxvQixDQTRCWkssWSxDQUFlLENBQ3BCO0FBQ0EsU0FBOEIsT0FGVixDQUdwQixZQUE4QixJQUhWLENBSXBCLGlCQUE4QixnQkFKVixDQUtwQixlQUE4QixjQUxWLENBTXBCLG1CQUE4QixrQkFOVixDQU9wQixhQUE4QixZQVBWLENBUXBCLFdBQThCLGdCQVJWLENBU3BCLGFBQThCLFlBVFYsQ0FVcEIsY0FBOEIsa0JBVlYsQ0FXcEIsVUFBOEIsU0FYVixDQVlwQixjQUE4QixhQVpWLENBYXBCLE9BQThCLGNBYlYsQ0FjcEIsY0FBOEIsMkJBZFYsQ0FlcEIsV0FBOEIsd0JBZlYsQ0FnQnBCLGVBQThCLGNBaEJWLENBaUJwQixxQkFBOEIsc0JBakJWLENBa0JwQixrQkFBOEIsbUJBbEJWLENBbUJwQixlQUE4QixjQW5CVixDQW9CcEIscUJBQThCLHNCQXBCVixDQXFCcEIsa0JBQThCLG1CQXJCVixDQXNCcEIsZ0JBQThCLGVBdEJWLENBdUJwQixzQkFBOEIsc0JBdkJWLENBd0JwQixtQkFBOEIsbUJBeEJWLENBeUJwQiw2QkFBOEIsNEJBekJWLENBMEJwQix5QkFBOEIsd0JBMUJWLENBMkJwQixpQkFBOEIsZ0JBM0JWLENBNEJwQixVQUE4QixTQTVCVixDQTZCcEIsU0FBOEIsUUE3QlYsQ0E4QnBCLGNBQThCLGFBOUJWLEMsaUJBNUJITCxvQiIsImZpbGUiOiJjbEFkYXB0ZXJzL29mZmljZTM2NS9tYWlsL2luZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IG1vbWVudCAgICAgICAgICAgICAgICAgICAgIGZyb20gJ21vbWVudCc7XG5pbXBvcnQgXyAgICAgICAgICAgICAgICAgICAgICAgICAgZnJvbSAnbG9kYXNoJztcbmltcG9ydCBPZmZpY2UzNjVCYXNlQWRhcHRlciAgICAgICBmcm9tICcuLi9iYXNlL0FkYXB0ZXInO1xuXG5cbi8qKlxuICogT2ZmaWNlIDM2NSBNYWlsIGFkYXB0ZXJcbiAqL1xuZXhwb3J0IGRlZmF1bHQgY2xhc3MgT2ZmaWNlMzY1TWFpbEFkYXB0ZXIgZXh0ZW5kcyBPZmZpY2UzNjVCYXNlQWRhcHRlciB7XG5cblxuICAvLyBjb2xsZWN0IHRoZXNlIGZpZWxkcyBhbHdheXMuLi5cbiAgc3RhdGljIGJhc2VGaWVsZHMgPSBbXG4gICAgJ0lkJyxcbiAgICAnQ2F0ZWdvcmllcycsXG4gICAgJ0RhdGVUaW1lQ3JlYXRlZCcsXG4gICAgJ1N1YmplY3QnLFxuICAgICdJbXBvcnRhbmNlJyxcbiAgICAnSGFzQXR0YWNobWVudHMnLFxuICAgICdQYXJlbnRGb2xkZXJJZCcsXG4gICAgJ0Zyb20nLFxuICAgICdTZW5kZXInLFxuICAgICdUb1JlY2lwaWVudHMnLFxuICAgICdDY1JlY2lwaWVudHMnLFxuICAgICdCY2NSZWNpcGllbnRzJyxcbiAgICAnUmVwbHlUbycsXG4gICAgJ0NvbnZlcnNhdGlvbklkJyxcbiAgICAnRGF0ZVRpbWVSZWNlaXZlZCcsXG4gICAgJ0RhdGVUaW1lU2VudCcsXG4gICAgJ0lzRGVsaXZlcnlSZWNlaXB0UmVxdWVzdGVkJyxcbiAgICAnSXNSZWFkUmVjZWlwdFJlcXVlc3RlZCcsXG4gICAgJ0lzUmVhZCdcbiAgXVxuXG5cbiAgLy8gY29udmVydCB0aGUgbmFtZXMgb2YgdGhlIGFwaSByZXNwb25zZSBkYXRhXG4gIHN0YXRpYyBmaWVsZE5hbWVNYXAgPSB7XG4gICAgLy8gRGVzaXJlZC4uLiAgICAgICAgICAgICAgICAgLy8gR2l2ZW4uLi5cbiAgICAnZW1haWxzJzogICAgICAgICAgICAgICAgICAgICAndmFsdWUnLFxuICAgICdtZXNzYWdlSWQnOiAgICAgICAgICAgICAgICAgICdJZCcsXG4gICAgJ2NvbnZlcnNhdGlvbklkJzogICAgICAgICAgICAgJ0NvbnZlcnNhdGlvbklkJyxcbiAgICAnZGF0ZVRpbWVTZW50JzogICAgICAgICAgICAgICAnRGF0ZVRpbWVTZW50JyxcbiAgICAnZGF0ZVRpbWVSZWNlaXZlZCc6ICAgICAgICAgICAnRGF0ZVRpbWVSZWNlaXZlZCcsXG4gICAgJ2ltcG9ydGFuY2UnOiAgICAgICAgICAgICAgICAgJ0ltcG9ydGFuY2UnLFxuICAgICdmb2xkZXJJZCc6ICAgICAgICAgICAgICAgICAgICdQYXJlbnRGb2xkZXJJZCcsXG4gICAgJ2NhdGVnb3JpZXMnOiAgICAgICAgICAgICAgICAgJ0NhdGVnb3JpZXMnLFxuICAgICdjb250ZW50VHlwZSc6ICAgICAgICAgICAgICAgICdCb2R5LkNvbnRlbnRUeXBlJyxcbiAgICAnc3ViamVjdCc6ICAgICAgICAgICAgICAgICAgICAnU3ViamVjdCcsXG4gICAgJ2JvZHlQcmV2aWV3JzogICAgICAgICAgICAgICAgJ0JvZHlQcmV2aWV3JyxcbiAgICAnYm9keSc6ICAgICAgICAgICAgICAgICAgICAgICAnQm9keS5Db250ZW50JyxcbiAgICAnZnJvbUFkZHJlc3MnOiAgICAgICAgICAgICAgICAnRnJvbS5FbWFpbEFkZHJlc3MuQWRkcmVzcycsXG4gICAgJ2Zyb21OYW1lJzogICAgICAgICAgICAgICAgICAgJ0Zyb20uRW1haWxBZGRyZXNzLk5hbWUnLFxuICAgICd0b1JlY2lwaWVudHMnOiAgICAgICAgICAgICAgICdUb1JlY2lwaWVudHMnLFxuICAgICd0b1JlY2lwaWVudEFkZHJlc3MnOiAgICAgICAgICdFbWFpbEFkZHJlc3MuQWRkcmVzcycsXG4gICAgJ3RvUmVjaXBpZW50TmFtZSc6ICAgICAgICAgICAgJ0VtYWlsQWRkcmVzcy5OYW1lJyxcbiAgICAnY2NSZWNpcGllbnRzJzogICAgICAgICAgICAgICAnQ2NSZWNpcGllbnRzJyxcbiAgICAnY2NSZWNpcGllbnRBZGRyZXNzJzogICAgICAgICAnRW1haWxBZGRyZXNzLkFkZHJlc3MnLFxuICAgICdjY1JlY2lwaWVudE5hbWUnOiAgICAgICAgICAgICdFbWFpbEFkZHJlc3MuTmFtZScsXG4gICAgJ2JjY1JlY2lwaWVudHMnOiAgICAgICAgICAgICAgJ0JjY1JlY2lwaWVudHMnLFxuICAgICdiY2NSZWNpcGllbnRBZGRyZXNzJzogICAgICAgICdFbWFpbEFkZHJlc3MuQWRkcmVzcycsXG4gICAgJ2JjY1JlY2lwaWVudE5hbWUnOiAgICAgICAgICAgJ0VtYWlsQWRkcmVzcy5OYW1lJyxcbiAgICAnaXNEZWxpdmVyeVJlY2VpcHRSZXF1ZXN0ZWQnOiAnSXNEZWxpdmVyeVJlY2VpcHRSZXF1ZXN0ZWQnLFxuICAgICdpc1JlYWRSZWNlaXB0UmVxdWVzdGVkJzogICAgICdJc1JlYWRSZWNlaXB0UmVxdWVzdGVkJyxcbiAgICAnaGFzQXR0YWNobWVudHMnOiAgICAgICAgICAgICAnSGFzQXR0YWNobWVudHMnLFxuICAgICdpc0RyYWZ0JzogICAgICAgICAgICAgICAgICAgICdJc0RyYWZ0JyxcbiAgICAnaXNSZWFkJzogICAgICAgICAgICAgICAgICAgICAnSXNSZWFkJyxcbiAgICAnYXR0YWNobWVudHMnOiAgICAgICAgICAgICAgICAnYXR0YWNobWVudHMnLFxuICB9XG5cblxuICBhc3luYyBnZXRCYXRjaERhdGEodXNlclByb2ZpbGVzLCBmaWx0ZXJTdGFydERhdGUsIGZpbHRlckVuZERhdGUsIGFkZGl0aW9uYWxGaWVsZHMpIHtcblxuICAgIGNvbnN0IHsgZmllbGROYW1lTWFwIH0gPSB0aGlzLmNvbnN0cnVjdG9yLFxuICAgICAgICAgIGRhdGFBZGFwdGVyUnVuU3RhdHMgICA9IHtcbiAgICAgICAgICAgIHVzZXJQcm9maWxlcyxcbiAgICAgICAgICAgIGZpbHRlclN0YXJ0RGF0ZSxcbiAgICAgICAgICAgIGZpbHRlckVuZERhdGUsXG4gICAgICAgICAgICBzdWNjZXNzOiBmYWxzZSxcbiAgICAgICAgICAgIHJ1bkRhdGU6IG1vbWVudCgpLnV0YygpLnRvRGF0ZSgpXG4gICAgICAgICAgfTtcblxuICAgIHRyeSB7XG5cbiAgICAgIGNvbnN0IGVtYWlsRGF0YSA9IGF3YWl0IFByb21pc2UuYWxsKHVzZXJQcm9maWxlcy5tYXAodXNlclByb2ZpbGUgPT4ge1xuICAgICAgICByZXR1cm4gdGhpcy5nZXRVc2VyRGF0YSh7XG4gICAgICAgICAgdXNlclByb2ZpbGUsXG4gICAgICAgICAgZmlsdGVyU3RhcnREYXRlLFxuICAgICAgICAgIGZpbHRlckVuZERhdGUsXG4gICAgICAgICAgYWRkaXRpb25hbEZpZWxkcyxcbiAgICAgICAgICBhcGlUeXBlOiAgJ21lc3NhZ2VzJyxcbiAgICAgICAgICAkZmlsdGVyOiAgYCBJc0RyYWZ0IGVxIGZhbHNlXG4gICAgICAgICAgICAgICAgICAgICAgICBhbmQgRGF0ZVRpbWVTZW50IGdlICR7ZmlsdGVyU3RhcnREYXRlLnRvSVNPU3RyaW5nKCkuc3Vic3RyaW5nKDAsIDEwKX1cbiAgICAgICAgICAgICAgICAgICAgICAgIGFuZCBEYXRlVGltZVNlbnQgbHQgJHtmaWx0ZXJFbmREYXRlLnRvSVNPU3RyaW5nKCkuc3Vic3RyaW5nKDAsIDEwKX1cbiAgICAgICAgICAgICAgICAgICAgYC5yZXBsYWNlKC9cXHMrL2csICcgJylcbiAgICAgICAgICAgICAgICAgICAgIC50cmltKClcbiAgICAgICAgfSk7XG4gICAgICB9KSk7XG5cbiAgICAgIC8vIHJlcGxhY2UgZGF0YSBrZXlzIHdpdGggZGVzaXJlZCBtYXBwaW5ncy4uLlxuICAgICAgY29uc3QgcmVzdWx0cyA9IF8ubWFwKGVtYWlsRGF0YSwgdXNlciA9PiB7XG4gICAgICAgIGNvbnN0IGVtYWlsQXJyYXkgPSAodXNlci5zdWNjZXNzICYmIHVzZXIuZGF0YSkgfHwgW107XG4gICAgICAgIHJldHVybiB7XG4gICAgICAgICAgLi4udXNlci51c2VyUHJvZmlsZSxcbiAgICAgICAgICBmaWx0ZXJTdGFydERhdGU6ICB1c2VyLmZpbHRlclN0YXJ0RGF0ZSxcbiAgICAgICAgICBmaWx0ZXJFbmREYXRlOiAgICB1c2VyLmZpbHRlckVuZERhdGUsXG4gICAgICAgICAgc3VjY2VzczogICAgICAgICAgdXNlci5zdWNjZXNzLFxuICAgICAgICAgIGVycm9yTWVzc2FnZTogICAgIHVzZXIuZXJyb3JNZXNzYWdlLFxuICAgICAgICAgIC8vIG1hcCBkYXRhIHdpdGggZGVzaXJlZCBrZXkgbmFtZXMuLi5cbiAgICAgICAgICBkYXRhOiBfLm1hcChlbWFpbEFycmF5LCBvcmlnaW5hbEVtYWlsTWVzc2FnZSA9PiB7XG4gICAgICAgICAgICBjb25zdCBtYXBwZWRFbWFpbE1lc3NhZ2UgPSB7fTtcblxuICAgICAgICAgICAgLy8gY2hhbmdlIHRvIGRlc2lyZWQgbmFtZXNcbiAgICAgICAgICAgIF8uZWFjaChmaWVsZE5hbWVNYXAsIChoYXZlLCB3YW50KSA9PiB7XG4gICAgICAgICAgICAgIGNvbnN0IG1hcHBlZCA9IF8uZ2V0KG9yaWdpbmFsRW1haWxNZXNzYWdlLCBoYXZlKTtcbiAgICAgICAgICAgICAgaWYgKG1hcHBlZCAhPT0gdW5kZWZpbmVkKSB7XG4gICAgICAgICAgICAgICAgbWFwcGVkRW1haWxNZXNzYWdlW3dhbnRdID0gL15kYXRlVGltZS8udGVzdCh3YW50KSA/IG5ldyBEYXRlKG1hcHBlZCkgOiBtYXBwZWQ7XG4gICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH0pO1xuXG4gICAgICAgICAgICAvLyBncmFiIGluZm8gZnJvbSBkaWZmZXJlbnQgY29ycmVzcG9uZGVudCB0eXBlcy4uLlxuICAgICAgICAgICAgLy8gKHNpbmNlIHdlJ3JlIHVzaW5nIGFuIGFycmF5IGxpdGVyYWwgaGVyZSwgJ2ZvciBvZicgc3ludGF4IHdpbGwgY29tcGlsZSByZWFzb25hYmx5KVxuICAgICAgICAgICAgZm9yIChjb25zdCB0eXBlIG9mIFsndG8nLCAnY2MnLCAnYmNjJ10pIHtcbiAgICAgICAgICAgICAgY29uc3Qga2V5ID0gYCR7dHlwZX1SZWNpcGllbnRgO1xuICAgICAgICAgICAgICBtYXBwZWRFbWFpbE1lc3NhZ2VbYCR7a2V5fXNgXSA9IG9yaWdpbmFsRW1haWxNZXNzYWdlW2ZpZWxkTmFtZU1hcFtgJHtrZXl9c2BdXVxuICAgICAgICAgICAgICAgIC5tYXAocmVjaXBpZW50ID0+IHtcbiAgICAgICAgICAgICAgICAgIHJldHVybiB7XG4gICAgICAgICAgICAgICAgICAgIGFkZHJlc3M6IF8uZ2V0KHJlY2lwaWVudCwgZmllbGROYW1lTWFwW2Ake2tleX1BZGRyZXNzYF0pLFxuICAgICAgICAgICAgICAgICAgICBuYW1lOiAgICBfLmdldChyZWNpcGllbnQsIGZpZWxkTmFtZU1hcFtgJHtrZXl9TmFtZWBdKVxuICAgICAgICAgICAgICAgICAgfTtcbiAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgcmV0dXJuIG1hcHBlZEVtYWlsTWVzc2FnZTtcbiAgICAgICAgICB9KVxuICAgICAgICB9O1xuICAgICAgfSk7XG5cbiAgICAgIC8vIHJldHVybiByZXN1bHRzIGFuZCBzdWNjZXNzIVxuICAgICAgcmV0dXJuIHtcbiAgICAgICAgLi4uZGF0YUFkYXB0ZXJSdW5TdGF0cyxcbiAgICAgICAgcmVzdWx0cyxcbiAgICAgICAgc3VjY2VzczogdHJ1ZVxuICAgICAgfTtcblxuICAgIH0gY2F0Y2ggKGVycm9yTWVzc2FnZSkge1xuICAgICAgY29uc29sZS5sb2coZXJyb3JNZXNzYWdlLnN0YWNrKTtcbiAgICAgIGNvbnNvbGUubG9nKCdPZmZpY2UzNjUgR2V0QmF0Y2hEYXRhIEVycm9yOiAnICsgSlNPTi5zdHJpbmdpZnkoZXJyb3JNZXNzYWdlKSk7XG4gICAgICByZXR1cm4geyAuLi5kYXRhQWRhcHRlclJ1blN0YXRzLCBlcnJvck1lc3NhZ2UgfTtcbiAgICB9XG5cbiAgfVxuXG59XG4iXX0=
+ */
+var Office365MailAdapter = function (_Office365BaseAdapter) {
+  _inherits(Office365MailAdapter, _Office365BaseAdapter);
+
+  function Office365MailAdapter() {
+    _classCallCheck(this, Office365MailAdapter);
+
+    return _possibleConstructorReturn(this, (Office365MailAdapter.__proto__ || Object.getPrototypeOf(Office365MailAdapter)).apply(this, arguments));
+  }
+
+  _createClass(Office365MailAdapter, [{
+    key: 'getBatchData',
+
+
+    // collect these fields always...
+    value: function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(userProfiles, filterStartDate, filterEndDate, additionalFields) {
+        var _this2 = this;
+
+        var fieldNameMap, dataAdapterRunStats, emailData, results;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                fieldNameMap = this.constructor.fieldNameMap;
+                dataAdapterRunStats = {
+                  userProfiles: userProfiles,
+                  filterStartDate: filterStartDate,
+                  filterEndDate: filterEndDate,
+                  success: false,
+                  runDate: (0, _moment2.default)().utc().toDate()
+                };
+                _context.prev = 2;
+                _context.next = 5;
+                return Promise.all(userProfiles.map(function (userProfile) {
+                  return _this2.getUserData({
+                    userProfile: userProfile,
+                    filterStartDate: filterStartDate,
+                    filterEndDate: filterEndDate,
+                    additionalFields: additionalFields,
+                    apiType: 'messages',
+                    $filter: (' IsDraft eq false\n                        and DateTimeSent ge ' + filterStartDate.toISOString().substring(0, 10) + '\n                        and DateTimeSent lt ' + filterEndDate.toISOString().substring(0, 10) + '\n                    ').replace(/\s+/g, ' ').trim()
+                  });
+                }));
+
+              case 5:
+                emailData = _context.sent;
+
+
+                // replace data keys with desired mappings...
+                results = _.map(emailData, function (user) {
+                  var emailArray = user.success && user.data || [];
+                  return _extends({}, user.userProfile, {
+                    filterStartDate: user.filterStartDate,
+                    filterEndDate: user.filterEndDate,
+                    success: user.success,
+                    errorMessage: user.errorMessage,
+                    // map data with desired key names...
+                    data: _.map(emailArray, function (originalEmailMessage) {
+                      var mappedEmailMessage = {};
+
+                      // change to desired names
+                      _.each(fieldNameMap, function (have, want) {
+                        var mapped = _.get(originalEmailMessage, have);
+                        if (mapped !== undefined) {
+                          mappedEmailMessage[want] = /^dateTime/.test(want) ? new Date(mapped) : mapped;
+                        }
+                      });
+
+                      // grab info from different correspondent types...
+                      // (since we're using an array literal here, 'for of' syntax will compile reasonably)
+                      var _arr = ['to', 'cc', 'bcc'];
+
+                      var _loop = function _loop() {
+                        var type = _arr[_i];
+                        var key = type + 'Recipient';
+                        mappedEmailMessage[key + 's'] = originalEmailMessage[fieldNameMap[key + 's']].map(function (recipient) {
+                          return {
+                            address: _.get(recipient, fieldNameMap[key + 'Address']),
+                            name: _.get(recipient, fieldNameMap[key + 'Name'])
+                          };
+                        });
+                      };
+
+                      for (var _i = 0; _i < _arr.length; _i++) {
+                        _loop();
+                      }
+
+                      return mappedEmailMessage;
+                    })
+                  });
+                });
+
+                // return results and success!
+
+                return _context.abrupt('return', _extends({}, dataAdapterRunStats, {
+                  results: results,
+                  success: true
+                }));
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context['catch'](2);
+
+                console.log(_context.t0.stack);
+                console.log('Office365 GetBatchData Error: ' + JSON.stringify(_context.t0));
+                return _context.abrupt('return', _extends({}, dataAdapterRunStats, { errorMessage: _context.t0 }));
+
+              case 15:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[2, 10]]);
+      }));
+
+      function getBatchData(_x, _x2, _x3, _x4) {
+        return _ref.apply(this, arguments);
+      }
+
+      return getBatchData;
+    }()
+
+    // convert the names of the api response data
+
+  }]);
+
+  return Office365MailAdapter;
+}(_Adapter2.default);
+
+Office365MailAdapter.baseFields = ['Id', 'Categories', 'DateTimeCreated', 'Subject', 'Importance', 'HasAttachments', 'ParentFolderId', 'From', 'Sender', 'ToRecipients', 'CcRecipients', 'BccRecipients', 'ReplyTo', 'ConversationId', 'DateTimeReceived', 'DateTimeSent', 'IsDeliveryReceiptRequested', 'IsReadReceiptRequested', 'IsRead'];
+Office365MailAdapter.fieldNameMap = {
+  // Desired...                 // Given...
+  'emails': 'value',
+  'messageId': 'Id',
+  'conversationId': 'ConversationId',
+  'dateTimeSent': 'DateTimeSent',
+  'dateTimeReceived': 'DateTimeReceived',
+  'importance': 'Importance',
+  'folderId': 'ParentFolderId',
+  'categories': 'Categories',
+  'contentType': 'Body.ContentType',
+  'subject': 'Subject',
+  'bodyPreview': 'BodyPreview',
+  'body': 'Body.Content',
+  'fromAddress': 'From.EmailAddress.Address',
+  'fromName': 'From.EmailAddress.Name',
+  'toRecipients': 'ToRecipients',
+  'toRecipientAddress': 'EmailAddress.Address',
+  'toRecipientName': 'EmailAddress.Name',
+  'ccRecipients': 'CcRecipients',
+  'ccRecipientAddress': 'EmailAddress.Address',
+  'ccRecipientName': 'EmailAddress.Name',
+  'bccRecipients': 'BccRecipients',
+  'bccRecipientAddress': 'EmailAddress.Address',
+  'bccRecipientName': 'EmailAddress.Name',
+  'isDeliveryReceiptRequested': 'IsDeliveryReceiptRequested',
+  'isReadReceiptRequested': 'IsReadReceiptRequested',
+  'hasAttachments': 'HasAttachments',
+  'isDraft': 'IsDraft',
+  'isRead': 'IsRead',
+  'attachments': 'attachments'
+};
+exports.default = Office365MailAdapter;
 //# sourceMappingURL=../../../clAdapters/office365/mail/index.js.map
