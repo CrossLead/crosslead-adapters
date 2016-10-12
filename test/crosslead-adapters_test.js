@@ -13,7 +13,7 @@ describe('crossleadAdapters', function() {
   var nsTestAccountValue = '123456';
   it('should return the NetSuite account as the extEntityKey', function() {
     var nsAdapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.NETSUITE);
-    should(nsAdapter instanceof CLAdapters.NetSuiteAdapter).equal(true);
+    should(nsAdapter instanceof CLAdapters.adapters.NetSuiteAdapter).equal(true);
     nsAdapter.credentials.account = nsTestAccountValue;
     should(nsAdapter.extEntityKey).equal(nsTestAccountValue);
   });

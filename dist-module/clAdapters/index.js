@@ -8,6 +8,8 @@ import Office365CalendarAdapter from './office365/calendar/';
 import GoogleAdapter from './google-mail/';
 import GoogleCalendarAdapter from './google-calendar/';
 
+import JiraAdapter from './jira/';
+
 /*
  * Enumeration of available adapters
  */
@@ -18,6 +20,7 @@ export default {
   Office365MailAdapter: Office365MailAdapter,
   Office365CalendarAdapter: Office365CalendarAdapter,
   GoogleAdapter: GoogleAdapter,
-  GoogleCalendarAdapter: GoogleCalendarAdapter
+  GoogleCalendarAdapter: GoogleCalendarAdapter,
+  JiraAdapter: JiraAdapter
 };
 //# sourceMappingURL=../clAdapters/index.js.map

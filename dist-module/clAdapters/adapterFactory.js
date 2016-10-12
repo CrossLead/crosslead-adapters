@@ -40,6 +40,8 @@ var AdapterFactory = function () {
           return new adapters.GoogleAdapter();
         case types.GOOGLE_CALENDAR:
           return new adapters.GoogleCalendarAdapter();
+        case types.JIRA_ADAPTER:
+          return new adapters.JiraAdapter();
         default:
           throw new Error('Unknown type');
       }
