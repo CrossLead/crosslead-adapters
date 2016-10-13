@@ -12,6 +12,10 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -47,7 +51,13 @@ var JiraAdapter = function (_Adapter) {
 
   function JiraAdapter() {
     (0, _classCallCheck3.default)(this, JiraAdapter);
-    return (0, _possibleConstructorReturn3.default)(this, (JiraAdapter.__proto__ || (0, _getPrototypeOf2.default)(JiraAdapter)).apply(this, arguments));
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (JiraAdapter.__proto__ || (0, _getPrototypeOf2.default)(JiraAdapter)).call(this));
+
+    _this.protocol = 'https';
+    _this.apiVersion = 2;
+    _this.port = null;
+    return _this;
   }
 
   return JiraAdapter;
@@ -56,70 +66,86 @@ var JiraAdapter = function (_Adapter) {
 exports.default = JiraAdapter;
 
 
-JiraAdapter.prototype.makeRequest = function () {
-  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(path) {
-    var uri, options;
-    return _regenerator2.default.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            undefined.protocol = 'https';
-            undefined.hostname = 'crosslead.atlassian.net';
-            undefined.apiVersion = 2;
-            undefined.port = null;
-            undefined.username = 'michelle.shu@crosslead.com';
-            undefined.password = 'gmaSAtN*CL13';
+JiraAdapter.prototype.makeRequest = function (path) {
+  var uri = _url2.default.format({
+    protocol: this.protocol,
+    hostname: this.credentials.host,
+    port: this.port,
+    pathname: 'rest/api/' + this.apiVersion + '/' + path
+  });
 
-            uri = _url2.default.format({
-              protocol: undefined.protocol,
-              hostname: undefined.hostname,
-              port: undefined.port,
-              pathname: 'rest/api/' + undefined.apiVersion + path
-            });
-            options = {
-              rejectUnauthorized: true,
-              uri: uri,
-              method: 'GET',
-              auth: {
-                user: undefined.username,
-                pass: undefined.password
-              }
-            };
-            return _context.abrupt('return', (0, _request2.default)(options));
+  var authorizationString = new Buffer(this.credentials.email + ':' + this.credentials.password).toString('base64');
 
-          case 9:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, undefined);
-  }));
-
-  return function (_x) {
-    return _ref.apply(this, arguments);
+  var options = {
+    uri: uri,
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + authorizationString
+    }
   };
-}();
 
-JiraAdapter.prototype.getIssueHierarchy = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-  var result;
+  return new _promise2.default(function (resolve, reject) {
+    (0, _request2.default)(options, function (error, response, body) {
+      if (error) {
+        reject({
+          code: response.statusCode,
+          message: error,
+          data: body,
+          success: false
+        });
+      } else {
+        resolve({
+          code: response.statusCode,
+          data: body,
+          success: true
+        });
+      }
+    });
+  });
+};
+
+JiraAdapter.prototype.getIssueHierarchy = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+  return _regenerator2.default.wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return this.makeRequest('issue/createmeta');
+
+        case 2:
+          return _context.abrupt('return', _context.sent);
+
+        case 3:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
+
+JiraAdapter.prototype.runConnectionTest = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+  var testResult;
   return _regenerator2.default.wrap(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return undefined.makeRequest('issue/createmeta');
+          return this.makeRequest('myself');
 
         case 2:
-          result = _context2.sent;
+          testResult = _context2.sent;
 
-          console.log(result);
-          return _context2.abrupt('return', result);
+          if (testResult.code === 401) {
+            testResult.errorMessage = 'Failed to authorize user.';
+            testResult.success = false;
+          }
+          return _context2.abrupt('return', testResult);
 
         case 5:
         case 'end':
           return _context2.stop();
       }
     }
-  }, _callee2, undefined);
+  }, _callee2, this);
 }));
 //# sourceMappingURL=../../clAdapters/jira/index.js.map
