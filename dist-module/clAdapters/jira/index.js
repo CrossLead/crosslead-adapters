@@ -51,22 +51,29 @@ JiraAdapter.prototype.makeRequest = function (path) {
     }
   };
 
-  return new _Promise(function (resolve, reject) {
+  return new _Promise(function (resolve) {
     request(options, function (error, response, body) {
+      var errorMessage = null;
+      var success = response && response.statusCode < 400;
+
       if (error) {
-        reject({
-          code: response.statusCode,
-          message: error,
-          data: body,
-          success: false
-        });
-      } else {
-        resolve({
-          code: response.statusCode,
-          data: body,
-          success: true
-        });
+        success = false;
+        if (error.code === 'ECONNREFUSED') {
+          errorMessage = 'Failed to connect to JIRA adapter.';
+        }
       }
+
+      if (response && response.statusCode === 401) {
+        success = false;
+        errorMessage = 'Failed to authorize JIRA adapter.';
+      }
+
+      resolve({
+        code: success ? 200 : 500,
+        message: errorMessage || error,
+        data: body,
+        success: success
+      });
     });
   });
 };
@@ -91,7 +98,6 @@ JiraAdapter.prototype.getIssueHierarchy = _asyncToGenerator(_regeneratorRuntime.
 }));
 
 JiraAdapter.prototype.runConnectionTest = _asyncToGenerator(_regeneratorRuntime.mark(function _callee2() {
-  var testResult;
   return _regeneratorRuntime.wrap(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
@@ -100,15 +106,9 @@ JiraAdapter.prototype.runConnectionTest = _asyncToGenerator(_regeneratorRuntime.
           return this.makeRequest('myself');
 
         case 2:
-          testResult = _context2.sent;
+          return _context2.abrupt('return', _context2.sent);
 
-          if (testResult.code === 401) {
-            testResult.errorMessage = 'Failed to authorize user.';
-            testResult.success = false;
-          }
-          return _context2.abrupt('return', testResult);
-
-        case 5:
+        case 3:
         case 'end':
           return _context2.stop();
       }
