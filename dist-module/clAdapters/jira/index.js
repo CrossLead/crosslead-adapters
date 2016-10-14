@@ -3,6 +3,7 @@ import _asyncToGenerator from 'babel-runtime/helpers/asyncToGenerator';
 import _Promise from 'babel-runtime/core-js/promise';
 import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
 import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
+import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
 import Adapter from '../base/Adapter';
@@ -17,11 +18,14 @@ var JiraAdapter = function (_Adapter) {
 
     var _this = _possibleConstructorReturn(this, (JiraAdapter.__proto__ || _Object$getPrototypeOf(JiraAdapter)).call(this));
 
-    _this.protocol = 'https';
     _this.apiVersion = 2;
-    _this.port = null;
     return _this;
   }
+
+  _createClass(JiraAdapter, [{
+    key: 'init',
+    value: function init() {}
+  }]);
 
   return JiraAdapter;
 }(Adapter);
@@ -31,13 +35,13 @@ export default JiraAdapter;
 
 JiraAdapter.prototype.makeRequest = function (path) {
   var uri = url.format({
-    protocol: this.protocol,
+    protocol: this.credentials.protocol || 'https',
     hostname: this.credentials.host,
-    port: this.port,
+    port: this.credentials.port,
     pathname: 'rest/api/' + this.apiVersion + '/' + path
   });
 
-  var authorizationString = new Buffer(this.credentials.email + ':' + this.credentials.password).toString('base64');
+  var authorizationString = new Buffer(this.credentials.username + ':' + this.credentials.password).toString('base64');
 
   var options = {
     uri: uri,
