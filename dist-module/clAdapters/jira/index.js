@@ -27,7 +27,7 @@ var JiraAdapter = function (_Adapter) {
     value: function init() {}
   }, {
     key: 'makeRequest',
-    value: function makeRequest(path) {
+    value: function makeRequest(path, query) {
       var uri = url.format({
         protocol: this.credentials.protocol || 'https',
         hostname: this.credentials.host,
@@ -44,6 +44,10 @@ var JiraAdapter = function (_Adapter) {
           'Authorization': 'Basic ' + authorizationString
         }
       };
+
+      if (query) {
+        options.qs = query;
+      }
 
       return new _Promise(function (resolve) {
         request(options, function (error, response, body) {
@@ -72,7 +76,7 @@ var JiraAdapter = function (_Adapter) {
       });
     }
   }, {
-    key: 'getIssueHierarchy',
+    key: 'runConnectionTest',
     value: function () {
       var _ref = _asyncToGenerator(_regeneratorRuntime.mark(function _callee() {
         return _regeneratorRuntime.wrap(function _callee$(_context) {
@@ -80,7 +84,7 @@ var JiraAdapter = function (_Adapter) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return this.makeRequest('issue/createmeta');
+                return this.makeRequest('myself');
 
               case 2:
                 return _context.abrupt('return', _context.sent);
@@ -93,14 +97,14 @@ var JiraAdapter = function (_Adapter) {
         }, _callee, this);
       }));
 
-      function getIssueHierarchy() {
+      function runConnectionTest() {
         return _ref.apply(this, arguments);
       }
 
-      return getIssueHierarchy;
+      return runConnectionTest;
     }()
   }, {
-    key: 'runConnectionTest',
+    key: 'getIssueHierarchy',
     value: function () {
       var _ref2 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee2() {
         return _regeneratorRuntime.wrap(function _callee2$(_context2) {
@@ -108,7 +112,7 @@ var JiraAdapter = function (_Adapter) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return this.makeRequest('myself');
+                return this.makeRequest('issue/createmeta');
 
               case 2:
                 return _context2.abrupt('return', _context2.sent);
@@ -121,11 +125,45 @@ var JiraAdapter = function (_Adapter) {
         }, _callee2, this);
       }));
 
-      function runConnectionTest() {
+      function getIssueHierarchy() {
         return _ref2.apply(this, arguments);
       }
 
-      return runConnectionTest;
+      return getIssueHierarchy;
+    }()
+  }, {
+    key: 'getUnresolvedEpicsForProject',
+    value: function () {
+      var _ref3 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee3(projectId, startAt, maxResults) {
+        var jql;
+        return _regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                jql = 'project=' + projectId + ' AND issuetype=Epic AND resolution=Unresolved';
+                _context3.next = 3;
+                return this.makeRequest('search', {
+                  jql: jql,
+                  startAt: startAt || 0,
+                  maxResults: maxResults || 50
+                });
+
+              case 3:
+                return _context3.abrupt('return', _context3.sent);
+
+              case 4:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function getUnresolvedEpicsForProject(_x, _x2, _x3) {
+        return _ref3.apply(this, arguments);
+      }
+
+      return getUnresolvedEpicsForProject;
     }()
   }]);
 
