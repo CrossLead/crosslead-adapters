@@ -32,6 +32,10 @@ var _googleCalendar = require('./google-calendar/');
 
 var _googleCalendar2 = _interopRequireDefault(_googleCalendar);
 
+var _jira = require('./jira/');
+
+var _jira2 = _interopRequireDefault(_jira);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /*
@@ -44,6 +48,7 @@ exports.default = {
   Office365MailAdapter: _mail2.default,
   Office365CalendarAdapter: _calendar2.default,
   GoogleAdapter: _googleMail2.default,
-  GoogleCalendarAdapter: _googleCalendar2.default
+  GoogleCalendarAdapter: _googleCalendar2.default,
+  JiraAdapter: _jira2.default
 };
 //# sourceMappingURL=../clAdapters/index.js.map

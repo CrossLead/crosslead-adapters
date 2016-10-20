@@ -20,9 +20,10 @@
   "dependencies": {
     "babel-polyfill": "6.13.0",
     "babel-runtime": "6.11.6",
+    "babel-preset-es2015-node4": "2.0.3",
     "google-auth-library": "0.9.6",
     "googleapis": "2.1.3",
-    "lodash": "3.10.0",
+    "lodash": "3.10.1",
     "moment": "2.10.3",
     "netsuite-js": "git://github.com/CrossLead/netsuite-js",
     "node-uuid": "1.4.3",
@@ -64,7 +65,8 @@
     "sourceMaps": false,
     "presets": [
       "stage-0",
-      "es2015"
+      "es2015",
+      "es2015-node4"
     ],
     "plugins": [
       "transform-class-properties",
