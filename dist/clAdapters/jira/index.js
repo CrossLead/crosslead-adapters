@@ -116,20 +116,48 @@ var JiraAdapter = function (_Adapter) {
       });
     }
   }, {
-    key: 'runConnectionTest',
+    key: 'getAllIssues',
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(requestPath, params) {
+        var requestParams, resultCount, issues, result, data;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return this.makeRequest('myself');
+                requestParams = params || {};
 
-              case 2:
-                return _context.abrupt('return', _context.sent);
+                requestParams.startAt = 0;
+                requestParams.maxResults = 50;
 
-              case 3:
+                resultCount = void 0, issues = [];
+
+              case 4:
+                _context.next = 6;
+                return this.makeRequest(requestPath, requestParams);
+
+              case 6:
+                result = _context.sent;
+                data = JSON.parse(result.data);
+
+
+                if (data.issues && data.issues.length) {
+                  resultCount = data.issues.length;
+                  issues = issues.concat(data.issues);
+                  requestParams.startAt += resultCount;
+                } else {
+                  resultCount = 0;
+                }
+
+              case 9:
+                if (resultCount && resultCount === requestParams.maxResults) {
+                  _context.next = 4;
+                  break;
+                }
+
+              case 10:
+                return _context.abrupt('return', issues);
+
+              case 11:
               case 'end':
                 return _context.stop();
             }
@@ -137,14 +165,14 @@ var JiraAdapter = function (_Adapter) {
         }, _callee, this);
       }));
 
-      function runConnectionTest() {
+      function getAllIssues(_x, _x2) {
         return _ref.apply(this, arguments);
       }
 
-      return runConnectionTest;
+      return getAllIssues;
     }()
   }, {
-    key: 'getIssueHierarchy',
+    key: 'runConnectionTest',
     value: function () {
       var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
         return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -152,7 +180,7 @@ var JiraAdapter = function (_Adapter) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return this.makeRequest('issue/createmeta');
+                return this.makeRequest('myself');
 
               case 2:
                 return _context2.abrupt('return', _context2.sent);
@@ -165,33 +193,27 @@ var JiraAdapter = function (_Adapter) {
         }, _callee2, this);
       }));
 
-      function getIssueHierarchy() {
+      function runConnectionTest() {
         return _ref2.apply(this, arguments);
       }
 
-      return getIssueHierarchy;
+      return runConnectionTest;
     }()
   }, {
-    key: 'getUnresolvedEpicsForProject',
+    key: 'getIssueHierarchy',
     value: function () {
-      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(projectId, startAt, maxResults) {
-        var jql;
+      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
         return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                jql = 'project=' + projectId + ' AND issuetype=Epic AND resolution=Unresolved';
-                _context3.next = 3;
-                return this.makeRequest('search', {
-                  jql: jql,
-                  startAt: startAt || 0,
-                  maxResults: maxResults || 50
-                });
+                _context3.next = 2;
+                return this.makeRequest('issue/createmeta');
 
-              case 3:
+              case 2:
                 return _context3.abrupt('return', _context3.sent);
 
-              case 4:
+              case 3:
               case 'end':
                 return _context3.stop();
             }
@@ -199,8 +221,38 @@ var JiraAdapter = function (_Adapter) {
         }, _callee3, this);
       }));
 
-      function getUnresolvedEpicsForProject(_x, _x2, _x3) {
+      function getIssueHierarchy() {
         return _ref3.apply(this, arguments);
+      }
+
+      return getIssueHierarchy;
+    }()
+  }, {
+    key: 'getUnresolvedEpicsForProject',
+    value: function () {
+      var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(projectId) {
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return this.getAllIssues('search', {
+                  jql: 'project=' + projectId + ' AND issuetype=Epic AND resolution=Unresolved'
+                });
+
+              case 2:
+                return _context4.abrupt('return', _context4.sent);
+
+              case 3:
+              case 'end':
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function getUnresolvedEpicsForProject(_x3) {
+        return _ref4.apply(this, arguments);
       }
 
       return getUnresolvedEpicsForProject;
