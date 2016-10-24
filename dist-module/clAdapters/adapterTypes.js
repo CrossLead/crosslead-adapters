@@ -1,9 +1,14 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**
  * Enumeration for different adapter types
  *
  * @enum
  */
-export default {
+exports.default = {
   CUSTOM: 1,
   NETSUITE: 2,
   CL_MOCK: 3,

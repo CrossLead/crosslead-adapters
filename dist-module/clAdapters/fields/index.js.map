@@ -1,1 +1,1 @@
-{"version":3,"sources":["clAdapters/fields/index.js"],"names":["Types"],"mappings":"AAAA;;;;;AAKA,SAASA,KAAT,QAAsB,SAAtB","file":"clAdapters/fields/index.js","sourcesContent":["/**\n * Adapter data fields\n * @return {Fields}\n 1*/\n\nexport { Types } from './types';\n\n"],"sourceRoot":"/source/"}
+{"version":3,"sources":["clAdapters/fields/index.js"],"names":["Types"],"mappings":";;;;;;;;;;;kBAKSA,K","file":"clAdapters/fields/index.js","sourcesContent":["/**\n * Adapter data fields\n * @return {Fields}\n 1*/\n\nexport { Types } from './types';\n\n"],"sourceRoot":"/source/"}

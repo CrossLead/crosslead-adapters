@@ -1,7 +1,31 @@
-import _Promise from 'babel-runtime/core-js/promise';
-import * as util from 'util';
-import BaseAdapter from './base/Adapter';
-import * as Fields from './fields/';
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+exports.default = CLMockAdapter;
+
+var _util = require('util');
+
+var util = _interopRequireWildcard(_util);
+
+var _Adapter = require('./base/Adapter');
+
+var _Adapter2 = _interopRequireDefault(_Adapter);
+
+var _fields = require('./fields/');
+
+var Fields = _interopRequireWildcard(_fields);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /**
  * CLMockAdapter
  *
@@ -15,8 +39,8 @@ import * as Fields from './fields/';
  * @class
  * @return {ClMockAdapter}
  */
-export default function CLMockAdapter() {
-  BaseAdapter.call(this);
+function CLMockAdapter() {
+  _Adapter2.default.call(this);
 
   /**
    * @override
@@ -28,14 +52,14 @@ export default function CLMockAdapter() {
   });
 };
 
-util.inherits(CLMockAdapter, BaseAdapter);
+util.inherits(CLMockAdapter, _Adapter2.default);
 
 /**
  * @override
  */
 CLMockAdapter.prototype.init = function () {
   var _this = this;
-  var p = new _Promise(function (resolve, reject) {
+  var p = new _promise2.default(function (resolve, reject) {
     if (_this.credentials.appId === '123456' && _this.credentials.apiKey === '999999') {
       resolve(_this);
     } else {
@@ -106,6 +130,6 @@ CLMockAdapter.prototype.getFieldData = function (field, query) {
     result.results.push(createResult());
   }
 
-  return _Promise.resolve(result);
+  return _promise2.default.resolve(result);
 };
 //# sourceMappingURL=../clAdapters/clMockAdapter.js.map

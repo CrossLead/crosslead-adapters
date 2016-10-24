@@ -1,9 +1,14 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**
  * Enumeration for different data field types
  *
  * @enum
  */
-export var Types = {
+var Types = exports.Types = {
   EXT_ENTITY: 1,
   USER: 2,
   GROUP: 3,

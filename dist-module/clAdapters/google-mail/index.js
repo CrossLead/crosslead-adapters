@@ -1,20 +1,60 @@
-import _Promise from 'babel-runtime/core-js/promise';
-import _JSON$stringify from 'babel-runtime/core-js/json/stringify';
-import * as crypto from 'crypto';
-import rp from 'request-promise';
-import * as util from 'util';
-import moment from 'moment';
-import * as querystring from 'querystring';
-import * as _ from 'lodash';
+'use strict';
 
-import BaseAdapter from '../base/Adapter';
-import * as GoogleMail from './google-js.js';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-export default function GoogleAdapter() {
-  BaseAdapter.call(this);
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+exports.default = GoogleAdapter;
+
+var _crypto = require('crypto');
+
+var crypto = _interopRequireWildcard(_crypto);
+
+var _requestPromise = require('request-promise');
+
+var _requestPromise2 = _interopRequireDefault(_requestPromise);
+
+var _util = require('util');
+
+var util = _interopRequireWildcard(_util);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _querystring = require('querystring');
+
+var querystring = _interopRequireWildcard(_querystring);
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+var _Adapter = require('../base/Adapter');
+
+var _Adapter2 = _interopRequireDefault(_Adapter);
+
+var _googleJs = require('./google-js.js');
+
+var GoogleMail = _interopRequireWildcard(_googleJs);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function GoogleAdapter() {
+  _Adapter2.default.call(this);
 };
 
-util.inherits(GoogleAdapter, BaseAdapter);
+util.inherits(GoogleAdapter, _Adapter2.default);
 
 GoogleAdapter.prototype.init = function () {
   var _this = this;
@@ -49,7 +89,7 @@ var getSingleMessageDetails = function getSingleMessageDetails(messageId, userEm
       Accept: 'application/json;odata.metadata=none'
     }
   };
-  return rp(messageRequestOptions).then(function (messageDetails) {
+  return (0, _requestPromise2.default)(messageRequestOptions).then(function (messageDetails) {
     result.messageData = JSON.parse(messageDetails);
     if (additionalFields.indexOf('Subject') === -1) {
       //remove subject header
@@ -86,8 +126,8 @@ var getAccessToken = function getAccessToken(clientId, adminEmail, userEmail, pr
     'sub': userEmail
   };
 
-  var encodedJwtHeader = new Buffer(_JSON$stringify(jwtHeader)).toString('base64');
-  var encodedJwtPayload = new Buffer(_JSON$stringify(jwtPayload)).toString('base64');
+  var encodedJwtHeader = new Buffer((0, _stringify2.default)(jwtHeader)).toString('base64');
+  var encodedJwtPayload = new Buffer((0, _stringify2.default)(jwtPayload)).toString('base64');
   var stringToSign = encodedJwtHeader + '.' + encodedJwtPayload;
 
   //sign it!
@@ -119,24 +159,24 @@ var getAccessToken = function getAccessToken(clientId, adminEmail, userEmail, pr
     }
   };
 
-  return rp(tokenRequestOptions).then(function (body) {
+  return (0, _requestPromise2.default)(tokenRequestOptions).then(function (body) {
     var tokenData = JSON.parse(body);
     if (tokenData && tokenData.access_token) {
       return tokenData.access_token;
     } else {
-      return _Promise.reject('Could not get access token.');
+      return _promise2.default.reject('Could not get access token.');
     }
   }).catch(function (err) {
-    var tokenData = JSON.parse(_JSON$stringify(err));
+    var tokenData = JSON.parse((0, _stringify2.default)(err));
     if (tokenData.name === 'StatusCodeError') {
       var entireMessage = tokenData.message;
       var messageJson = entireMessage.replace(tokenData.statusCode + ' - ', '');
       var messageData = JSON.parse(messageJson.replace(new RegExp('\\"', 'g'), '"'));
       //console.log('-----');
       //console.log(messageData);
-      return _Promise.reject(messageData);
+      return _promise2.default.reject(messageData);
     } else {
-      return _Promise.reject(err);
+      return _promise2.default.reject(err);
     }
   });
 };
@@ -144,7 +184,7 @@ var getAccessToken = function getAccessToken(clientId, adminEmail, userEmail, pr
 var getMoreEmails = function getMoreEmails(messages, userEmail, token, apiVersion, additionalFields, emailRequestOptions, firstUri, nextPageToken) {
   emailRequestOptions.uri = firstUri + '&pageToken=' + nextPageToken;
   var tempPageToken = '';
-  return rp(emailRequestOptions).then(function (body) {
+  return (0, _requestPromise2.default)(emailRequestOptions).then(function (body) {
     var messageDetailPromises = [];
     var messageList = JSON.parse(body);
     tempPageToken = messageList.nextPageToken;
@@ -158,7 +198,7 @@ var getMoreEmails = function getMoreEmails(messages, userEmail, token, apiVersio
       }
     }
 
-    return _Promise.all(messageDetailPromises);
+    return _promise2.default.all(messageDetailPromises);
   }).then(function () {
     if (tempPageToken) {
       return getMoreEmails(messages, userEmail, token, apiVersion, additionalFields, emailRequestOptions, firstUri, tempPageToken);
@@ -186,7 +226,7 @@ var getUserEmails = function getUserEmails(clientId, serviceEmail, userEmail, pr
         Accept: 'application/json;odata.metadata=none'
       }
     };
-    return rp(emailRequestOptions);
+    return (0, _requestPromise2.default)(emailRequestOptions);
   }).then(function (body) {
     var messageDetailPromises = [];
     result.data = {};
@@ -203,7 +243,7 @@ var getUserEmails = function getUserEmails(clientId, serviceEmail, userEmail, pr
       }
     }
 
-    return _Promise.all(messageDetailPromises);
+    return _promise2.default.all(messageDetailPromises);
   }).then(function () {
     //console.log(result.data.messageList);
     if (result.data.messageList.nextPageToken) {
@@ -221,7 +261,7 @@ var getUserEmails = function getUserEmails(clientId, serviceEmail, userEmail, pr
       var messageData = JSON.parse(messageJson.replace(new RegExp('\\"', 'g'), '"'));
       result.errorMessage = messageData.error.message;
     } else {
-      result.errorMessage = _JSON$stringify(err);
+      result.errorMessage = (0, _stringify2.default)(err);
     }
     return true;
   });
@@ -299,12 +339,12 @@ var mapEmailData = function mapEmailData(emailData) {
 
         mappedEmailMessage.messageId = originalEmailMessage.messageId;
         mappedEmailMessage.conversationId = messageData.threadId;
-        mappedEmailMessage.dateTimeSent = moment(new Date(getHeaderValue(messageData, 'Date'))).utc().toDate();
+        mappedEmailMessage.dateTimeSent = (0, _moment2.default)(new Date(getHeaderValue(messageData, 'Date'))).utc().toDate();
 
         var dateReceived = getHeaderValue(messageData, 'Received');
         if (dateReceived) {
           var datePartOfValue = dateReceived.split(';')[1];
-          mappedEmailMessage.dateTimeReceived = moment(new Date(datePartOfValue)).utc().toDate();
+          mappedEmailMessage.dateTimeReceived = (0, _moment2.default)(new Date(datePartOfValue)).utc().toDate();
         }
 
         mappedEmailMessage.importance = 'Normal';
@@ -371,7 +411,7 @@ var getEmailData = function getEmailData(emails, filterStartDate, filterEndDate,
     emailResultPromises.push(getUserEmails(clientId, serviceEmail, emails[emailIter].emailAfterMapping, privateKey, apiVersion, filterStartDate, filterEndDate, additionalFields, emailResults[emailIter]));
   }
 
-  return _Promise.all(emailResultPromises).then(function () {
+  return _promise2.default.all(emailResultPromises).then(function () {
     return emailResults;
   });
 };
@@ -385,7 +425,7 @@ GoogleAdapter.prototype.getBatchData = function (emails, filterStartDate, filter
 
   var dataAdapterRunStats = {
     success: true,
-    runDate: moment().utc().toDate(),
+    runDate: (0, _moment2.default)().utc().toDate(),
     filterStartDate: filterStartDate,
     filterEndDate: filterEndDate,
     emails: emails
@@ -402,7 +442,7 @@ GoogleAdapter.prototype.getBatchData = function (emails, filterStartDate, filter
   }).catch(function (err) {
     dataAdapterRunStats.success = false;
     dataAdapterRunStats.errorMessage = err;
-    console.log('GoogleMail GetBatchData Error: ' + _JSON$stringify(err));
+    console.log('GoogleMail GetBatchData Error: ' + (0, _stringify2.default)(err));
     return dataAdapterRunStats;
   });
 };
@@ -410,8 +450,8 @@ GoogleAdapter.prototype.getBatchData = function (emails, filterStartDate, filter
 GoogleAdapter.prototype.runConnectionTest = function (connectionData) {
   var _this = this;
   _this._config = new GoogleMail.Configuration(connectionData.credentials);
-  var filterStartDate = moment().utc().startOf('day').add(-1, 'days').toDate();
-  var filterEndDate = moment().utc().startOf('day').toDate();
+  var filterStartDate = (0, _moment2.default)().utc().startOf('day').add(-1, 'days').toDate();
+  var filterEndDate = (0, _moment2.default)().utc().startOf('day').toDate();
   return _this.getBatchData([{ emailAfterMapping: _this._config.credentials.email }], filterStartDate, filterEndDate, '').then(function (data) {
     if (data.success && data.results[0]) {
       //to see if it really worked, we need to pass in the first result
@@ -425,13 +465,13 @@ GoogleAdapter.prototype.runConnectionTest = function (connectionData) {
 GoogleAdapter.prototype.runMessageTest = function (connectionData) {
   var _this = this;
   _this._config = new GoogleMail.Configuration(connectionData.credentials);
-  var filterStartDate = moment().utc().startOf('day').add(-1, 'days').toDate();
-  var filterEndDate = moment().utc().startOf('day').add(1, 'days').toDate();
+  var filterStartDate = (0, _moment2.default)().utc().startOf('day').add(-1, 'days').toDate();
+  var filterEndDate = (0, _moment2.default)().utc().startOf('day').add(1, 'days').toDate();
   return _this.getBatchData([_this._config.credentials.email], filterStartDate, filterEndDate, 'Subject,BodyPreview,Body').then(function (data) {
     console.log('runMessageTest worked');
     console.log(data.results[0]);
   }).catch(function (err) {
-    console.log('runMessageTest Error: ' + _JSON$stringify(err));
+    console.log('runMessageTest Error: ' + (0, _stringify2.default)(err));
   });
 };
 //# sourceMappingURL=../../clAdapters/google-mail/index.js.map

@@ -1,36 +1,97 @@
-import _Object$assign from 'babel-runtime/core-js/object/assign';
-import _toConsumableArray from 'babel-runtime/helpers/toConsumableArray';
-import _JSON$stringify from 'babel-runtime/core-js/json/stringify';
-import _regeneratorRuntime from 'babel-runtime/regenerator';
-import _asyncToGenerator from 'babel-runtime/helpers/asyncToGenerator';
-import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
-import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
-import _createClass from 'babel-runtime/helpers/createClass';
-import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
-import _inherits from 'babel-runtime/helpers/inherits';
-import * as uuid from 'node-uuid';
-import * as crypto from 'crypto';
-import request from 'request-promise';
-import moment from 'moment';
-import _ from 'lodash';
-import Adapter from '../../base/Adapter';
-import Office365BaseService from './Service';
-import Office365BaseConfiguration from './Configuration';
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _nodeUuid = require('node-uuid');
+
+var uuid = _interopRequireWildcard(_nodeUuid);
+
+var _crypto = require('crypto');
+
+var crypto = _interopRequireWildcard(_crypto);
+
+var _requestPromise = require('request-promise');
+
+var _requestPromise2 = _interopRequireDefault(_requestPromise);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _Adapter2 = require('../../base/Adapter');
+
+var _Adapter3 = _interopRequireDefault(_Adapter2);
+
+var _Service = require('./Service');
+
+var _Service2 = _interopRequireDefault(_Service);
+
+var _Configuration = require('./Configuration');
+
+var _Configuration2 = _interopRequireDefault(_Configuration);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Common reset, runConnectionTest, and getAccessToken methods...
  */
-
 var Office365BaseAdapter = function (_Adapter) {
-  _inherits(Office365BaseAdapter, _Adapter);
+  (0, _inherits3.default)(Office365BaseAdapter, _Adapter);
 
   function Office365BaseAdapter() {
-    _classCallCheck(this, Office365BaseAdapter);
-
-    return _possibleConstructorReturn(this, (Office365BaseAdapter.__proto__ || _Object$getPrototypeOf(Office365BaseAdapter)).apply(this, arguments));
+    (0, _classCallCheck3.default)(this, Office365BaseAdapter);
+    return (0, _possibleConstructorReturn3.default)(this, (Office365BaseAdapter.__proto__ || (0, _getPrototypeOf2.default)(Office365BaseAdapter)).apply(this, arguments));
   }
 
-  _createClass(Office365BaseAdapter, [{
+  (0, _createClass3.default)(Office365BaseAdapter, [{
     key: 'reset',
     value: function reset() {
       delete this._config;
@@ -40,13 +101,13 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'init',
     value: function () {
-      var _ref = _asyncToGenerator(_regeneratorRuntime.mark(function _callee() {
-        return _regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this._config = new Office365BaseConfiguration(this.credentials);
-                this._service = new Office365BaseService(this._config);
+                this._config = new _Configuration2.default(this.credentials);
+                this._service = new _Service2.default(this._config);
                 _context.next = 4;
                 return this._service.init();
 
@@ -71,16 +132,16 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'runConnectionTest',
     value: function () {
-      var _ref2 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee2(connectionData) {
+      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(connectionData) {
         var today, filterStartDate, filterEndDate, data;
-        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                this._config = new Office365BaseConfiguration(connectionData.credentials);
+                this._config = new _Configuration2.default(connectionData.credentials);
 
                 today = function today() {
-                  return moment().utc().startOf('day');
+                  return (0, _moment2.default)().utc().startOf('day');
                 };
 
                 filterStartDate = today().add(-1, 'days').toDate();
@@ -112,10 +173,10 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'getAccessToken',
     value: function () {
-      var _ref3 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee3() {
+      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
         var _config, _config$credentials, clientId, tenantId, certificate, certificateThumbprint, apiVersion, tokenRequestUrl, jwtHeader, accessTokenExpires, jwtPayload, encode, encodedJwtHeader, encodedJwtPayload, stringToSign, encodedSignedJwtInfo, tokenRequestFormData, tokenRequestOptions, tokenData, messageData;
 
-        return _regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -157,7 +218,7 @@ var Office365BaseAdapter = function (_Adapter) {
                   'sub': clientId
                 };
                 encode = function encode(header) {
-                  return new Buffer(_JSON$stringify(header)).toString('base64');
+                  return new Buffer((0, _stringify2.default)(header)).toString('base64');
                 }, encodedJwtHeader = encode(jwtHeader), encodedJwtPayload = encode(jwtPayload), stringToSign = encodedJwtHeader + '.' + encodedJwtPayload, encodedSignedJwtInfo = crypto.createSign('RSA-SHA256').update(stringToSign).sign(certificate, 'base64');
                 tokenRequestFormData = {
                   client_id: clientId,
@@ -175,7 +236,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 _context3.prev = 17;
                 _context3.t0 = JSON;
                 _context3.next = 21;
-                return request(tokenRequestOptions);
+                return (0, _requestPromise2.default)(tokenRequestOptions);
 
               case 21:
                 _context3.t1 = _context3.sent;
@@ -227,12 +288,12 @@ var Office365BaseAdapter = function (_Adapter) {
   }, {
     key: 'getUserData',
     value: function () {
-      var _ref4 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee4(options, userData) {
+      var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(options, userData) {
         var pageToGet = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
         var userProfile, filterStartDate, filterEndDate, additionalFields, $filter, apiType, _options$maxPages, maxPages, _options$recordsPerPa, recordsPerPage, accessToken, apiVersion, skip, baseFields, params, urlParams, requestOptions, _ref5, records, e, recIter, rec, mid, attachmentOptions, attachmentData, _userData$data;
 
-        return _regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -276,7 +337,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 }
 
                 // format parameters for url
-                urlParams = _(params).map(function (value, key) {
+                urlParams = (0, _lodash2.default)(params).map(function (value, key) {
                   return key + '=' + value;
                 }).join('&');
                 requestOptions = {
@@ -293,7 +354,7 @@ var Office365BaseAdapter = function (_Adapter) {
 
                 _context4.t1 = JSON;
                 _context4.next = 26;
-                return request(requestOptions);
+                return (0, _requestPromise2.default)(requestOptions);
 
               case 26:
                 _context4.t2 = _context4.sent;
@@ -338,7 +399,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 };
                 _context4.t4 = JSON;
                 _context4.next = 43;
-                return request(attachmentOptions);
+                return (0, _requestPromise2.default)(attachmentOptions);
 
               case 43:
                 _context4.t5 = _context4.sent;
@@ -370,7 +431,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 }
 
                 if (records && pageToGet > 1) {
-                  (_userData$data = userData.data).push.apply(_userData$data, _toConsumableArray(records));
+                  (_userData$data = userData.data).push.apply(_userData$data, (0, _toConsumableArray3.default)(records));
                 }
 
                 // if the returned results are the maximum number of records per page,
@@ -394,9 +455,9 @@ var Office365BaseAdapter = function (_Adapter) {
                 _context4.prev = 61;
                 _context4.t6 = _context4['catch'](21);
 
-                _Object$assign(userData, {
+                (0, _assign2.default)(userData, {
                   success: false,
-                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? _JSON$stringify(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
+                  errorMessage: _context4.t6.name !== 'StatusCodeError' ? (0, _stringify2.default)(_context4.t6) : JSON.parse(_context4.t6.message.replace(_context4.t6.statusCode + ' - ', '').replace(/\"/g, '"')).message
                 });
                 return _context4.abrupt('return', true);
 
@@ -415,9 +476,8 @@ var Office365BaseAdapter = function (_Adapter) {
       return getUserData;
     }()
   }]);
-
   return Office365BaseAdapter;
-}(Adapter);
+}(_Adapter3.default);
 
-export default Office365BaseAdapter;
+exports.default = Office365BaseAdapter;
 //# sourceMappingURL=../../../clAdapters/office365/base/Adapter.js.map
