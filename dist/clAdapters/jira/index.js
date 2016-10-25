@@ -40,6 +40,10 @@ var _Adapter2 = require('../base/Adapter');
 
 var _Adapter3 = _interopRequireDefault(_Adapter2);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
@@ -237,7 +241,7 @@ var JiraAdapter = function (_Adapter) {
               case 0:
                 _context4.next = 2;
                 return this.getAllIssues({
-                  jql: 'project=' + projectId + ' AND issuetype=Epic AND resolution=Unresolved'
+                  jql: 'project = ' + projectId + ' AND issuetype = Epic AND resolution = Unresolved'
                 });
 
               case 2:
@@ -258,22 +262,24 @@ var JiraAdapter = function (_Adapter) {
       return getUnresolvedEpicsForProject;
     }()
   }, {
-    key: 'getIssuesForEpic',
+    key: 'getEpicsForProject',
     value: function () {
-      var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(epicId, issueTypes) {
+      var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(projectId, startDate, endDate) {
+        var formattedStartDate, formattedEndDate;
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                _context5.next = 2;
+                formattedStartDate = (0, _moment2.default)(startDate).format('YYYY/MM/DD HH:mm'), formattedEndDate = (0, _moment2.default)(endDate).format('YYYY/MM/DD HH:mm');
+                _context5.next = 3;
                 return this.getAllIssues({
-                  jql: '("Epic Link"=' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND issuetype IN (' + issueTypes.join(',') + ')'
+                  jql: 'project = ' + projectId + ' AND issuetype = Epic AND\n      updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
                 });
 
-              case 2:
+              case 3:
                 return _context5.abrupt('return', _context5.sent);
 
-              case 3:
+              case 4:
               case 'end':
                 return _context5.stop();
             }
@@ -281,8 +287,40 @@ var JiraAdapter = function (_Adapter) {
         }, _callee5, this);
       }));
 
-      function getIssuesForEpic(_x3, _x4) {
+      function getEpicsForProject(_x3, _x4, _x5) {
         return _ref5.apply(this, arguments);
+      }
+
+      return getEpicsForProject;
+    }()
+  }, {
+    key: 'getIssuesForEpic',
+    value: function () {
+      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6(epicId, issueTypes, startDate, endDate) {
+        var formattedStartDate, formattedEndDate;
+        return _regenerator2.default.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                formattedStartDate = (0, _moment2.default)(startDate).format('YYYY/MM/DD HH:mm'), formattedEndDate = (0, _moment2.default)(endDate).format('YYYY/MM/DD HH:mm');
+                _context6.next = 3;
+                return this.getAllIssues({
+                  jql: '("Epic Link" = ' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
+                });
+
+              case 3:
+                return _context6.abrupt('return', _context6.sent);
+
+              case 4:
+              case 'end':
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function getIssuesForEpic(_x6, _x7, _x8, _x9) {
+        return _ref6.apply(this, arguments);
       }
 
       return getIssuesForEpic;
