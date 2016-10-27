@@ -39,8 +39,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function rateLimit(fn) {
   var _arguments = arguments;
-  var rate = arguments.length <= 1 || arguments[1] === undefined ? 1000 : arguments[1];
-  var count = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
+  var rate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
+  var count = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
 
   // if first arg is not number,

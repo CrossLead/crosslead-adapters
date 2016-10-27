@@ -66,7 +66,7 @@ var SlackAdapter = (_dec = rateLimit(1000), (_class = (_temp = _class2 = functio
     value: function callSlackApiMethod(method) {
       var _this2 = this;
 
-      var params = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
       var paramString = '';
       for (var p in params) {

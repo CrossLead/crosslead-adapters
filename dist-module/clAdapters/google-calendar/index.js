@@ -119,7 +119,7 @@ var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
     key: 'getBatchData',
     value: function () {
       var _ref2 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee5() {
-        var userProfiles = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+        var userProfiles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
         var _this2 = this;
 

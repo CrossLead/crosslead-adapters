@@ -47,6 +47,10 @@ var _Adapter2 = require('../base/Adapter');
 
 var _Adapter3 = _interopRequireDefault(_Adapter2);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
@@ -90,7 +94,7 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
-var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_Adapter) {
+var JiraAdapter = (_dec = (0, _rateLimit2.default)(200), (_class = function (_Adapter) {
   (0, _inherits3.default)(JiraAdapter, _Adapter);
 
   function JiraAdapter() {
@@ -112,7 +116,7 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_A
 
   }, {
     key: 'makeRequest',
-    value: function makeRequest(path) {
+    value: function makeRequest(path, query) {
       var uri = _url2.default.format({
         protocol: this.credentials.protocol || 'https',
         hostname: this.credentials.host,
@@ -129,6 +133,10 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_A
           'Authorization': 'Basic ' + authorizationString
         }
       };
+
+      if (query) {
+        options.qs = query;
+      }
 
       return new _promise2.default(function (resolve) {
         (0, _request2.default)(options, function (error, response, body) {
@@ -157,20 +165,48 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_A
       });
     }
   }, {
-    key: 'getIssueHierarchy',
+    key: 'getAllIssues',
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(params) {
+        var requestParams, resultCount, issues, result, data;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return this.makeRequest('issue/createmeta');
+                requestParams = params || {};
 
-              case 2:
-                return _context.abrupt('return', _context.sent);
+                requestParams.startAt = 0;
+                requestParams.maxResults = 50;
 
-              case 3:
+                resultCount = void 0, issues = [];
+
+              case 4:
+                _context.next = 6;
+                return this.makeRequest('search', requestParams);
+
+              case 6:
+                result = _context.sent;
+                data = JSON.parse(result.data);
+
+
+                if (data.issues && data.issues.length) {
+                  resultCount = data.issues.length;
+                  issues = issues.concat(data.issues);
+                  requestParams.startAt += resultCount;
+                } else {
+                  resultCount = 0;
+                }
+
+              case 9:
+                if (resultCount && resultCount === requestParams.maxResults) {
+                  _context.next = 4;
+                  break;
+                }
+
+              case 10:
+                return _context.abrupt('return', issues);
+
+              case 11:
               case 'end':
                 return _context.stop();
             }
@@ -178,40 +214,49 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_A
         }, _callee, this);
       }));
 
-      function getIssueHierarchy() {
+      function getAllIssues(_x) {
         return _ref.apply(this, arguments);
       }
 
-      return getIssueHierarchy;
+      return getAllIssues;
     }()
   }, {
     key: 'runConnectionTest',
-    value: function () {
-      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-        return _regenerator2.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return this.makeRequest('myself');
+    value: function runConnectionTest() {
+      return this.makeRequest('myself');
+    }
+  }, {
+    key: 'getIssueHierarchy',
+    value: function getIssueHierarchy() {
+      return this.makeRequest('issue/createmeta');
+    }
+  }, {
+    key: 'getUnresolvedEpicsForProject',
+    value: function getUnresolvedEpicsForProject(projectId) {
+      return this.getAllIssues({
+        jql: 'project = ' + projectId + ' AND issuetype = Epic AND resolution = Unresolved'
+      });
+    }
+  }, {
+    key: 'getEpicsForProject',
+    value: function getEpicsForProject(projectId, startDate, endDate) {
+      var formattedStartDate = (0, _moment2.default)(startDate).format('YYYY/MM/DD HH:mm'),
+          formattedEndDate = (0, _moment2.default)(endDate).format('YYYY/MM/DD HH:mm');
 
-              case 2:
-                return _context2.abrupt('return', _context2.sent);
+      return this.getAllIssues({
+        jql: 'project = ' + projectId + ' AND issuetype = Epic AND\n      updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
+      });
+    }
+  }, {
+    key: 'getIssuesForEpic',
+    value: function getIssuesForEpic(epicId, issueTypes, startDate, endDate) {
+      var formattedStartDate = (0, _moment2.default)(startDate).format('YYYY/MM/DD HH:mm'),
+          formattedEndDate = (0, _moment2.default)(endDate).format('YYYY/MM/DD HH:mm');
 
-              case 3:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function runConnectionTest() {
-        return _ref2.apply(this, arguments);
-      }
-
-      return runConnectionTest;
-    }()
+      return this.getAllIssues({
+        jql: '("Epic Link" = ' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
+      });
+    }
   }]);
   return JiraAdapter;
 }(_Adapter3.default), (_applyDecoratedDescriptor(_class.prototype, 'makeRequest', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'makeRequest'), _class.prototype)), _class));
