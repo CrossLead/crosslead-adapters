@@ -99,5 +99,5 @@ var Adapter = function () {
   return Adapter;
 }();
 
-export default Adapter;
+export { Adapter as default };
 //# sourceMappingURL=../../clAdapters/base/Adapter.js.map

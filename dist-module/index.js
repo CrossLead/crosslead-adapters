@@ -2,7 +2,7 @@
  * crosslead-adapters
  * https://github.com/CrossLead/crosslead-adapters
  *
- * Copyright (c) 2015 McChrystal Group
+ * Copyright (c) 2016 CrossLead
  *
  * @ignore
  */
@@ -10,7 +10,7 @@ import * as Fields from './clAdapters/fields';
 import AdapterFactory from './clAdapters/adapterFactory';
 import AdapterStatus from './clAdapters/adapterStatus';
 import AdapterTypes from './clAdapters/adapterTypes';
-import adapters from './clAdapters/';
+import * as adapters from './clAdapters/';
 
 export default {
   Fields: Fields,
@@ -28,7 +28,7 @@ import _AdapterStatus from './clAdapters/adapterStatus';
 export { _AdapterStatus as AdapterStatus };
 import _AdapterTypes from './clAdapters/adapterTypes';
 export { _AdapterTypes as AdapterTypes };
-import _adapters from './clAdapters/';
+import * as _adapters from './clAdapters/';
 export { _adapters as adapters };
 // client
 

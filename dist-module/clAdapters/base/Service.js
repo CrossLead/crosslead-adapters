@@ -39,5 +39,5 @@ var Service = function () {
   return Service;
 }();
 
-export default Service;
+export { Service as default };
 //# sourceMappingURL=../../clAdapters/base/Service.js.map

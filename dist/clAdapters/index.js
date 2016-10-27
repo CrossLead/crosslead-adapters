@@ -3,10 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SlackAdapter = exports.JiraAdapter = exports.GoogleCalendarAdapter = exports.GoogleAdapter = exports.Office365CalendarAdapter = exports.Office365MailAdapter = exports.NetSuiteAdapter = exports.CLMockAdapter = exports.Adapter = undefined;
 
-var _Adapter = require('./base/Adapter');
+var _Adapter2 = require('./base/Adapter');
 
-var _Adapter2 = _interopRequireDefault(_Adapter);
+var _Adapter3 = _interopRequireDefault(_Adapter2);
 
 var _clMockAdapter = require('./clMockAdapter');
 
@@ -36,19 +37,19 @@ var _jira = require('./jira/');
 
 var _jira2 = _interopRequireDefault(_jira);
 
+var _slack = require('./slack/');
+
+var _slack2 = _interopRequireDefault(_slack);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/*
- * Enumeration of available adapters
- */
-exports.default = {
-  Adapter: _Adapter2.default,
-  CLMockAdapter: _clMockAdapter2.default,
-  NetSuiteAdapter: _netsuite2.default,
-  Office365MailAdapter: _mail2.default,
-  Office365CalendarAdapter: _calendar2.default,
-  GoogleAdapter: _googleMail2.default,
-  GoogleCalendarAdapter: _googleCalendar2.default,
-  JiraAdapter: _jira2.default
-};
+exports.Adapter = _Adapter3.default;
+exports.CLMockAdapter = _clMockAdapter2.default;
+exports.NetSuiteAdapter = _netsuite2.default;
+exports.Office365MailAdapter = _mail2.default;
+exports.Office365CalendarAdapter = _calendar2.default;
+exports.GoogleAdapter = _googleMail2.default;
+exports.GoogleCalendarAdapter = _googleCalendar2.default;
+exports.JiraAdapter = _jira2.default;
+exports.SlackAdapter = _slack2.default;
 //# sourceMappingURL=../clAdapters/index.js.map

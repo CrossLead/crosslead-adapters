@@ -10,5 +10,5 @@ var Configuration = function Configuration(credentials, options) {
   }, options);
 };
 
-export default Configuration;
+export { Configuration as default };
 //# sourceMappingURL=../../clAdapters/base/Configuration.js.map

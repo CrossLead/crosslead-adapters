@@ -26,6 +26,6 @@ var Office365BaseConfiguration = function (_Configuration) {
   return Office365BaseConfiguration;
 }(Configuration);
 
-export default Office365BaseConfiguration;
+export { Office365BaseConfiguration as default };
 ;
 //# sourceMappingURL=../../../clAdapters/office365/base/Configuration.js.map

@@ -11,6 +11,9 @@ import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
+
+var _class, _temp;
+
 import * as googleapis from 'googleapis';
 import moment from 'moment';
 import * as _ from 'lodash';
@@ -25,7 +28,7 @@ var credentialMappings = {
   'email': 'adminEmail'
 };
 
-var GoogleCalendarAdapter = function (_Adapter) {
+var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
   _inherits(GoogleCalendarAdapter, _Adapter);
 
   // constructor needs to call super
@@ -487,11 +490,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
   }]);
 
   return GoogleCalendarAdapter;
-}(Adapter);
-
-GoogleCalendarAdapter.Configuration = Configuration;
-GoogleCalendarAdapter.Service = Service;
-GoogleCalendarAdapter.fieldNameMap = {
+}(Adapter), _class.Configuration = Configuration, _class.Service = Service, _class.fieldNameMap = {
   // Desired...                          // Given...
   'eventId': 'id',
   'attendees': 'attendees',
@@ -513,6 +512,6 @@ GoogleCalendarAdapter.fieldNameMap = {
   'url': 'htmlLink',
   'hangoutLink': 'hangoutLink',
   'privacy': 'visibility'
-};
-export default GoogleCalendarAdapter;
+}, _temp);
+export { GoogleCalendarAdapter as default };
 //# sourceMappingURL=../../clAdapters/google-calendar/index.js.map

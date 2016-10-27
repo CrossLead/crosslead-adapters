@@ -8,6 +8,9 @@ import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
+
+var _class, _temp;
+
 import moment from 'moment';
 import * as _ from 'lodash';
 import Office365BaseAdapter from '../base/Adapter';
@@ -15,8 +18,7 @@ import Office365BaseAdapter from '../base/Adapter';
 /**
  * Office 365 Mail adapter
  */
-
-var Office365MailAdapter = function (_Office365BaseAdapter) {
+var Office365MailAdapter = (_temp = _class = function (_Office365BaseAdapter) {
   _inherits(Office365MailAdapter, _Office365BaseAdapter);
 
   function Office365MailAdapter() {
@@ -143,10 +145,7 @@ var Office365MailAdapter = function (_Office365BaseAdapter) {
   }]);
 
   return Office365MailAdapter;
-}(Office365BaseAdapter);
-
-Office365MailAdapter.baseFields = ['Id', 'Categories', 'DateTimeCreated', 'Subject', 'Importance', 'HasAttachments', 'ParentFolderId', 'From', 'Sender', 'ToRecipients', 'CcRecipients', 'BccRecipients', 'ReplyTo', 'ConversationId', 'DateTimeReceived', 'DateTimeSent', 'IsDeliveryReceiptRequested', 'IsReadReceiptRequested', 'IsRead'];
-Office365MailAdapter.fieldNameMap = {
+}(Office365BaseAdapter), _class.baseFields = ['Id', 'Categories', 'DateTimeCreated', 'Subject', 'Importance', 'HasAttachments', 'ParentFolderId', 'From', 'Sender', 'ToRecipients', 'CcRecipients', 'BccRecipients', 'ReplyTo', 'ConversationId', 'DateTimeReceived', 'DateTimeSent', 'IsDeliveryReceiptRequested', 'IsReadReceiptRequested', 'IsRead'], _class.fieldNameMap = {
   // Desired...                 // Given...
   'emails': 'value',
   'messageId': 'Id',
@@ -177,6 +176,6 @@ Office365MailAdapter.fieldNameMap = {
   'isDraft': 'IsDraft',
   'isRead': 'IsRead',
   'attachments': 'attachments'
-};
-export default Office365MailAdapter;
+}, _temp);
+export { Office365MailAdapter as default };
 //# sourceMappingURL=../../../clAdapters/office365/mail/index.js.map

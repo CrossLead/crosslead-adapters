@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _typeof2 = require('babel-runtime/helpers/typeof');
 
@@ -56,6 +57,8 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _class, _temp;
+
 var _googleapis = require('googleapis');
 
 var googleapis = _interopRequireWildcard(_googleapis);
@@ -83,7 +86,7 @@ var credentialMappings = {
   'email': 'adminEmail'
 };
 
-var GoogleCalendarAdapter = function (_Adapter) {
+var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
   (0, _inherits3.default)(GoogleCalendarAdapter, _Adapter);
 
   // constructor needs to call super
@@ -543,11 +546,7 @@ var GoogleCalendarAdapter = function (_Adapter) {
     }()
   }]);
   return GoogleCalendarAdapter;
-}(_index.Adapter);
-
-GoogleCalendarAdapter.Configuration = _index.Configuration;
-GoogleCalendarAdapter.Service = _index.Service;
-GoogleCalendarAdapter.fieldNameMap = {
+}(_index.Adapter), _class.Configuration = _index.Configuration, _class.Service = _index.Service, _class.fieldNameMap = {
   // Desired...                          // Given...
   'eventId': 'id',
   'attendees': 'attendees',
@@ -569,6 +568,6 @@ GoogleCalendarAdapter.fieldNameMap = {
   'url': 'htmlLink',
   'hangoutLink': 'hangoutLink',
   'privacy': 'visibility'
-};
+}, _temp);
 exports.default = GoogleCalendarAdapter;
 //# sourceMappingURL=../../clAdapters/google-calendar/index.js.map

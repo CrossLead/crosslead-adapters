@@ -16,6 +16,6 @@ var Office365BaseService = function (_Service) {
   return Office365BaseService;
 }(Service);
 
-export default Office365BaseService;
+export { Office365BaseService as default };
 ;
 //# sourceMappingURL=../../../clAdapters/office365/base/Service.js.map

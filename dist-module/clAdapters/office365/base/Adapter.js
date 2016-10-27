@@ -419,5 +419,5 @@ var Office365BaseAdapter = function (_Adapter) {
   return Office365BaseAdapter;
 }(Adapter);
 
-export default Office365BaseAdapter;
+export { Office365BaseAdapter as default };
 //# sourceMappingURL=../../../clAdapters/office365/base/Adapter.js.map

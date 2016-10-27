@@ -1,6 +1,6 @@
 import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 import _createClass from 'babel-runtime/helpers/createClass';
-import adapters from './';
+import * as adapters from './';
 import types from './adapterTypes';
 
 /**
@@ -42,6 +42,8 @@ var AdapterFactory = function () {
           return new adapters.GoogleCalendarAdapter();
         case types.JIRA:
           return new adapters.JiraAdapter();
+        case types.SLACK:
+          return new adapters.SlackAdapter();
         default:
           throw new Error('Unknown type');
       }
@@ -51,5 +53,5 @@ var AdapterFactory = function () {
   return AdapterFactory;
 }();
 
-export default AdapterFactory;
+export { AdapterFactory as default };
 //# sourceMappingURL=../clAdapters/adapterFactory.js.map
