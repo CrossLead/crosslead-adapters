@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _assign = require('babel-runtime/core-js/object/assign');
 
@@ -289,7 +290,7 @@ var Office365BaseAdapter = function (_Adapter) {
     key: 'getUserData',
     value: function () {
       var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(options, userData) {
-        var pageToGet = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+        var pageToGet = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
 
         var userProfile, filterStartDate, filterEndDate, additionalFields, $filter, apiType, _options$maxPages, maxPages, _options$recordsPerPa, recordsPerPage, accessToken, apiVersion, skip, baseFields, params, urlParams, requestOptions, _ref5, records, e, recIter, rec, mid, attachmentOptions, attachmentData, _userData$data;
 

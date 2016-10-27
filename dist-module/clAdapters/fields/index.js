@@ -1,15 +1,7 @@
-'use strict';
+/**
+ * Adapter data fields
+ * @return {Fields}
+ 1*/
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _types = require('./types');
-
-Object.defineProperty(exports, 'Types', {
-  enumerable: true,
-  get: function get() {
-    return _types.Types;
-  }
-});
+export { Types } from './types';
 //# sourceMappingURL=../../clAdapters/fields/index.js.map

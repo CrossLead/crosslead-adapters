@@ -1,54 +1,19 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Adapter = require('./base/Adapter');
-
-var _Adapter2 = _interopRequireDefault(_Adapter);
-
-var _clMockAdapter = require('./clMockAdapter');
-
-var _clMockAdapter2 = _interopRequireDefault(_clMockAdapter);
-
-var _netsuite = require('./netsuite/');
-
-var _netsuite2 = _interopRequireDefault(_netsuite);
-
-var _mail = require('./office365/mail/');
-
-var _mail2 = _interopRequireDefault(_mail);
-
-var _calendar = require('./office365/calendar/');
-
-var _calendar2 = _interopRequireDefault(_calendar);
-
-var _googleMail = require('./google-mail/');
-
-var _googleMail2 = _interopRequireDefault(_googleMail);
-
-var _googleCalendar = require('./google-calendar/');
-
-var _googleCalendar2 = _interopRequireDefault(_googleCalendar);
-
-var _jira = require('./jira/');
-
-var _jira2 = _interopRequireDefault(_jira);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/*
- * Enumeration of available adapters
- */
-exports.default = {
-  Adapter: _Adapter2.default,
-  CLMockAdapter: _clMockAdapter2.default,
-  NetSuiteAdapter: _netsuite2.default,
-  Office365MailAdapter: _mail2.default,
-  Office365CalendarAdapter: _calendar2.default,
-  GoogleAdapter: _googleMail2.default,
-  GoogleCalendarAdapter: _googleCalendar2.default,
-  JiraAdapter: _jira2.default
-};
+import _Adapter from './base/Adapter';
+export { _Adapter as Adapter };
+import _CLMockAdapter from './clMockAdapter';
+export { _CLMockAdapter as CLMockAdapter };
+import _NetSuiteAdapter from './netsuite/';
+export { _NetSuiteAdapter as NetSuiteAdapter };
+import _Office365MailAdapter from './office365/mail/';
+export { _Office365MailAdapter as Office365MailAdapter };
+import _Office365CalendarAdapter from './office365/calendar/';
+export { _Office365CalendarAdapter as Office365CalendarAdapter };
+import _GoogleAdapter from './google-mail/';
+export { _GoogleAdapter as GoogleAdapter };
+import _GoogleCalendarAdapter from './google-calendar/';
+export { _GoogleCalendarAdapter as GoogleCalendarAdapter };
+import _JiraAdapter from './jira/';
+export { _JiraAdapter as JiraAdapter };
+import _SlackAdapter from './slack/';
+export { _SlackAdapter as SlackAdapter };
 //# sourceMappingURL=../clAdapters/index.js.map

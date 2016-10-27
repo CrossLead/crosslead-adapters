@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -44,6 +45,8 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _class, _temp;
+
 var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
@@ -63,7 +66,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Office 365 Calendar adapter
  */
-var Office365CalendarAdapter = function (_Office365BaseAdapter) {
+var Office365CalendarAdapter = (_temp = _class = function (_Office365BaseAdapter) {
   (0, _inherits3.default)(Office365CalendarAdapter, _Office365BaseAdapter);
 
   function Office365CalendarAdapter() {
@@ -179,10 +182,7 @@ var Office365CalendarAdapter = function (_Office365BaseAdapter) {
 
   }]);
   return Office365CalendarAdapter;
-}(_Adapter2.default);
-
-Office365CalendarAdapter.baseFields = ['Id', 'Attendees', 'Calendar', 'Categories', 'DateTimeCreated', 'DateTimeLastModified', 'End', 'EndTimeZone', 'HasAttachments', 'Importance', 'iCalUID', 'IsAllDay', 'IsCancelled', 'IsOrganizer', 'Location', 'Organizer', 'Recurrence', 'ResponseRequested', 'ResponseStatus', 'SeriesMasterId', 'ShowAs', 'Start', 'StartTimeZone', 'Subject', 'Type', 'WebLink', 'Sensitivity'];
-Office365CalendarAdapter.fieldNameMap = {
+}(_Adapter2.default), _class.baseFields = ['Id', 'Attendees', 'Calendar', 'Categories', 'DateTimeCreated', 'DateTimeLastModified', 'End', 'EndTimeZone', 'HasAttachments', 'Importance', 'iCalUID', 'IsAllDay', 'IsCancelled', 'IsOrganizer', 'Location', 'Organizer', 'Recurrence', 'ResponseRequested', 'ResponseStatus', 'SeriesMasterId', 'ShowAs', 'Start', 'StartTimeZone', 'Subject', 'Type', 'WebLink', 'Sensitivity'], _class.fieldNameMap = {
   // Desired...                          // Given...
   'eventId': 'Id',
   'attendees': 'Attendees',
@@ -223,6 +223,6 @@ Office365CalendarAdapter.fieldNameMap = {
   'type': 'Type',
   'url': 'WebLink',
   'privacy': 'Sensitivity'
-};
+}, _temp);
 exports.default = Office365CalendarAdapter;
 //# sourceMappingURL=../../../clAdapters/office365/calendar/index.js.map
