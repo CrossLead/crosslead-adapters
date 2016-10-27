@@ -179,7 +179,6 @@ var JiraAdapter = (_dec = rateLimit(1000), (_class = function (_Adapter) {
   }, {
     key: 'getIssueHierarchy',
     value: function getIssueHierarchy() {
-      console.log('getIssueHierarchy');
       return this.makeRequest('issue/createmeta');
     }
   }, {
