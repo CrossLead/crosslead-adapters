@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -44,6 +45,8 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _class, _temp;
+
 var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
@@ -63,7 +66,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Office 365 Mail adapter
  */
-var Office365MailAdapter = function (_Office365BaseAdapter) {
+var Office365MailAdapter = (_temp = _class = function (_Office365BaseAdapter) {
   (0, _inherits3.default)(Office365MailAdapter, _Office365BaseAdapter);
 
   function Office365MailAdapter() {
@@ -188,10 +191,7 @@ var Office365MailAdapter = function (_Office365BaseAdapter) {
 
   }]);
   return Office365MailAdapter;
-}(_Adapter2.default);
-
-Office365MailAdapter.baseFields = ['Id', 'Categories', 'DateTimeCreated', 'Subject', 'Importance', 'HasAttachments', 'ParentFolderId', 'From', 'Sender', 'ToRecipients', 'CcRecipients', 'BccRecipients', 'ReplyTo', 'ConversationId', 'DateTimeReceived', 'DateTimeSent', 'IsDeliveryReceiptRequested', 'IsReadReceiptRequested', 'IsRead'];
-Office365MailAdapter.fieldNameMap = {
+}(_Adapter2.default), _class.baseFields = ['Id', 'Categories', 'DateTimeCreated', 'Subject', 'Importance', 'HasAttachments', 'ParentFolderId', 'From', 'Sender', 'ToRecipients', 'CcRecipients', 'BccRecipients', 'ReplyTo', 'ConversationId', 'DateTimeReceived', 'DateTimeSent', 'IsDeliveryReceiptRequested', 'IsReadReceiptRequested', 'IsRead'], _class.fieldNameMap = {
   // Desired...                 // Given...
   'emails': 'value',
   'messageId': 'Id',
@@ -222,6 +222,6 @@ Office365MailAdapter.fieldNameMap = {
   'isDraft': 'IsDraft',
   'isRead': 'IsRead',
   'attachments': 'attachments'
-};
+}, _temp);
 exports.default = Office365MailAdapter;
 //# sourceMappingURL=../../../clAdapters/office365/mail/index.js.map

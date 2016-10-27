@@ -1,8 +1,3 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 /**
  * Enumeration for adapter status. This is really only for
  * application-specific serialization but both `crosslead-platform`
@@ -11,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
  *
  * @enum
  */
-exports.default = {
+export default {
   ACTIVE: 1,
   DELETED: 2
 };

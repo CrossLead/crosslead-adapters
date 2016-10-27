@@ -25,7 +25,9 @@ var _adapterTypes2 = _interopRequireDefault(_adapterTypes);
 
 var _clAdapters = require('./clAdapters/');
 
-var _clAdapters2 = _interopRequireDefault(_clAdapters);
+var adapters = _interopRequireWildcard(_clAdapters);
+
+var _adapters = _interopRequireWildcard(_clAdapters);
 
 var _client = require('./client/');
 
@@ -40,12 +42,12 @@ exports.default = {
   AdapterFactory: _adapterFactory2.default,
   AdapterTypes: _adapterTypes2.default,
   AdapterStatus: _adapterStatus2.default,
-  adapters: _clAdapters2.default
+  adapters: adapters
 }; /**
     * crosslead-adapters
     * https://github.com/CrossLead/crosslead-adapters
     *
-    * Copyright (c) 2015 McChrystal Group
+    * Copyright (c) 2016 CrossLead
     *
     * @ignore
     */
@@ -54,7 +56,7 @@ exports.Fields = _Fields;
 exports.AdapterFactory = _adapterFactory2.default;
 exports.AdapterStatus = _adapterStatus2.default;
 exports.AdapterTypes = _adapterTypes2.default;
-exports.adapters = _clAdapters2.default;
+exports.adapters = _adapters;
 // client
 
 exports.ClAdaptersClient = _ClAdaptersClient;

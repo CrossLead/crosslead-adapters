@@ -1,61 +1,37 @@
-'use strict';
+/**
+ * crosslead-adapters
+ * https://github.com/CrossLead/crosslead-adapters
+ *
+ * Copyright (c) 2016 CrossLead
+ *
+ * @ignore
+ */
+import * as Fields from './clAdapters/fields';
+import AdapterFactory from './clAdapters/adapterFactory';
+import AdapterStatus from './clAdapters/adapterStatus';
+import AdapterTypes from './clAdapters/adapterTypes';
+import * as adapters from './clAdapters/';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ClAdaptersClient = exports.adapters = exports.AdapterTypes = exports.AdapterStatus = exports.AdapterFactory = exports.Fields = undefined;
-
-var _fields = require('./clAdapters/fields');
-
-var Fields = _interopRequireWildcard(_fields);
-
-var _Fields = _interopRequireWildcard(_fields);
-
-var _adapterFactory = require('./clAdapters/adapterFactory');
-
-var _adapterFactory2 = _interopRequireDefault(_adapterFactory);
-
-var _adapterStatus = require('./clAdapters/adapterStatus');
-
-var _adapterStatus2 = _interopRequireDefault(_adapterStatus);
-
-var _adapterTypes = require('./clAdapters/adapterTypes');
-
-var _adapterTypes2 = _interopRequireDefault(_adapterTypes);
-
-var _clAdapters = require('./clAdapters/');
-
-var _clAdapters2 = _interopRequireDefault(_clAdapters);
-
-var _client = require('./client/');
-
-var _ClAdaptersClient = _interopRequireWildcard(_client);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-exports.default = {
+export default {
   Fields: Fields,
-  AdapterFactory: _adapterFactory2.default,
-  AdapterTypes: _adapterTypes2.default,
-  AdapterStatus: _adapterStatus2.default,
-  adapters: _clAdapters2.default
-}; /**
-    * crosslead-adapters
-    * https://github.com/CrossLead/crosslead-adapters
-    *
-    * Copyright (c) 2015 McChrystal Group
-    *
-    * @ignore
-    */
+  AdapterFactory: AdapterFactory,
+  AdapterTypes: AdapterTypes,
+  AdapterStatus: AdapterStatus,
+  adapters: adapters
+};
 
-exports.Fields = _Fields;
-exports.AdapterFactory = _adapterFactory2.default;
-exports.AdapterStatus = _adapterStatus2.default;
-exports.AdapterTypes = _adapterTypes2.default;
-exports.adapters = _clAdapters2.default;
+import * as _Fields from './clAdapters/fields';
+export { _Fields as Fields };
+import _AdapterFactory from './clAdapters/adapterFactory';
+export { _AdapterFactory as AdapterFactory };
+import _AdapterStatus from './clAdapters/adapterStatus';
+export { _AdapterStatus as AdapterStatus };
+import _AdapterTypes from './clAdapters/adapterTypes';
+export { _AdapterTypes as AdapterTypes };
+import * as _adapters from './clAdapters/';
+export { _adapters as adapters };
 // client
 
-exports.ClAdaptersClient = _ClAdaptersClient;
+import * as _ClAdaptersClient from './client/';
+export { _ClAdaptersClient as ClAdaptersClient };
 //# sourceMappingURL=index.js.map

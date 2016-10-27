@@ -1,27 +1,14 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+import _extends from 'babel-runtime/helpers/extends';
+import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 
 var Configuration = function Configuration(credentials, options) {
-  (0, _classCallCheck3.default)(this, Configuration);
+  _classCallCheck(this, Configuration);
 
   this.credentials = credentials || {};
-  this.options = (0, _extends3.default)({
+  this.options = _extends({
     apiVersion: '1'
   }, options);
 };
 
-exports.default = Configuration;
+export { Configuration as default };
 //# sourceMappingURL=../../clAdapters/base/Configuration.js.map

@@ -1,26 +1,7 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _ = require('./');
-
-var _2 = _interopRequireDefault(_);
-
-var _adapterTypes = require('./adapterTypes');
-
-var _adapterTypes2 = _interopRequireDefault(_adapterTypes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
+import _createClass from 'babel-runtime/helpers/createClass';
+import * as adapters from './';
+import types from './adapterTypes';
 
 /**
  * Adapter factory
@@ -28,12 +9,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @class
  * @return {AdapterFactory}
  */
+
 var AdapterFactory = function () {
   function AdapterFactory() {
-    (0, _classCallCheck3.default)(this, AdapterFactory);
+    _classCallCheck(this, AdapterFactory);
   }
 
-  (0, _createClass3.default)(AdapterFactory, null, [{
+  _createClass(AdapterFactory, null, [{
     key: 'createAdapter',
 
 
@@ -44,29 +26,32 @@ var AdapterFactory = function () {
      */
     value: function createAdapter(type) {
       switch (type) {
-        case _adapterTypes2.default.CUSTOM:
+        case types.CUSTOM:
           throw new Error('Custom adapters provide their own approach');
-        case _adapterTypes2.default.NETSUITE:
-          return new _2.default.NetSuiteAdapter();
-        case _adapterTypes2.default.CL_MOCK:
-          return new _2.default.CLMockAdapter();
-        case _adapterTypes2.default.OFFICE365:
-          return new _2.default.Office365MailAdapter();
-        case _adapterTypes2.default.OFFICE365_CALENDAR:
-          return new _2.default.Office365CalendarAdapter();
-        case _adapterTypes2.default.GOOGLE:
-          return new _2.default.GoogleAdapter();
-        case _adapterTypes2.default.GOOGLE_CALENDAR:
-          return new _2.default.GoogleCalendarAdapter();
-        case _adapterTypes2.default.JIRA:
-          return new _2.default.JiraAdapter();
+        case types.NETSUITE:
+          return new adapters.NetSuiteAdapter();
+        case types.CL_MOCK:
+          return new adapters.CLMockAdapter();
+        case types.OFFICE365:
+          return new adapters.Office365MailAdapter();
+        case types.OFFICE365_CALENDAR:
+          return new adapters.Office365CalendarAdapter();
+        case types.GOOGLE:
+          return new adapters.GoogleAdapter();
+        case types.GOOGLE_CALENDAR:
+          return new adapters.GoogleCalendarAdapter();
+        case types.JIRA:
+          return new adapters.JiraAdapter();
+        case types.SLACK:
+          return new adapters.SlackAdapter();
         default:
           throw new Error('Unknown type');
       }
     }
   }]);
+
   return AdapterFactory;
 }();
 
-exports.default = AdapterFactory;
+export { AdapterFactory as default };
 //# sourceMappingURL=../clAdapters/adapterFactory.js.map

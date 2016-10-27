@@ -3,6 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
+
+var _getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor');
+
+var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -36,6 +41,8 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _dec, _desc, _value, _class;
+
 var _Adapter2 = require('../base/Adapter');
 
 var _Adapter3 = _interopRequireDefault(_Adapter2);
@@ -48,9 +55,42 @@ var _request = require('request');
 
 var _request2 = _interopRequireDefault(_request);
 
+var _rateLimit = require('../../utils/rate-limit');
+
+var _rateLimit2 = _interopRequireDefault(_rateLimit);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var JiraAdapter = function (_Adapter) {
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_Adapter) {
   (0, _inherits3.default)(JiraAdapter, _Adapter);
 
   function JiraAdapter() {
@@ -65,6 +105,11 @@ var JiraAdapter = function (_Adapter) {
   (0, _createClass3.default)(JiraAdapter, [{
     key: 'init',
     value: function init() {}
+
+    /**
+     * Rate limit api requests to once per second
+     */
+
   }, {
     key: 'makeRequest',
     value: function makeRequest(path) {
@@ -169,7 +214,6 @@ var JiraAdapter = function (_Adapter) {
     }()
   }]);
   return JiraAdapter;
-}(_Adapter3.default);
-
+}(_Adapter3.default), (_applyDecoratedDescriptor(_class.prototype, 'makeRequest', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'makeRequest'), _class.prototype)), _class));
 exports.default = JiraAdapter;
 //# sourceMappingURL=../../clAdapters/jira/index.js.map

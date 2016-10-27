@@ -1,38 +1,9 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-exports.default = NetSuiteAdapter;
-
-var _lodash = require('lodash');
-
-var _ = _interopRequireWildcard(_lodash);
-
-var _util = require('util');
-
-var util = _interopRequireWildcard(_util);
-
-var _Adapter = require('../base/Adapter');
-
-var _Adapter2 = _interopRequireDefault(_Adapter);
-
-var _fields = require('../fields');
-
-var Fields = _interopRequireWildcard(_fields);
-
-var _netsuiteJs = require('netsuite-js');
-
-var NetSuite = _interopRequireWildcard(_netsuiteJs);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+import _Promise from 'babel-runtime/core-js/promise';
+import * as _ from 'lodash';
+import * as util from 'util';
+import BaseAdapter from '../base/Adapter';
+import * as Fields from '../fields';
+import * as NetSuite from 'netsuite-js';
 
 var implementedFields = {};
 
@@ -61,8 +32,8 @@ implementedFields[Fields.Types.EXT_ENTITY] = {
  * @class
  * @return {NetSuiteAdapter}
  */
-function NetSuiteAdapter() {
-  _Adapter2.default.call(this);
+export default function NetSuiteAdapter() {
+  BaseAdapter.call(this);
 
   /**
    * @override
@@ -84,7 +55,7 @@ function NetSuiteAdapter() {
   this._cachedDataByFieldType = {};
 };
 
-util.inherits(NetSuiteAdapter, _Adapter2.default);
+util.inherits(NetSuiteAdapter, BaseAdapter);
 
 /**
  * @override
@@ -139,7 +110,7 @@ NetSuiteAdapter.prototype._getCacheValue = function (field, limit, skip) {
 NetSuiteAdapter.prototype.getFieldData = function (field, query) {
   console.log(field);
   var _this = this;
-  return new _promise2.default(function (resolve, reject) {
+  return new _Promise(function (resolve, reject) {
     query = query || {};
 
     var preferences = new NetSuite.Search.SearchPreferences();
