@@ -94,7 +94,7 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
-var JiraAdapter = (_dec = (0, _rateLimit2.default)(1000), (_class = function (_Adapter) {
+var JiraAdapter = (_dec = (0, _rateLimit2.default)(200), (_class = function (_Adapter) {
   (0, _inherits3.default)(JiraAdapter, _Adapter);
 
   function JiraAdapter() {

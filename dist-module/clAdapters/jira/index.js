@@ -45,7 +45,7 @@ import url from 'url';
 import request from 'request';
 import rateLimit from '../../utils/rate-limit';
 
-var JiraAdapter = (_dec = rateLimit(1000), (_class = function (_Adapter) {
+var JiraAdapter = (_dec = rateLimit(200), (_class = function (_Adapter) {
   _inherits(JiraAdapter, _Adapter);
 
   function JiraAdapter() {
