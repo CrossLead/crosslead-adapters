@@ -257,6 +257,11 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(200), (_class = function (_Ad
         jql: '("Epic Link" = ' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
       });
     }
+  }, {
+    key: 'getComments',
+    value: function getComments(issueId) {
+      return this.makeRequest('issue/' + issueId + '/comment');
+    }
   }]);
   return JiraAdapter;
 }(_Adapter3.default), (_applyDecoratedDescriptor(_class.prototype, 'makeRequest', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'makeRequest'), _class.prototype)), _class));

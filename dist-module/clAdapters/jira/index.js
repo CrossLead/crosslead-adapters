@@ -208,6 +208,11 @@ var JiraAdapter = (_dec = rateLimit(200), (_class = function (_Adapter) {
         jql: '("Epic Link" = ' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
       });
     }
+  }, {
+    key: 'getComments',
+    value: function getComments(issueId) {
+      return this.makeRequest('issue/' + issueId + '/comment');
+    }
   }]);
 
   return JiraAdapter;
