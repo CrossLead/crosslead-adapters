@@ -36,7 +36,8 @@ exports.default = {
   GOOGLE: 5,
   GOOGLE_CALENDAR: 6,
   OFFICE365_CALENDAR: 7,
-  JIRA: 8
+  JIRA: 8,
+  SLACK: 9
 };
 
 },{}],3:[function(require,module,exports){

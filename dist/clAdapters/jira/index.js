@@ -262,6 +262,11 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(200), (_class = function (_Ad
     value: function getComments(issueId) {
       return this.makeRequest('issue/' + issueId + '/comment');
     }
+  }, {
+    key: 'getUser',
+    value: function getUser(username) {
+      return this.makeRequest('user', { username: username });
+    }
   }]);
   return JiraAdapter;
 }(_Adapter3.default), (_applyDecoratedDescriptor(_class.prototype, 'makeRequest', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'makeRequest'), _class.prototype)), _class));

@@ -213,6 +213,11 @@ var JiraAdapter = (_dec = rateLimit(200), (_class = function (_Adapter) {
     value: function getComments(issueId) {
       return this.makeRequest('issue/' + issueId + '/comment');
     }
+  }, {
+    key: 'getUser',
+    value: function getUser(username) {
+      return this.makeRequest('user', { username: username });
+    }
   }]);
 
   return JiraAdapter;
