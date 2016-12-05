@@ -209,6 +209,11 @@ var JiraAdapter = (_dec = rateLimit(200), (_class = function (_Adapter) {
       });
     }
   }, {
+    key: 'getIssue',
+    value: function getIssue(issueId) {
+      return this.makeRequest('issue/' + issueId);
+    }
+  }, {
     key: 'getComments',
     value: function getComments(issueId) {
       return this.makeRequest('issue/' + issueId + '/comment');

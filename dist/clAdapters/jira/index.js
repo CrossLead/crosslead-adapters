@@ -258,6 +258,11 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(200), (_class = function (_Ad
       });
     }
   }, {
+    key: 'getIssue',
+    value: function getIssue(issueId) {
+      return this.makeRequest('issue/' + issueId);
+    }
+  }, {
     key: 'getComments',
     value: function getComments(issueId) {
       return this.makeRequest('issue/' + issueId + '/comment');
