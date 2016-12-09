@@ -239,20 +239,14 @@ var JiraAdapter = (_dec = (0, _rateLimit2.default)(200), (_class = function (_Ad
     }
   }, {
     key: 'getEpicsForProject',
-    value: function getEpicsForProject(projectId, startDate, endDate) {
-      var formattedStartDate = (0, _moment2.default)(startDate).format('YYYY/MM/DD HH:mm'),
-          formattedEndDate = (0, _moment2.default)(endDate).format('YYYY/MM/DD HH:mm');
-
+    value: function getEpicsForProject(projectId, formattedStartDate, formattedEndDate) {
       return this.getAllIssues({
         jql: 'project = ' + projectId + ' AND issuetype = Epic AND\n      updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
       });
     }
   }, {
     key: 'getIssuesForEpic',
-    value: function getIssuesForEpic(epicId, issueTypes, startDate, endDate) {
-      var formattedStartDate = (0, _moment2.default)(startDate).format('YYYY/MM/DD HH:mm'),
-          formattedEndDate = (0, _moment2.default)(endDate).format('YYYY/MM/DD HH:mm');
-
+    value: function getIssuesForEpic(epicId, issueTypes, formattedStartDate, formattedEndDate) {
       return this.getAllIssues({
         jql: '("Epic Link" = ' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
       });
