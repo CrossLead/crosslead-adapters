@@ -199,7 +199,7 @@ var JiraAdapter = (_dec = rateLimit(200), (_class = function (_Adapter) {
     key: 'getIssuesForEpic',
     value: function getIssuesForEpic(epicId, issueTypes, formattedStartDate, formattedEndDate) {
       return this.getAllIssues({
-        jql: '("Epic Link" = ' + epicId + ' OR parent IN tempoEpicIssues(' + epicId + ')) AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
+        jql: '"Epic Link" = ' + epicId + ' AND\n        issuetype IN (' + issueTypes.join(',') + ') AND\n        updatedDate >= "' + formattedStartDate + '" AND updatedDate <= "' + formattedEndDate + '"'
       });
     }
   }, {
