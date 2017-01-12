@@ -1,55 +1,19 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.SlackAdapter = exports.JiraAdapter = exports.GoogleCalendarAdapter = exports.GoogleAdapter = exports.Office365CalendarAdapter = exports.Office365MailAdapter = exports.NetSuiteAdapter = exports.CLMockAdapter = exports.Adapter = undefined;
-
-var _Adapter2 = require('./base/Adapter');
-
-var _Adapter3 = _interopRequireDefault(_Adapter2);
-
-var _clMockAdapter = require('./clMockAdapter');
-
-var _clMockAdapter2 = _interopRequireDefault(_clMockAdapter);
-
-var _netsuite = require('./netsuite/');
-
-var _netsuite2 = _interopRequireDefault(_netsuite);
-
-var _mail = require('./office365/mail/');
-
-var _mail2 = _interopRequireDefault(_mail);
-
-var _calendar = require('./office365/calendar/');
-
-var _calendar2 = _interopRequireDefault(_calendar);
-
-var _googleMail = require('./google-mail/');
-
-var _googleMail2 = _interopRequireDefault(_googleMail);
-
-var _googleCalendar = require('./google-calendar/');
-
-var _googleCalendar2 = _interopRequireDefault(_googleCalendar);
-
-var _jira = require('./jira/');
-
-var _jira2 = _interopRequireDefault(_jira);
-
-var _slack = require('./slack/');
-
-var _slack2 = _interopRequireDefault(_slack);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.Adapter = _Adapter3.default;
-exports.CLMockAdapter = _clMockAdapter2.default;
-exports.NetSuiteAdapter = _netsuite2.default;
-exports.Office365MailAdapter = _mail2.default;
-exports.Office365CalendarAdapter = _calendar2.default;
-exports.GoogleAdapter = _googleMail2.default;
-exports.GoogleCalendarAdapter = _googleCalendar2.default;
-exports.JiraAdapter = _jira2.default;
-exports.SlackAdapter = _slack2.default;
-//# sourceMappingURL=../clAdapters/index.js.map
+"use strict";
+var Adapter_1 = require("./base/Adapter");
+exports.Adapter = Adapter_1.default;
+var clMockAdapter_1 = require("./clMockAdapter");
+exports.CLMockAdapter = clMockAdapter_1.default;
+var _1 = require("./netsuite/");
+exports.NetSuiteAdapter = _1.default;
+var _2 = require("./office365/mail/");
+exports.Office365MailAdapter = _2.default;
+var _3 = require("./office365/calendar/");
+exports.Office365CalendarAdapter = _3.default;
+var _4 = require("./google-mail/");
+exports.GoogleAdapter = _4.default;
+var _5 = require("./google-calendar/");
+exports.GoogleCalendarAdapter = _5.default;
+var _6 = require("./jira/");
+exports.JiraAdapter = _6.default;
+var _7 = require("./slack/");
+exports.SlackAdapter = _7.default;

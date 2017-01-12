@@ -1,1 +1,0 @@
-{"version":3,"sources":["clAdapters/google-mail/google-js.js"],"names":["Configuration","Service"],"mappings":";;;;;;;;;;;2BAAQA,a;;;;;;;;;4BACAC,O","file":"clAdapters/google-mail/google-js.js","sourcesContent":["export {Configuration} from './google-js-config';\nexport {Service} from './google-js-service';"],"sourceRoot":"/source/"}

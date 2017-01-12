@@ -1,28 +1,12 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = undefined;
-
-var _regenerator = require('babel-runtime/regenerator');
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 /**
  * Abstract base class for all adapters
  *
@@ -30,74 +14,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @abstract
  * @return {Adapter}
  */
-var Adapter = function () {
-  function Adapter() {
-    (0, _classCallCheck3.default)(this, Adapter);
-
+class Adapter {
+    constructor() {
+        /**
+         * @member {Object}
+         */
+        this.credentials = {};
+        /**
+         * If this adapter supports external entity fields, it must provide
+         * a key to uniquely associate that field as having come from this
+         * adapter instance. For example, a NetSuite adapter may simply
+         * expose its `credentials.account` value also as its `extEntityKey`
+         * @member {String}
+         */
+        Object.defineProperty(this, 'extEntityKey', {
+            get: function () {
+                return '';
+            },
+            configurable: true,
+            enumerable: true
+        });
+    }
     /**
-     * @member {Object}
+     * Connects to datasource. Requires `credentials` member to be filled out
+     * @virtual
+     * @return {Promise.<Adapter>} initialzed adapter
      */
-    this.credentials = {};
-
-    /**
-     * If this adapter supports external entity fields, it must provide
-     * a key to uniquely associate that field as having come from this
-     * adapter instance. For example, a NetSuite adapter may simply
-     * expose its `credentials.account` value also as its `extEntityKey`
-     * @member {String}
-     */
-    Object.defineProperty(this, 'extEntityKey', {
-      get: function get() {
-        return '';
-      },
-      configurable: true,
-      enumerable: true
-    });
-  }
-
-  /**
-   * Connects to datasource. Requires `credentials` member to be filled out
-   * @virtual
-   * @return {Promise.<Adapter>} initialzed adapter
-   */
-
-
-  (0, _createClass3.default)(Adapter, [{
-    key: 'init',
-    value: function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
-        return _regenerator2.default.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                throw new Error('Must be implemented by subclass');
-
-              case 1:
-              case 'end':
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      function init() {
-        return _ref.apply(this, arguments);
-      }
-
-      return init;
-    }()
-
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('Must be implemented by subclass');
+        });
+    }
     /**
      * Adapters may be stateful. For instance, they may need to store
      * auth tokens, search continuation ids, etc or cache results.
      * Invoke this method to reset an adapter to a clean state, which
      * requires recalling `init()`
      */
-
-  }, {
-    key: 'reset',
-    value: function reset() {}
-
+    reset() { }
     /**
      * Gets specified field data from datasource
      * @param  {Object} field adapter field
@@ -108,15 +62,9 @@ var Adapter = function () {
      * @return {Number} result.count total results
      * @return {Object[]} result.results result objects
      */
-
-  }, {
-    key: 'getFieldData',
-    value: function getFieldData() /*field, query*/{
-      throw new Error('Must be implemented by subclass');
+    getFieldData() {
+        throw new Error('Must be implemented by subclass');
     }
-  }]);
-  return Adapter;
-}();
-
+}
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Adapter;
-//# sourceMappingURL=../../clAdapters/base/Adapter.js.map

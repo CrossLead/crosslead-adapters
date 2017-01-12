@@ -1,31 +1,7 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-exports.default = CLMockAdapter;
-
-var _util = require('util');
-
-var util = _interopRequireWildcard(_util);
-
-var _Adapter = require('./base/Adapter');
-
-var _Adapter2 = _interopRequireDefault(_Adapter);
-
-var _fields = require('./fields/');
-
-var Fields = _interopRequireWildcard(_fields);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+"use strict";
+const util = require("util");
+const Adapter_1 = require("./base/Adapter");
+const Fields = require("./fields/");
 /**
  * CLMockAdapter
  *
@@ -40,36 +16,35 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @return {ClMockAdapter}
  */
 function CLMockAdapter() {
-  _Adapter2.default.call(this);
-
-  /**
-   * @override
-   */
-  Object.defineProperty(this, 'extEntityKey', {
-    get: function get() {
-      return this.credentials.appId;
-    }
-  });
-};
-
-util.inherits(CLMockAdapter, _Adapter2.default);
-
+    Adapter_1.default.call(this);
+    /**
+     * @override
+     */
+    Object.defineProperty(this, 'extEntityKey', {
+        get: function () {
+            return this.credentials.appId;
+        }
+    });
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = CLMockAdapter;
+;
+util.inherits(CLMockAdapter, Adapter_1.default);
 /**
  * @override
  */
 CLMockAdapter.prototype.init = function () {
-  var _this = this;
-  var p = new _promise2.default(function (resolve, reject) {
-    if (_this.credentials.appId === '123456' && _this.credentials.apiKey === '999999') {
-      resolve(_this);
-    } else {
-      reject('Wrong credentials, please use appId "123456" and apiKey "999999"');
-    }
-  });
-
-  return p;
+    const _this = this;
+    const p = new Promise((resolve, reject) => {
+        if (_this.credentials.appId === '123456' && _this.credentials.apiKey === '999999') {
+            resolve(_this);
+        }
+        else {
+            reject('Wrong credentials, please use appId "123456" and apiKey "999999"');
+        }
+    });
+    return p;
 };
-
 /**
  * Reflects given field in this `result` format:
  * ```
@@ -91,45 +66,39 @@ CLMockAdapter.prototype.init = function () {
  * @override
  */
 CLMockAdapter.prototype.getFieldData = function (field, query) {
-  query = query || {};
-  var typeName = void 0;
-  console.log(field);
-  switch (field.type) {
-    case Fields.Types.USER:
-      typeName = 'user';
-      break;
-    case Fields.Types.GROUP:
-      typeName = 'group';
-      break;
-    default:
-      typeName = 'unknown';
-      break;
-  }
-
-  var skip = query.skip || 0;
-  if (!skip) {
-    this.numResultsToGenerate = Math.floor(Math.random() * 50);
-    console.log('CLMockAdapter: Generating %d results', this.numResultsToGenerate);
-  }
-
-  var result = {
-    count: this.numResultsToGenerate,
-    results: []
-  };
-
-  var createResult = function createResult() {
-    var r = {};
-    r[typeName + 'ExtId'] = Math.floor(Math.random() * 3) + 1;
-    r[field.extId] = Math.random();
-    return r;
-  };
-
-  var pageSize = query.limit || 5;
-  var resultsToReturn = Math.min(pageSize, this.numResultsToGenerate - skip);
-  for (var i = 0; i < resultsToReturn; i++) {
-    result.results.push(createResult());
-  }
-
-  return _promise2.default.resolve(result);
+    query = query || {};
+    let typeName;
+    console.log(field);
+    switch (field.type) {
+        case Fields.Types.USER:
+            typeName = 'user';
+            break;
+        case Fields.Types.GROUP:
+            typeName = 'group';
+            break;
+        default:
+            typeName = 'unknown';
+            break;
+    }
+    const skip = query.skip || 0;
+    if (!skip) {
+        this.numResultsToGenerate = Math.floor(Math.random() * 50);
+        console.log('CLMockAdapter: Generating %d results', this.numResultsToGenerate);
+    }
+    const result = {
+        count: this.numResultsToGenerate,
+        results: []
+    };
+    const createResult = function () {
+        const r = {};
+        r[typeName + 'ExtId'] = Math.floor(Math.random() * 3) + 1;
+        r[field.extId] = Math.random();
+        return r;
+    };
+    const pageSize = query.limit || 5;
+    const resultsToReturn = Math.min(pageSize, this.numResultsToGenerate - skip);
+    for (let i = 0; i < resultsToReturn; i++) {
+        result.results.push(createResult());
+    }
+    return Promise.resolve(result);
 };
-//# sourceMappingURL=../clAdapters/clMockAdapter.js.map

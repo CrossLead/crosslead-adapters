@@ -1,15 +1,7 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _types = require('./types');
-
-Object.defineProperty(exports, 'Types', {
-  enumerable: true,
-  get: function get() {
-    return _types.Types;
-  }
-});
-//# sourceMappingURL=../../clAdapters/fields/index.js.map
+/**
+ * Adapter data fields
+ * @return {Fields}
+ 1*/
+"use strict";
+var types_1 = require("./types");
+exports.Types = types_1.Types;

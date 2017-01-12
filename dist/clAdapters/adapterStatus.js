@@ -1,8 +1,5 @@
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Enumeration for adapter status. This is really only for
  * application-specific serialization but both `crosslead-platform`
@@ -12,7 +9,6 @@ Object.defineProperty(exports, "__esModule", {
  * @enum
  */
 exports.default = {
-  ACTIVE: 1,
-  DELETED: 2
+    ACTIVE: 1,
+    DELETED: 2,
 };
-//# sourceMappingURL=../clAdapters/adapterStatus.js.map
