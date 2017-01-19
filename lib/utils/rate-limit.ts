@@ -1,29 +1,31 @@
+
+export default function rateLimitDecorator<T>(rate = 1000, count = 1) {
+  return (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
+    const fn: (...args: any[]) => T = descriptor.value;
+    descriptor.value = rateLimit(fn, rate, count);
+    return descriptor;
+  };
+}
+
+
 /**
  * Limit calls of this function to at most 1/rate,
  * where rate is in milliseconds. Instead of grouping (like _.debounce)
  * calls are added to a queue and executed serially.
  *
- * @param fn ?: function to rate limit
- * @param rate : milliseconds to wait between invocations
- * @param count : maximum concurrent calls between wait periods
+ * TODO: once spread types are available, fn can have typed args:
+ *    https://github.com/Microsoft/TypeScript/issues/10727
+ *
+ * @param fn function to rate limit
+ * @param rate milliseconds to wait between invocations
+ * @param count maximum concurrent calls between wait periods
  */
-export default function rateLimit(fn, rate = 1000, count = 1) {
-
-
-  // if first arg is not number,
-  // assume decorator syntax, return curried decorator
-  if (typeof fn !== 'function') {
-    const args = Array.from(arguments);
-    return (proto, prop) => {
-      const baseFn = proto[prop];
-      if (typeof baseFn !== 'function') {
-        throw new TypeError(`Cannot wrap property ${prop}, must be function`);
-      }
-      proto[prop] = rateLimit(baseFn, ...args);
-    };
-  }
-
-  const queue = [];
+function rateLimit<T>(
+  fn: (...args: any[]) => T,
+  rate = 1000,
+  count = 1
+): (...args: any[]) => Promise<T> {
+  const queue: any[] = [];
   let working = 0;
 
   /**
@@ -56,7 +58,7 @@ export default function rateLimit(fn, rate = 1000, count = 1) {
    * Returned wrapped function, keeping correct context
    */
   return function(...args) {
-    return new Promise((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       try {
         queue.push([this, args, resolve, reject]);
         if (working < count) dequeue();

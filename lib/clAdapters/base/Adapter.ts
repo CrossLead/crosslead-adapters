@@ -1,3 +1,16 @@
+import { Field } from '../fields/';
+
+/**
+ *
+ * adapter credential object
+ *
+ */
+export interface AdapterCredentials {
+  [key: string]: string;
+};
+
+
+
 /**
  * Abstract base class for all adapters
  *
@@ -7,20 +20,17 @@
  */
 export default class Adapter {
 
+  /**
+   * If this adapter supports external entity fields, it must provide
+   * a key to uniquely associate that field as having come from this
+   * adapter instance. For example, a NetSuite adapter may simply
+   * expose its `credentials.account` value also as its `extEntityKey`
+   * @member {String}
+   */
+  extEntityKey: string;
+  credentials: AdapterCredentials = {};
 
   constructor() {
-    /**
-     * @member {Object}
-     */
-    this.credentials = {};
-
-    /**
-     * If this adapter supports external entity fields, it must provide
-     * a key to uniquely associate that field as having come from this
-     * adapter instance. For example, a NetSuite adapter may simply
-     * expose its `credentials.account` value also as its `extEntityKey`
-     * @member {String}
-     */
     Object.defineProperty(this, 'extEntityKey', {
       get: function() {
         return '';
@@ -36,7 +46,7 @@ export default class Adapter {
    * @virtual
    * @return {Promise.<Adapter>} initialzed adapter
    */
-  async init() {
+  async init(): Promise<any> {
     throw new Error('Must be implemented by subclass');
   }
 
@@ -60,7 +70,7 @@ export default class Adapter {
    * @return {Number} result.count total results
    * @return {Object[]} result.results result objects
    */
-  getFieldData( /*field, query*/ ) {
+  getFieldData(field?: Field, query?: any): any {
     throw new Error('Must be implemented by subclass');
   }
 

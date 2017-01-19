@@ -1,18 +1,21 @@
 import * as crypto from 'crypto';
-import rp from 'request-promise';
+import * as requestPromise from 'request-promise';
 import * as util from 'util';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as _ from 'lodash';
 
 import BaseAdapter from '../base/Adapter';
 import * as GoogleMail from './google-js.js';
 
-export default function GoogleAdapter() {
-  BaseAdapter.call(this);
-};
 
-util.inherits(GoogleAdapter, BaseAdapter);
+class GoogleAdapter extends BaseAdapter {
+  runConnectionTest = runConnectionTest;
+  runMessageTest = runMessageTest;
+  getBatchData = getBatchData;
+}
+
+export default GoogleAdapter;
 
 GoogleAdapter.prototype.init = function() {
   const _this = this;
@@ -32,7 +35,11 @@ GoogleAdapter.prototype.reset = function() {
   delete this._service;
 };
 
-const getSingleMessageDetails = function(messageId, userEmail, token, apiVersion, additionalFields, result) {
+const getSingleMessageDetails = function(...args: any[]) {
+  const [
+    messageId, userEmail, token, apiVersion, additionalFields, result
+  ] = args;
+
   let additionalFieldsToQuery = additionalFields.replace('BodyPreview', 'snippet');
   additionalFieldsToQuery = additionalFieldsToQuery.replace('Body', 'payload(parts)');
   additionalFieldsToQuery = additionalFieldsToQuery.replace('Subject', 'payload(parts)');
@@ -58,11 +65,11 @@ const getSingleMessageDetails = function(messageId, userEmail, token, apiVersion
       Accept: 'application/json;odata.metadata=none'
     }
   };
-  return rp(messageRequestOptions)
+  return requestPromise(messageRequestOptions)
   .then((messageDetails) => {
     result.messageData = JSON.parse(messageDetails);
     if (additionalFields.indexOf('Subject') === -1) {
-      //remove subject header
+      // remove subject header
       const headers = _.get(result, 'messageData.payload.headers');
       const n = _.get(headers, 'length');
       if (n > 0) {
@@ -78,7 +85,11 @@ const getSingleMessageDetails = function(messageId, userEmail, token, apiVersion
   });
 };
 
-const getAccessToken = function(clientId, adminEmail, userEmail, privateKey) {
+const getAccessToken = function(...args: any[]): Promise<any> {
+  const [
+    clientId, adminEmail, userEmail, privateKey
+  ] = args;
+
   const tokenRequestUrl = 'https://www.googleapis.com/oauth2/v3/token';
   const unixEpochTime = Math.floor((new Date()).getTime() / 1000);
 
@@ -100,13 +111,13 @@ const getAccessToken = function(clientId, adminEmail, userEmail, privateKey) {
   const encodedJwtPayload = new Buffer(JSON.stringify(jwtPayload)).toString('base64');
   const stringToSign = encodedJwtHeader + '.' + encodedJwtPayload;
 
-  //sign it!
+  // sign it!
   const signer = crypto.createSign('RSA-SHA256');
   signer.update(stringToSign);
 
   const encodedSignedJwtInfo = signer.sign(privateKey, 'base64');
 
-  //define assertion
+  // define assertion
   const clientAssertion = encodedJwtHeader + '.' + encodedJwtPayload + '.' + encodedSignedJwtInfo;
 
   const tokenRequestFormData = {
@@ -129,8 +140,8 @@ const getAccessToken = function(clientId, adminEmail, userEmail, privateKey) {
     }
   };
 
-  return rp(tokenRequestOptions)
-  .then((body) => {
+  return ((requestPromise(tokenRequestOptions) as any) as Promise<any>)
+  .then((body: any) => {
     const tokenData = JSON.parse(body);
     if (tokenData && tokenData.access_token) {
       return tokenData.access_token;
@@ -138,14 +149,14 @@ const getAccessToken = function(clientId, adminEmail, userEmail, privateKey) {
       return Promise.reject('Could not get access token.');
     }
   })
-  .catch((err) => {
+  .catch((err: Error) => {
     const tokenData = JSON.parse(JSON.stringify(err));
     if (tokenData.name === 'StatusCodeError') {
       const entireMessage = tokenData.message;
       const messageJson = entireMessage.replace(tokenData.statusCode + ' - ', '');
       const messageData = JSON.parse(messageJson.replace(new RegExp('\\"', 'g'), '"'));
-      //console.log('-----');
-      //console.log(messageData);
+      // console.log('-----');
+      // console.log(messageData);
       return Promise.reject(messageData);
     } else {
       return Promise.reject(err);
@@ -154,6 +165,9 @@ const getAccessToken = function(clientId, adminEmail, userEmail, privateKey) {
 };
 
 const getMoreEmails = function(
+    ...args: any[]
+  ): any {
+  const [
     messages,
     userEmail,
     token,
@@ -162,10 +176,11 @@ const getMoreEmails = function(
     emailRequestOptions,
     firstUri,
     nextPageToken
-  ) {
+  ] = args;
+
   emailRequestOptions.uri = firstUri + '&pageToken=' + nextPageToken;
   let tempPageToken = '';
-  return rp(emailRequestOptions)
+  return requestPromise(emailRequestOptions)
   .then((body) => {
     const messageDetailPromises = [];
     const messageList = JSON.parse(body);
@@ -194,7 +209,11 @@ const getMoreEmails = function(
   });
 };
 
-const getUserEmails = function(clientId,
+const getUserEmails = function(
+    ...args: any[]
+  ) {
+  const [
+    clientId,
     serviceEmail,
     userEmail,
     privateKey,
@@ -203,9 +222,10 @@ const getUserEmails = function(clientId,
     filterEndDate,
     additionalFields,
     result
-  ) {
+  ] = args;
+
   let token = '';
-  let emailRequestOptions = {};
+  let emailRequestOptions: any = {};
   let firstUri = '';
   return getAccessToken(clientId, serviceEmail, userEmail, privateKey)
   .then((tokenResponse) => {
@@ -231,7 +251,7 @@ const getUserEmails = function(clientId,
         Accept: 'application/json;odata.metadata=none'
       }
     };
-    return rp(emailRequestOptions);
+    return requestPromise(emailRequestOptions);
   })
   .then((body) => {
     const messageDetailPromises = [];
@@ -261,7 +281,7 @@ const getUserEmails = function(clientId,
     return Promise.all(messageDetailPromises);
   })
   .then(() => {
-    //console.log(result.data.messageList);
+    // console.log(result.data.messageList);
     if (result.data.messageList.nextPageToken) {
       return getMoreEmails(
         result.data.messages,
@@ -294,9 +314,9 @@ const getUserEmails = function(clientId,
   });
 };
 
-const getHeaderValue = function(message, headerName) {
+const getHeaderValue = function(message: any, headerName: any) {
   const headerValues = _(message.payload.headers)
-          .filter((header) => {
+          .filter((header: any) => {
             return header.name === headerName;
           })
           .pluck('value')
@@ -308,7 +328,7 @@ const getHeaderValue = function(message, headerName) {
   }
 };
 
-const getEmailAddressObjectFromString = function(value) {
+const getEmailAddressObjectFromString = function(value: any) {
   const returnObject = {
     name: value,
     address: value
@@ -323,7 +343,7 @@ const getEmailAddressObjectFromString = function(value) {
   return returnObject;
 };
 
-const convertEmailListToArrayOfEmailAddressObjects = function(emailList) {
+const convertEmailListToArrayOfEmailAddressObjects = function(emailList: string) {
   const emailAddressObjectArray = [];
   if (emailList) {
     const emailArray = emailList.split(',');
@@ -335,13 +355,13 @@ const convertEmailListToArrayOfEmailAddressObjects = function(emailList) {
   return emailAddressObjectArray;
 };
 
-const hasLabel = function(message, labelValue) {
+const hasLabel = function(message: any, labelValue: any) {
   return message.labelIds && message.labelIds.length && (message.labelIds.indexOf(labelValue) >= 0);
 };
 
-const getFirstScalarPart = function(partToCheck) {
+const getFirstScalarPart = function(partToCheck: any) {
   let returnObject = partToCheck;
-  _.forEach(partToCheck.headers, (header) => {
+  _.forEach(partToCheck.headers, (header: any) => {
     if (header.name === 'Content-Type' && header.value.indexOf('multipart/') > -1 && partToCheck.parts.length > 0) {
       returnObject = getFirstScalarPart(partToCheck.parts[0]);
     }
@@ -349,7 +369,7 @@ const getFirstScalarPart = function(partToCheck) {
   return returnObject;
 };
 
-const mapEmailData = function(emailData) {
+const mapEmailData = function(emailData: any) {
   const mappedData = [];
 
   for (let userIter = 0; userIter < emailData.length; userIter++) {
@@ -362,7 +382,7 @@ const mapEmailData = function(emailData) {
     if (emailData[userIter].success) {
       for (let i = 0; i < emailData[userIter].data.messages.length; i++) {
         const originalEmailMessage = emailData[userIter].data.messages[i];
-        let mappedEmailMessage = {};
+        let mappedEmailMessage: any = {};
 
         mappedEmailMessage = originalEmailMessage;
         const messageData = originalEmailMessage.messageData;
@@ -429,7 +449,9 @@ const mapEmailData = function(emailData) {
   return mappedData;
 };
 
-const getEmailData = function(emails,
+const getEmailData = function(...args: any[]) {
+  const [
+    emails,
     filterStartDate,
     filterEndDate,
     additionalFields,
@@ -437,13 +459,14 @@ const getEmailData = function(emails,
     serviceEmail,
     privateKey,
     apiVersion
-  ) {
-  const emailResults = [];
+  ] = args;
+
+  const emailResults: any[] = [];
   const emailResultPromises = [];
 
   for (let emailIter = 0; emailIter < emails.length; emailIter++) {
-    //initialize emailResults with the email object passed in
-    //and add filter dates
+    // initialize emailResults with the email object passed in
+    // and add filter dates
     emailResults[emailIter] = _.assign({}, emails[emailIter], {
       filterStartDate: filterStartDate,
       filterEndDate: filterEndDate
@@ -470,14 +493,20 @@ const getEmailData = function(emails,
   });
 };
 
-GoogleAdapter.prototype.getBatchData = function(emails, filterStartDate, filterEndDate, additionalFields) {
+export function getBatchData(
+  ...args: any[]
+): Promise<any> {
+  const [
+    emails, filterStartDate, filterEndDate, additionalFields
+  ] = args;
+
   const clientId = this._config.credentials.clientId;
   const clientEmail = this._config.credentials.email;
   const serviceEmail = this._config.credentials.serviceEmail;
   const privateKey = this._config.credentials.certificate;
   const apiVersion = this._config.options.apiVersion;
 
-  const dataAdapterRunStats = {
+  const dataAdapterRunStats: any = {
     success: true,
     runDate: moment().utc().toDate(),
     filterStartDate: filterStartDate,
@@ -485,7 +514,7 @@ GoogleAdapter.prototype.getBatchData = function(emails, filterStartDate, filterE
     emails: emails
   };
 
-  //first try to get token for the admin - if that fails, then all will fail
+  // first try to get token for the admin - if that fails, then all will fail
   return getAccessToken(clientId, serviceEmail, clientEmail, privateKey)
   .then(() => {
     return getEmailData(
@@ -514,15 +543,15 @@ GoogleAdapter.prototype.getBatchData = function(emails, filterStartDate, filterE
   });
 };
 
-GoogleAdapter.prototype.runConnectionTest = function(connectionData) {
+export function runConnectionTest(connectionData: any) {
   const _this = this;
   _this._config = new GoogleMail.Configuration(connectionData.credentials);
   const filterStartDate = moment().utc().startOf('day').add(-1, 'days').toDate();
   const filterEndDate = moment().utc().startOf('day').toDate();
   return _this.getBatchData([{emailAfterMapping: _this._config.credentials.email}], filterStartDate, filterEndDate, '')
-  .then((data) => {
+  .then((data: any) => {
     if (data.success && data.results[0]) {
-      //to see if it really worked, we need to pass in the first result
+      // to see if it really worked, we need to pass in the first result
       return data.results[0];
     } else {
       return data;
@@ -530,18 +559,18 @@ GoogleAdapter.prototype.runConnectionTest = function(connectionData) {
   });
 };
 
-GoogleAdapter.prototype.runMessageTest = function(connectionData) {
+export function runMessageTest(connectionData: any) {
   const _this = this;
   _this._config = new GoogleMail.Configuration(connectionData.credentials);
   const filterStartDate = moment().utc().startOf('day').add(-1, 'days').toDate();
   const filterEndDate = moment().utc().startOf('day').add(1, 'days').toDate();
   return _this
   .getBatchData([_this._config.credentials.email], filterStartDate, filterEndDate, 'Subject,BodyPreview,Body')
-  .then((data) => {
+  .then((data: any) => {
     console.log('runMessageTest worked');
     console.log(data.results[0]);
   })
-  .catch((err) => {
+  .catch((err: any) => {
     console.log('runMessageTest Error: ' + JSON.stringify(err));
   });
 };

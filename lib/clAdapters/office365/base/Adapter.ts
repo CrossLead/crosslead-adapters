@@ -1,17 +1,39 @@
 import * as uuid                       from 'node-uuid';
 import * as crypto                     from 'crypto';
-import request                    from 'request-promise';
-import moment                     from 'moment';
-import _                          from 'lodash';
+import * as request                    from 'request-promise';
+import * as moment                     from 'moment';
+import * as _                          from 'lodash';
 import Adapter                    from '../../base/Adapter';
 import Office365BaseService       from './Service';
 import Office365BaseConfiguration from './Configuration';
+
+
+
+export interface Office365AdapterGetUserInfoOptions {
+  userProfile: any;
+  filterStartDate: Date;
+  filterEndDate: Date;
+  additionalFields?: any;
+  $filter?: any;
+  apiType?: any;
+  maxPages?: number;
+  recordsPerPage?: number;
+}
+
+
 
 /**
  * Common reset, runConnectionTest, and getAccessToken methods...
  */
 export default class Office365BaseAdapter extends Adapter {
 
+  _config: Office365BaseConfiguration;
+  _service: Office365BaseService;
+
+  static baseFields: any = {};
+
+  accessToken?: string;
+  accessTokenExpires?: Date;
 
   reset() {
     delete this._config;
@@ -23,12 +45,12 @@ export default class Office365BaseAdapter extends Adapter {
     this._config  = new Office365BaseConfiguration(this.credentials);
     this._service = new Office365BaseService(this._config);
     await this._service.init();
-    console.log(`Successfully initialized ${this.constructor.name} for email: ${this.credentials.email}`);
+    console.log(`Successfully initialized ${this.constructor.name} for email: ${this.credentials['email']}`);
     return this;
   }
 
 
-  async runConnectionTest(connectionData) {
+  async runConnectionTest(connectionData: any) {
     this._config = new Office365BaseConfiguration(connectionData.credentials);
 
     const today           = () => moment().utc().startOf('day'),
@@ -36,16 +58,20 @@ export default class Office365BaseAdapter extends Adapter {
           filterEndDate   = today().toDate(),
           data            = await this.getBatchData(
                               [ {
-                                email: this._config.credentials.email,
-                                emailAfterMapping: this._config.credentials.email
+                                email: this._config.credentials['email'],
+                                emailAfterMapping: this._config.credentials['email']
                               } ],
                               filterStartDate,
                               filterEndDate,
                               ''
                             );
 
-    //to see if it really worked, we need to pass in the first result
+    // to see if it really worked, we need to pass in the first result
     return data.success && data.results[0] ? data.results[0] : data;
+  }
+
+  async getBatchData(...args: any[]): Promise<any> {
+    throw new Error(`Must override in subclass!`);
   }
 
 
@@ -89,7 +115,7 @@ export default class Office365BaseAdapter extends Adapter {
       'sub': clientId
     };
 
-    const encode               = header => new Buffer(JSON.stringify(header)).toString('base64'),
+    const encode               = (header: any) => new Buffer(JSON.stringify(header)).toString('base64'),
           encodedJwtHeader     = encode(jwtHeader),
           encodedJwtPayload    = encode(jwtPayload),
           stringToSign         = encodedJwtHeader + '.' + encodedJwtPayload,
@@ -137,7 +163,11 @@ export default class Office365BaseAdapter extends Adapter {
   }
 
 
-  async getUserData(options, userData, pageToGet = 1) {
+  async getUserData(
+    options: Office365AdapterGetUserInfoOptions,
+    userData?: any,
+    pageToGet = 1
+  ): Promise<any> {
     const {
       userProfile,
       filterStartDate,
@@ -156,9 +186,9 @@ export default class Office365BaseAdapter extends Adapter {
           { apiVersion }       = this._config.options,
           skip                 = (pageToGet - 1) * recordsPerPage,
           // extract static property...
-          { baseFields }       = this.constructor,
+          { baseFields = [] }       = this.constructor as any,
           // parameters to query email with...
-          params               = {
+          params: any               = {
             startDateTime: filterStartDate.toISOString(),
             endDateTime: filterEndDate.toISOString(),
             $top:     recordsPerPage,
@@ -171,7 +201,7 @@ export default class Office365BaseAdapter extends Adapter {
 
     // format parameters for url
     const urlParams = _(params)
-      .map((value, key) => `${key}=${value}`)
+      .map((value: string, key: string) => `${key}=${value}`)
       .join('&');
 
     const requestOptions = {
@@ -186,7 +216,7 @@ export default class Office365BaseAdapter extends Adapter {
     try {
       userData.success = true;
 
-      const { value: records } = JSON.parse(await request(requestOptions)) || {};
+      const { value: records = [] as any[] } = JSON.parse(await request(requestOptions)) || {};
       const e = userProfile.emailAfterMapping;
 
       if (userProfile.getAttachments && records.length) {

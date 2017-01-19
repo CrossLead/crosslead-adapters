@@ -1,34 +1,48 @@
 import Adapter from '../base/Adapter';
-import moment from 'moment';
-import url from 'url';
-import request from 'request';
+import * as moment from 'moment';
+import * as url from 'url';
+import * as request from 'request';
 import rateLimit from '../../utils/rate-limit';
 
-export default class JiraAdapter extends Adapter {
-  constructor() {
-    super();
-    this.apiVersion = 2;
-  }
+export interface JiraRequestOpts extends request.CoreOptions {
+  uri: string;
+}
 
-  init() {}
+export interface JiraAdapterRequestResult {
+  code: 200 | 500;
+  message: string;
+  data: any;
+  success: boolean;
+};
+
+
+export default class JiraAdapter extends Adapter {
+
+  apiVersion = 2;
+
+  async init() {}
 
   /**
    * Rate limit api requests to once per second
    */
   @rateLimit(200)
-  makeRequest(path, query) {
+  makeRequest(path: string, query?: any): Promise<JiraAdapterRequestResult> {
     const uri = url.format({
-      protocol: this.credentials.protocol || 'https',
-      hostname: this.credentials.host,
-      port: this.credentials.port,
+      protocol: this.credentials['protocol'] || 'https',
+      hostname: this.credentials['host'],
+      port: this.credentials['port'],
       pathname: 'rest/api/' + this.apiVersion + '/' + path
     });
 
     const authorizationString = new Buffer(
-      this.credentials.username + ':' + this.credentials.password
+      this.credentials['username'] + ':' + this.credentials['password']
     ).toString('base64');
 
-    const options = {
+
+
+
+
+    const options: JiraRequestOpts = {
       uri: uri,
       method: 'GET',
       headers: {
@@ -40,7 +54,7 @@ export default class JiraAdapter extends Adapter {
       options.qs = query;
     }
 
-    return new Promise((resolve) => {
+    return new Promise<JiraAdapterRequestResult>((resolve) => {
       request(options, (error, response, body) => {
         let errorMessage = null;
         let success = response && response.statusCode < 400;
@@ -67,13 +81,13 @@ export default class JiraAdapter extends Adapter {
     });
   }
 
-  async getAllIssues(params) {
+  async getAllIssues(params: any) {
     const requestParams = params || {};
     requestParams.startAt = 0;
     requestParams.maxResults = 50;
 
     let resultCount,
-        issues = [];
+        issues: any[] = [];
     do {
       const result = await this.makeRequest('search', requestParams),
             data = JSON.parse(result.data);
@@ -98,20 +112,20 @@ export default class JiraAdapter extends Adapter {
     return this.makeRequest('issue/createmeta');
   }
 
-  getUnresolvedEpicsForProject(projectId) {
+  getUnresolvedEpicsForProject(projectId: string) {
     return this.getAllIssues({
       jql: `project = ${projectId} AND issuetype = Epic AND resolution = Unresolved`
     });
   }
 
-  getEpicsForProject(projectId, formattedStartDate, formattedEndDate) {
+  getEpicsForProject(projectId: string, formattedStartDate: Date, formattedEndDate: Date) {
     return this.getAllIssues({
       jql: `project = ${projectId} AND issuetype = Epic AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
   }
 
-  getIssuesForEpic(epicId, issueTypes, formattedStartDate, formattedEndDate) {
+  getIssuesForEpic(epicId: string, issueTypes: string[], formattedStartDate: Date, formattedEndDate: Date) {
     return this.getAllIssues({
       jql: `"Epic Link" = ${epicId} AND
         issuetype IN (${issueTypes.join(',')}) AND
@@ -119,15 +133,15 @@ export default class JiraAdapter extends Adapter {
     });
   }
 
-  getIssue(issueId) {
+  getIssue(issueId: string) {
     return this.makeRequest(`issue/${issueId}`);
   }
 
-  getComments(issueId) {
+  getComments(issueId: string) {
     return this.makeRequest(`issue/${issueId}/comment`);
   }
 
-  getUser(username) {
+  getUser(username: string) {
     return this.makeRequest('user', { username: username });
   }
 }

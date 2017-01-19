@@ -1,16 +1,61 @@
 import * as googleapis from 'googleapis';
-import moment     from 'moment';
-import * as _          from 'lodash';
+import * as moment from 'moment';
+import * as _ from 'lodash';
 import { Adapter, Configuration, Service } from '../base/index';
 
 // google calendar api
 const calendar = googleapis.calendar('v3');
 
-const credentialMappings = {
+const credentialMappings: { [key: string]: string } = {
   'certificate' : 'private_key',
   'serviceEmail': 'client_email',
   'email'       : 'adminEmail'
 };
+
+
+
+
+export const fieldNameMap = {
+  // Desired...                          // Given...
+  'eventId':                             'id',
+  'attendees':                           'attendees',
+  'dateTimeCreated':                     'created',
+  'dateTimeLastModified':                'updated',
+  'attendeeAddress':                     'EmailAddress.Address',
+  'attendeeName':                        'EmailAddress.Name',
+  'iCalUId':                             'iCalUID',
+  'location':                            'location',
+  'status':                              'status',
+  'isCreator':                           'creator.self',
+  'isOrganizer':                         'organizer.self',
+  'organizerEmail':                      'organizer.email',
+  'recurrance':                          'recurrance',
+  'responseStatus':                      'responseStatus',
+  'dateTimeStart':                       'start.dateTime',
+  'dateTimeEnd':                         'end.dateTime',
+  'subject':                             'summary',
+  'url':                                 'htmlLink',
+  'hangoutLink':                         'hangoutLink',
+  'privacy':                             'visibility'
+};
+
+
+
+export interface UserProfile {
+  email: string;
+  emailAfterMapping: string;
+}
+
+
+export type GoogleCalendarApiEvent = {
+  [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
+};
+
+export interface GoogleCalendarApiResult {
+  items: GoogleCalendarApiEvent[],
+  nextPageToken?: string;
+}
+
 
 
 export default class GoogleCalendarAdapter extends Adapter {
@@ -19,29 +64,12 @@ export default class GoogleCalendarAdapter extends Adapter {
   static Service = Service;
 
   // convert the names of the api response data
-  static fieldNameMap = {
-    // Desired...                          // Given...
-    'eventId':                             'id',
-    'attendees':                           'attendees',
-    'dateTimeCreated':                     'created',
-    'dateTimeLastModified':                'updated',
-    'attendeeAddress':                     'EmailAddress.Address',
-    'attendeeName':                        'EmailAddress.Name',
-    'iCalUId':                             'iCalUID',
-    'location':                            'location',
-    'status':                              'status',
-    'isCreator':                           'creator.self',
-    'isOrganizer':                         'organizer.self',
-    'organizerEmail':                      'organizer.email',
-    'recurrance':                          'recurrance',
-    'responseStatus':                      'responseStatus',
-    'dateTimeStart':                       'start.dateTime',
-    'dateTimeEnd':                         'end.dateTime',
-    'subject':                             'summary',
-    'url':                                 'htmlLink',
-    'hangoutLink':                         'hangoutLink',
-    'privacy':                             'visibility'
-  };
+  static fieldNameMap = fieldNameMap;
+
+
+
+  _config: Configuration;
+  _service: Service;
 
   // constructor needs to call super
   constructor() {
@@ -96,13 +124,18 @@ export default class GoogleCalendarAdapter extends Adapter {
 
 
   // currently doing nothing with fields here, but keeping as placeholder
-  async getBatchData(userProfiles = [], filterStartDate, filterEndDate /*, fields */) {
+  async getBatchData(
+    userProfiles: UserProfile[] = [],
+    filterStartDate: Date,
+    filterEndDate: Date,
+    fields?: string
+  ) {
 
-    const { fieldNameMap } = this.constructor;
+    const { fieldNameMap } = GoogleCalendarAdapter;
 
     // api options...
     // https://developers.google.com/google-apps/calendar/v3/
-    const opts = {
+    const opts: any = {
       alwaysIncludeEmail:   true,
       calendarId:           'primary',
       singleEvents:         true,
@@ -139,17 +172,17 @@ export default class GoogleCalendarAdapter extends Adapter {
           opts.auth = await this.authorize(userProfile.emailAfterMapping);
 
           // function to recurse through pageTokens
-          const getEvents = async(data) => {
+          const getEvents = async (data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
 
             // request first results...
-            const events = await new Promise((res, rej) => {
+            const events = await new Promise<GoogleCalendarApiResult>((res, rej) => {
               // add page token if given
               if (data && data.nextPageToken) {
                 opts.pageToken = data.nextPageToken;
               }
 
               calendar.events.list(
-                opts, (err, d) => err ? rej(err) : res(d)
+                opts, (err: Error, d: any) => err ? rej(err) : res(d)
               );
             });
 
@@ -171,11 +204,11 @@ export default class GoogleCalendarAdapter extends Adapter {
 
           const { items } = await getEvents();
 
-          const data = _.map(items, item => {
+          const data = _.map(items, (item: GoogleCalendarApiEvent) => {
 
-            const out = {};
+            const out: { [key: string]: string } = {};
 
-            _.each(fieldNameMap, (have, want) => {
+            _.each(fieldNameMap, (have: string, want: string) => {
               let modified = _.get(item, have);
               if (/^dateTime/.test(want)) {
                 modified = new Date(modified);
@@ -186,15 +219,15 @@ export default class GoogleCalendarAdapter extends Adapter {
             });
 
 
-            const attendeeSelf = _.find(out.attendees, (attendee) => {
+            const attendeeSelf = _.find(out['attendees'], (attendee: any) => {
               return attendee.self;
             });
 
             if (attendeeSelf) {
-              out.responseStatus = attendeeSelf.responseStatus;
+              out['responseStatus'] = attendeeSelf.responseStatus;
             }
 
-            out.attendees = _.map(out.attendees, attendee => {
+            out['attendees'] = _.map(out['attendees'], (attendee: any) => {
               const { email, responseStatus } = attendee;
               return { address: email, response: responseStatus };
             });
@@ -264,7 +297,7 @@ export default class GoogleCalendarAdapter extends Adapter {
 
 
   // create authenticated token for api requests for given user
-  async authorize(email) {
+  async authorize(email: string) {
 
     const { credentials: { serviceEmail, certificate } } = this;
 
@@ -283,7 +316,7 @@ export default class GoogleCalendarAdapter extends Adapter {
     );
 
     // await authorization
-    return new Promise((res, rej) => auth.authorize(err => {
+    return new Promise((res, rej) => auth.authorize((err: Error) => {
       err ? rej(err) : res(auth);
     }));
   }

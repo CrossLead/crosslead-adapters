@@ -1,4 +1,4 @@
-import moment                     from 'moment';
+import * as moment                     from 'moment';
 import * as _                          from 'lodash';
 import Office365BaseAdapter       from '../base/Adapter';
 
@@ -40,7 +40,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
   ];
 
   // convert the names of the api response data
-  static fieldNameMap = {
+  static fieldNameMap: { [key: string]: string } = {
     // Desired...                          // Given...
     'eventId':                             'Id',
     'attendees':                           'Attendees',
@@ -84,9 +84,9 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
   };
 
 
-  async getBatchData(userProfiles, filterStartDate, filterEndDate, additionalFields) {
+  async getBatchData(userProfiles: any[], filterStartDate: Date, filterEndDate: Date, additionalFields?: any) {
 
-    const { fieldNameMap } = this.constructor,
+    const { fieldNameMap } = Office365CalendarAdapter,
           dataAdapterRunStats   = {
             emails: userProfiles,
             filterStartDate,
@@ -105,7 +105,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
       })));
 
       // replace data keys with desired mappings...
-      const results = _.map(eventData, user => {
+      const results = _.map(eventData, (user: any) => {
         return {
           ...user.userProfile,
           filterStartDate:  user.filterStartDate,
@@ -113,11 +113,11 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
           success:          user.success,
           errorMessage:     user.errorMessage,
           // map data with desired key names...
-          data: _.map(user.data || [], originalEvent => {
-            const mappedEvent = {};
+          data: _.map(user.data || [], (originalEvent: any) => {
+            const mappedEvent: any = {};
 
             // change to desired names
-            _.each(fieldNameMap, (have, want) => {
+            _.each(fieldNameMap, (have: string, want: string) => {
               const mapped = _.get(originalEvent, have);
               if (mapped !== undefined) {
                 mappedEvent[want] = /^dateTime/.test(want) ? new Date(mapped) : mapped;
@@ -129,7 +129,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
             }
 
             mappedEvent[`attendees`] = originalEvent[fieldNameMap[`attendees`]]
-              .map(attendee => {
+              .map((attendee: any) => {
                 return {
                   address:  _.get(attendee, fieldNameMap[`attendeeAddress`]),
                   name:     _.get(attendee, fieldNameMap[`attendeeName`]),

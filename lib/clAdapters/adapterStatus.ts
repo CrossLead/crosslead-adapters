@@ -6,7 +6,10 @@
  *
  * @enum
  */
-export default {
-  ACTIVE: 1,
-  DELETED: 2,
-};
+enum AdapterStatus {
+  ACTIVE = 1,
+  DELETED = 2,
+}
+
+
+export default AdapterStatus;

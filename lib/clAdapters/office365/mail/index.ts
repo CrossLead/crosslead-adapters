@@ -1,4 +1,4 @@
-import moment                     from 'moment';
+import * as moment                     from 'moment';
 import * as _                          from 'lodash';
 import Office365BaseAdapter       from '../base/Adapter';
 
@@ -34,7 +34,7 @@ export default class Office365MailAdapter extends Office365BaseAdapter {
 
 
   // convert the names of the api response data
-  static fieldNameMap = {
+  static fieldNameMap: { [key: string]: string } = {
     // Desired...                 // Given...
     'emails':                     'value',
     'messageId':                  'Id',
@@ -68,9 +68,9 @@ export default class Office365MailAdapter extends Office365BaseAdapter {
   };
 
 
-  async getBatchData(userProfiles, filterStartDate, filterEndDate, additionalFields) {
+  async getBatchData(userProfiles: any[], filterStartDate: Date, filterEndDate: Date, additionalFields?: any) {
 
-    const { fieldNameMap } = this.constructor,
+    const { fieldNameMap } = Office365MailAdapter,
           dataAdapterRunStats   = {
             userProfiles,
             filterStartDate,
@@ -97,7 +97,7 @@ export default class Office365MailAdapter extends Office365BaseAdapter {
       }));
 
       // replace data keys with desired mappings...
-      const results = _.map(emailData, user => {
+      const results = _.map(emailData, (user: any) => {
         const emailArray = (user.success && user.data) || [];
         return {
           ...user.userProfile,
@@ -106,11 +106,11 @@ export default class Office365MailAdapter extends Office365BaseAdapter {
           success:          user.success,
           errorMessage:     user.errorMessage,
           // map data with desired key names...
-          data: _.map(emailArray, originalEmailMessage => {
-            const mappedEmailMessage = {};
+          data: _.map(emailArray, (originalEmailMessage: any) => {
+            const mappedEmailMessage: any = {};
 
             // change to desired names
-            _.each(fieldNameMap, (have, want) => {
+            _.each(fieldNameMap, (have: string, want: string) => {
               const mapped = _.get(originalEmailMessage, have);
               if (mapped !== undefined) {
                 mappedEmailMessage[want] = /^dateTime/.test(want) ? new Date(mapped) : mapped;
@@ -122,7 +122,7 @@ export default class Office365MailAdapter extends Office365BaseAdapter {
             for (const type of ['to', 'cc', 'bcc']) {
               const key = `${type}Recipient`;
               mappedEmailMessage[`${key}s`] = originalEmailMessage[fieldNameMap[`${key}s`]]
-                .map(recipient => {
+                .map((recipient: any) => {
                   return {
                     address: _.get(recipient, fieldNameMap[`${key}Address`]),
                     name:    _.get(recipient, fieldNameMap[`${key}Name`])

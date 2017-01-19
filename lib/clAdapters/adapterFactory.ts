@@ -9,7 +9,7 @@ import {
   SlackAdapter
 } from './';
 
-import types    from './adapterTypes';
+import Types from './adapterTypes';
 
 /**
  * Adapter factory
@@ -24,25 +24,25 @@ export default class AdapterFactory {
    * @param  {AdapterType} type
    * @return {BaseAdapter} concrete adapter subclass
    */
-  static createAdapter(type) {
+  static createAdapter(type: Types) {
     switch (type) {
-      case types.CUSTOM:
+      case Types.CUSTOM:
         throw new Error('Custom adapters provide their own approach');
-      case types.NETSUITE:
+      case Types.NETSUITE:
         return new NetSuiteAdapter();
-      case types.CL_MOCK:
+      case Types.CL_MOCK:
         return new CLMockAdapter();
-      case types.OFFICE365:
+      case Types.OFFICE365:
         return new Office365MailAdapter();
-      case types.OFFICE365_CALENDAR:
+      case Types.OFFICE365_CALENDAR:
         return new Office365CalendarAdapter();
-      case types.GOOGLE:
+      case Types.GOOGLE:
         return new GoogleAdapter();
-      case types.GOOGLE_CALENDAR:
+      case Types.GOOGLE_CALENDAR:
         return new GoogleCalendarAdapter();
-      case types.JIRA:
+      case Types.JIRA:
         return new JiraAdapter();
-      case types.SLACK:
+      case Types.SLACK:
         return new SlackAdapter();
       default:
         throw new Error('Unknown type');

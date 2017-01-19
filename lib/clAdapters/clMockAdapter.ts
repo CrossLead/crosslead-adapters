@@ -1,6 +1,7 @@
 import * as util from 'util';
 import BaseAdapter from './base/Adapter';
 import * as Fields from './fields/';
+
 /**
  * CLMockAdapter
  *
@@ -14,20 +15,24 @@ import * as Fields from './fields/';
  * @class
  * @return {ClMockAdapter}
  */
-export default function CLMockAdapter() {
-  BaseAdapter.call(this);
-
-  /**
-   * @override
-   */
-  Object.defineProperty(this, 'extEntityKey', {
-    get: function() {
-      return this.credentials.appId;
-    }
-  });
+class CLMockAdapter extends BaseAdapter {
+  constructor() {
+    super();
+    /**
+     * @override
+     */
+    Object.defineProperty(this, 'extEntityKey', {
+      get: function() {
+        return this.credentials.appId;
+      }
+    });
+  }
 };
 
-util.inherits(CLMockAdapter, BaseAdapter);
+
+
+export default CLMockAdapter;
+
 
 /**
  * @override
@@ -65,9 +70,9 @@ CLMockAdapter.prototype.init = function() {
  * Returns between 0-50 results in pages of `query.limit` (default 5)
  * @override
  */
-CLMockAdapter.prototype.getFieldData = function(field, query) {
+CLMockAdapter.prototype.getFieldData = function(field: Fields.Field, query: any) {
   query = query || {};
-  let typeName;
+  let typeName: string;
   console.log(field);
   switch (field.type) {
     case Fields.Types.USER:
@@ -89,11 +94,11 @@ CLMockAdapter.prototype.getFieldData = function(field, query) {
 
   const result = {
     count: this.numResultsToGenerate,
-    results: []
+    results: [] as { [key: string]: number }[]
   };
 
   const createResult = function() {
-    const r = {};
+    const r: { [key: string]: number } = {};
     r[typeName + 'ExtId'] = Math.floor(Math.random() * 3) + 1;
     r[field.extId] = Math.random();
     return r;

@@ -1,5 +1,5 @@
 import Adapter from '../base/Adapter';
-import request from 'request';
+import * as request from 'request';
 import rateLimit from '../../utils/rate-limit';
 
 export default class SlackAdapter extends Adapter {
@@ -10,8 +10,8 @@ export default class SlackAdapter extends Adapter {
   /**
    * Rate limit (at prototype level) slack api calls to once per second.
    */
-  @rateLimit(1000)
-  static callSlackApiMethod(method, params = {}) {
+  @rateLimit<any>(1000)
+  static callSlackApiMethod(method: string, params: {[key: string]: string} = {}): any {
     let paramString = '';
     for (const p in params) {
       paramString += `${p}=${params[p]}&`;
@@ -32,6 +32,6 @@ export default class SlackAdapter extends Adapter {
   }
 
   // null init function...
-  init() {}
+  async init() {}
 
 }

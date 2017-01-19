@@ -6,6 +6,7 @@
   "bugs": "https://github.com/CrossLead/crosslead-adapters/issues",
   "license": "none",
   "main": "dist/lib/index.js",
+  "typings": "dist/lib/index.d.ts",
   "author": {
     "name": "Christian Yang",
     "email": "christian.yang@crosslead.com",
@@ -31,6 +32,9 @@
   },
   "devDependencies": {
     "@types/node": "6.0.60",
+    "@types/node-uuid": "^0.0.28",
+    "@types/request": "^0.0.39",
+    "@types/request-promise": "^4.1.33",
     "ava": "0.17.0",
     "tslint": "4.3.1",
     "typescript": "2.1.5"
