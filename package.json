@@ -31,13 +31,19 @@
   },
   "devDependencies": {
     "@types/node": "6.0.60",
+    "ava": "^0.17.0",
     "tslint": "^4.3.1",
     "typescript": "2.1.5"
   },
   "scripts": {
-    "test": "gulp test",
+    "test": "npm run tsc && ava",
     "lint": "tslint --force \"./lib/**/*.js\" \"./lib/**/*.ts\"",
-    "tsc": "tsc",
-    "watch": "tsc -w"
+    "tsc": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc -w"
+  },
+  "ava": {
+    "files": [
+      "dist/test/**/*.js"
+    ]
   }
 }
