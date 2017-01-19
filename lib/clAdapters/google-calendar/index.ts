@@ -52,7 +52,7 @@ export type GoogleCalendarApiEvent = {
 };
 
 export interface GoogleCalendarApiResult {
-  items: GoogleCalendarApiEvent[],
+  items: GoogleCalendarApiEvent[];
   nextPageToken?: string;
 }
 

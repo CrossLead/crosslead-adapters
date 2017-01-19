@@ -40,8 +40,8 @@
     "typescript": "2.1.5"
   },
   "scripts": {
-    "test": "npm run tsc && ava",
-    "lint": "tslint --force \"./lib/**/*.js\" \"./lib/**/*.ts\"",
+    "test": "npm run lint && npm run tsc && ava",
+    "lint": "tslint \"./lib/**/*.js\" \"./lib/**/*.ts\"",
     "tsc": "rm -rf dist && tsc",
     "watch": "rm -rf dist && tsc -w"
   },
