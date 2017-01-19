@@ -22,7 +22,7 @@ const googleCalendar = adapterFactory.createAdapter(adapterTypes.GOOGLE_CALENDAR
 
 If using browserify / webpack / etc., simply require the client module
 ```javascript
-import { adapterTypes } from 'crosslead-adapters/dist/client';
+import { adapterTypes } from 'crosslead-adapters/dist/lib/client';
 ```
 
 ## API
