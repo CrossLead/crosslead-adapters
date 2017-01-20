@@ -4,15 +4,16 @@
     "target": "es6",
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "experimentalDecorators": true,
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "allowJs": false
   },
   "include": [
-    "lib",
-    "test",
-    "typings"
+    "./lib/**/*.ts",
+    "./test/**/*.ts",
+    "./*.d.ts"
   ],
   "exclude": [
     "node_modules"

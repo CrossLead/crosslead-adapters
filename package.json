@@ -43,7 +43,8 @@
     "test": "npm run lint && npm run tsc && ava",
     "lint": "tslint \"./lib/**/*.js\" \"./lib/**/*.ts\"",
     "tsc": "rm -rf dist && tsc",
-    "watch": "rm -rf dist && tsc -w"
+    "watch": "rm -rf dist && tsc -w",
+    "postinstall": "node gitinstall.js"
   },
   "ava": {
     "files": [
