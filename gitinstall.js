@@ -4,13 +4,11 @@
 const {spawn} = require('child_process');
 const config = require('./package.json');
 
-if (config._resolved) {
-  Promise.resolve()
-    .then(run('npm', 'install --only=dev --ignore-scripts'))
-    .then(run('npm', 'run tsc'))
-    .then(() => process.exit(0))
-    .catch(() => (console.log(error.stack), process.exit(1)));
-}
+Promise.resolve()
+  .then(run('npm', 'install --only=dev --ignore-scripts'))
+  .then(run('npm', 'run tsc'))
+  .then(() => process.exit(0))
+  .catch(() => (console.log(error.stack), process.exit(1)));
 
 function run(cmd, argString = '') {
   const args = argString.split(' ');
