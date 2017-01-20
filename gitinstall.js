@@ -4,8 +4,6 @@
 const {spawn} = require('child_process');
 const config = require('./package.json');
 
-console.log(JSON.stringify(config, null, 2));
-
 if (config._resolved) {
   Promise.resolve()
     .then(run('npm', 'install --only=dev --ignore-scripts'))
