@@ -1,4 +1,7 @@
 # crosslead-adapters
+
+[![Build Status](https://travis-ci.org/CrossLead/crosslead-adapters.svg?branch=master)](https://travis-ci.org/CrossLead/crosslead-adapters)
+
 Common data adapter functionality across web server and background workers
 
 ## Install
