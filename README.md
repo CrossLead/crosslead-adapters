@@ -33,6 +33,20 @@ import { adapterTypes } from 'crosslead-adapters/dist/lib/client';
 _(Coming soon)_
 
 
+## Building this project
+
+To compile the project, lint, and run tests run...
+
+```shell
+npm run test
+```
+
+To start `tsc` in watch mode, run...
+
+```shell
+npm run watch
+```
+
 ## Contributing
 
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [gulp](http://gulpjs.com/).
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
