@@ -28,16 +28,16 @@
     "moment": "2.10.3",
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
     "node-uuid": "1.4.3",
-    "request-promise": "0.4.2"
-  },
-  "devDependencies": {
+    "request-promise": "0.4.2",
     "@types/node": "6.0.60",
     "@types/node-uuid": "^0.0.28",
     "@types/request": "^0.0.39",
     "@types/request-promise": "^4.1.33",
-    "ava": "0.17.0",
-    "tslint": "4.3.1",
     "typescript": "2.1.5"
+  },
+  "devDependencies": {
+    "ava": "0.17.0",
+    "tslint": "4.3.1"
   },
   "scripts": {
     "test": "npm run lint && npm run tsc && ava",
