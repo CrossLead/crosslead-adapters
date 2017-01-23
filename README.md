@@ -1,13 +1,11 @@
 # crosslead-adapters
 Common data adapter functionality across web server and background workers
 
-
 ## Install
 
 ```bash
 $ npm install --save crosslead-adapters
 ```
-
 
 ## Usage
 
@@ -24,17 +22,7 @@ const googleCalendar = adapterFactory.createAdapter(adapterTypes.GOOGLE_CALENDAR
 
 If using browserify / webpack / etc., simply require the client module
 ```javascript
-import { adapterTypes } from 'crosslead-adapters/dist/client';
-```
-
-If you have a babel compilation step in your build process (or in an es6 supporting environment), the client source can also be required directly.
-```javascript
-import { adapterTypes } from 'crosslead-adapters/src/client';
-```
-
-Additionally, there is a global exposing bower module...
-```shell
-bower install crosslead-adapters-client --save
+import { adapterTypes } from 'crosslead-adapters/dist/lib/client';
 ```
 
 ## API

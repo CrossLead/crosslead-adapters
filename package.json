@@ -5,8 +5,8 @@
   "homepage": "https://github.com/CrossLead/crosslead-adapters",
   "bugs": "https://github.com/CrossLead/crosslead-adapters/issues",
   "license": "none",
-  "main": "dist/index.js",
-  "jsnext:main": "dist-module/index.js",
+  "main": "dist/lib/index.js",
+  "typings": "dist/lib/index.d.ts",
   "author": {
     "name": "Christian Yang",
     "email": "christian.yang@crosslead.com",
@@ -16,11 +16,12 @@
     "type": "git",
     "url": "https://github.com/CrossLead/crosslead-adapters"
   },
+  "engines": {
+    "node": ">=6.9.1",
+    "npm": ">=3"
+  },
   "keywords": [],
   "dependencies": {
-    "babel-polyfill": "6.13.0",
-    "babel-runtime": "6.11.6",
-    "babel-preset-es2015-node4": "2.0.3",
     "google-auth-library": "0.9.6",
     "googleapis": "2.1.3",
     "lodash": "3.10.1",
@@ -30,51 +31,23 @@
     "request-promise": "0.4.2"
   },
   "devDependencies": {
-    "babel-core": "6.14.0",
-    "babel-eslint": "6.1.2",
-    "babel-plugin-add-module-exports": "0.2.1",
-    "babel-plugin-transform-class-properties": "6.11.5",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-flow-strip-types": "6.14.0",
-    "babel-plugin-transform-runtime": "6.15.0",
-    "babel-preset-es2015": "6.14.0",
-    "babel-preset-es2015-rollup": "1.2.0",
-    "babel-preset-stage-0": "6.5.0",
-    "browserify": "11.1.0",
-    "eslint": "2.13.1",
-    "eslint-plugin-import": "1.3.0",
-    "gulp": "3.9.1",
-    "gulp-babel": "6.1.2",
-    "gulp-bump": "0.1.11",
-    "gulp-eslint": "2.0.0",
-    "gulp-istanbul": "0.5.0",
-    "gulp-jscs": "1.1.2",
-    "gulp-jshint": "1.8.4",
-    "gulp-load-plugins": "0.6.0",
-    "gulp-mocha": "1.1.0",
-    "gulp-plumber": "0.6.5",
-    "gulp-sourcemaps": "1.5.2",
-    "gulp-util": "3.0.1",
-    "should": "4.0.4",
-    "vinyl-source-stream": "1.1.0"
+    "@types/node": "6.0.60",
+    "@types/node-uuid": "^0.0.28",
+    "@types/request": "^0.0.39",
+    "@types/request-promise": "^4.1.33",
+    "ava": "0.17.0",
+    "tslint": "4.3.1",
+    "typescript": "2.1.5"
   },
   "scripts": {
-    "test": "gulp test",
-    "prepublish": "gulp compile"
+    "test": "npm run lint && npm run tsc && ava",
+    "lint": "tslint \"./lib/**/*.js\" \"./lib/**/*.ts\"",
+    "tsc": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc -w"
   },
-  "babel": {
-    "sourceMaps": false,
-    "presets": [
-      "stage-0",
-      "es2015",
-      "es2015-node4"
-    ],
-    "plugins": [
-      "transform-decorators-legacy",
-      "transform-class-properties",
-      "transform-flow-strip-types",
-      "transform-runtime"
-    ],
-    "compact": false
+  "ava": {
+    "files": [
+      "dist/test/**/*.js"
+    ]
   }
 }
