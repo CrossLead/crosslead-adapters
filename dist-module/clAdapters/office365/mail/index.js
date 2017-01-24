@@ -41,16 +41,15 @@ var Office365MailAdapter = (_temp = _class = function (_Office365BaseAdapter) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                fieldNameMap = this.constructor.fieldNameMap;
-                dataAdapterRunStats = {
+                fieldNameMap = this.constructor.fieldNameMap, dataAdapterRunStats = {
                   userProfiles: userProfiles,
                   filterStartDate: filterStartDate,
                   filterEndDate: filterEndDate,
                   success: false,
                   runDate: moment().utc().toDate()
                 };
-                _context.prev = 2;
-                _context.next = 5;
+                _context.prev = 1;
+                _context.next = 4;
                 return _Promise.all(userProfiles.map(function (userProfile) {
                   return _this2.getUserData({
                     userProfile: userProfile,
@@ -62,7 +61,7 @@ var Office365MailAdapter = (_temp = _class = function (_Office365BaseAdapter) {
                   });
                 }));
 
-              case 5:
+              case 4:
                 emailData = _context.sent;
 
 
@@ -117,20 +116,20 @@ var Office365MailAdapter = (_temp = _class = function (_Office365BaseAdapter) {
                   success: true
                 }));
 
-              case 10:
-                _context.prev = 10;
-                _context.t0 = _context['catch'](2);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context['catch'](1);
 
                 console.log(_context.t0.stack);
                 console.log('Office365 GetBatchData Error: ' + _JSON$stringify(_context.t0));
                 return _context.abrupt('return', _extends({}, dataAdapterRunStats, { errorMessage: _context.t0 }));
 
-              case 15:
+              case 14:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, this, [[2, 10]]);
+        }, _callee, this, [[1, 9]]);
       }));
 
       function getBatchData(_x, _x2, _x3, _x4) {

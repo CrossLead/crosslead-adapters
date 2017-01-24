@@ -189,13 +189,7 @@ var Office365BaseAdapter = function (_Adapter) {
                 return _context3.abrupt('return', this.accessToken);
 
               case 2:
-                _config = this._config;
-                _config$credentials = _config.credentials;
-                clientId = _config$credentials.clientId;
-                tenantId = _config$credentials.tenantId;
-                certificate = _config$credentials.certificate;
-                certificateThumbprint = _config$credentials.certificateThumbprint;
-                apiVersion = _config.options.apiVersion;
+                _config = this._config, _config$credentials = _config.credentials, clientId = _config$credentials.clientId, tenantId = _config$credentials.tenantId, certificate = _config$credentials.certificate, certificateThumbprint = _config$credentials.certificateThumbprint, apiVersion = _config.options.apiVersion;
                 tokenRequestUrl = 'https://login.microsoftonline.com/' + tenantId + '/oauth2/token?api-version=' + apiVersion;
                 jwtHeader = {
                   'alg': 'RS256',
@@ -234,50 +228,50 @@ var Office365BaseAdapter = function (_Adapter) {
                   uri: tokenRequestUrl,
                   formData: tokenRequestFormData
                 };
-                _context3.prev = 17;
+                _context3.prev = 11;
                 _context3.t0 = JSON;
-                _context3.next = 21;
+                _context3.next = 15;
                 return (0, _requestPromise2.default)(tokenRequestOptions);
 
-              case 21:
+              case 15:
                 _context3.t1 = _context3.sent;
                 tokenData = _context3.t0.parse.call(_context3.t0, _context3.t1);
 
                 if (!(tokenData && tokenData.access_token)) {
-                  _context3.next = 27;
+                  _context3.next = 21;
                   break;
                 }
 
                 return _context3.abrupt('return', this.accessToken = tokenData.access_token);
 
-              case 27:
+              case 21:
                 throw new Error('Could not get access token.');
 
-              case 28:
-                _context3.next = 38;
+              case 22:
+                _context3.next = 32;
                 break;
 
-              case 30:
-                _context3.prev = 30;
-                _context3.t2 = _context3['catch'](17);
+              case 24:
+                _context3.prev = 24;
+                _context3.t2 = _context3['catch'](11);
 
                 if (!(_context3.t2.name === 'StatusCodeError')) {
-                  _context3.next = 37;
+                  _context3.next = 31;
                   break;
                 }
 
                 messageData = JSON.parse(_context3.t2.message.replace(_context3.t2.statusCode + ' - ', '').replace(/\"/g, '"'));
                 throw new Error(messageData);
 
-              case 37:
+              case 31:
                 throw new Error(_context3.t2);
 
-              case 38:
+              case 32:
               case 'end':
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[17, 30]]);
+        }, _callee3, this, [[11, 24]]);
       }));
 
       function getAccessToken() {
@@ -298,33 +292,20 @@ var Office365BaseAdapter = function (_Adapter) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                userProfile = options.userProfile;
-                filterStartDate = options.filterStartDate;
-                filterEndDate = options.filterEndDate;
-                additionalFields = options.additionalFields;
-                $filter = options.$filter;
-                apiType = options.apiType;
-                _options$maxPages = options.maxPages;
-                maxPages = _options$maxPages === undefined ? 20 : _options$maxPages;
-                _options$recordsPerPa = options.recordsPerPage;
-                recordsPerPage = _options$recordsPerPa === undefined ? 25 : _options$recordsPerPa;
+                userProfile = options.userProfile, filterStartDate = options.filterStartDate, filterEndDate = options.filterEndDate, additionalFields = options.additionalFields, $filter = options.$filter, apiType = options.apiType, _options$maxPages = options.maxPages, maxPages = _options$maxPages === undefined ? 20 : _options$maxPages, _options$recordsPerPa = options.recordsPerPage, recordsPerPage = _options$recordsPerPa === undefined ? 25 : _options$recordsPerPa;
 
                 // accumulation of data
 
                 userData = userData || { userProfile: userProfile, filterStartDate: filterStartDate, filterEndDate: filterEndDate };
 
-                _context4.next = 13;
+                _context4.next = 4;
                 return this.getAccessToken();
 
-              case 13:
+              case 4:
                 accessToken = _context4.sent;
                 apiVersion = this._config.options.apiVersion;
                 skip = (pageToGet - 1) * recordsPerPage;
-
-                // extract static property...
                 baseFields = this.constructor.baseFields;
-
-                // parameters to query email with...
                 params = {
                   startDateTime: filterStartDate.toISOString(),
                   endDateTime: filterEndDate.toISOString(),
@@ -349,40 +330,40 @@ var Office365BaseAdapter = function (_Adapter) {
                     Accept: 'application/json;odata.metadata=none'
                   }
                 };
-                _context4.prev = 21;
+                _context4.prev = 12;
 
                 userData.success = true;
 
                 _context4.t1 = JSON;
-                _context4.next = 26;
+                _context4.next = 17;
                 return (0, _requestPromise2.default)(requestOptions);
 
-              case 26:
+              case 17:
                 _context4.t2 = _context4.sent;
                 _context4.t0 = _context4.t1.parse.call(_context4.t1, _context4.t2);
 
                 if (_context4.t0) {
-                  _context4.next = 30;
+                  _context4.next = 21;
                   break;
                 }
 
                 _context4.t0 = {};
 
-              case 30:
+              case 21:
                 _ref5 = _context4.t0;
                 records = _ref5.value;
                 e = userProfile.emailAfterMapping;
 
                 if (!(userProfile.getAttachments && records.length)) {
-                  _context4.next = 52;
+                  _context4.next = 43;
                   break;
                 }
 
                 recIter = 0;
 
-              case 35:
+              case 26:
                 if (!(recIter < records.length)) {
-                  _context4.next = 52;
+                  _context4.next = 43;
                   break;
                 }
 
@@ -399,33 +380,33 @@ var Office365BaseAdapter = function (_Adapter) {
                   }
                 };
                 _context4.t4 = JSON;
-                _context4.next = 43;
+                _context4.next = 34;
                 return (0, _requestPromise2.default)(attachmentOptions);
 
-              case 43:
+              case 34:
                 _context4.t5 = _context4.sent;
                 _context4.t3 = _context4.t4.parse.call(_context4.t4, _context4.t5);
 
                 if (_context4.t3) {
-                  _context4.next = 47;
+                  _context4.next = 38;
                   break;
                 }
 
                 _context4.t3 = {};
 
-              case 47:
+              case 38:
                 attachmentData = _context4.t3;
 
                 if (attachmentData.value && attachmentData.value.length > 0) {
                   rec.attachments = attachmentData.value;
                 }
 
-              case 49:
+              case 40:
                 recIter++;
-                _context4.next = 35;
+                _context4.next = 26;
                 break;
 
-              case 52:
+              case 43:
 
                 if (records && pageToGet === 1) {
                   userData.data = records;
@@ -439,22 +420,22 @@ var Office365BaseAdapter = function (_Adapter) {
                 // we are not done yet, so recurse...
 
                 if (!(records.length === recordsPerPage && pageToGet <= maxPages)) {
-                  _context4.next = 58;
+                  _context4.next = 49;
                   break;
                 }
 
                 return _context4.abrupt('return', this.getUserData(options, userData, pageToGet + 1));
 
-              case 58:
+              case 49:
                 return _context4.abrupt('return', userData);
 
-              case 59:
-                _context4.next = 65;
+              case 50:
+                _context4.next = 56;
                 break;
 
-              case 61:
-                _context4.prev = 61;
-                _context4.t6 = _context4['catch'](21);
+              case 52:
+                _context4.prev = 52;
+                _context4.t6 = _context4['catch'](12);
 
                 (0, _assign2.default)(userData, {
                   success: false,
@@ -462,12 +443,12 @@ var Office365BaseAdapter = function (_Adapter) {
                 });
                 return _context4.abrupt('return', true);
 
-              case 65:
+              case 56:
               case 'end':
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[21, 61]]);
+        }, _callee4, this, [[12, 52]]);
       }));
 
       function getUserData(_x3, _x4) {

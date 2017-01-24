@@ -272,8 +272,8 @@ var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
                                         }
 
                                         out.attendees = _.map(out.attendees, function (attendee) {
-                                          var email = attendee.email;
-                                          var responseStatus = attendee.responseStatus;
+                                          var email = attendee.email,
+                                              responseStatus = attendee.responseStatus;
 
                                           return { address: email, response: responseStatus };
                                         });
@@ -372,7 +372,7 @@ var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
     key: 'runConnectionTest',
     value: function () {
       var _ref6 = _asyncToGenerator(_regeneratorRuntime.mark(function _callee6() {
-        var email, data;
+        var email, data, firstResult;
         return _regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
@@ -380,28 +380,47 @@ var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
                 email = this.credentials.email;
                 _context6.prev = 1;
                 _context6.next = 4;
-                return this.getBatchData([{ email: email, emailAfterMapping: email }], moment().toDate(), moment().add(-1, 'day').toDate());
+                return this.getBatchData([{ email: email, emailAfterMapping: email }], moment().add(-1, 'day').toDate(), moment().toDate());
 
               case 4:
                 data = _context6.sent;
-                return _context6.abrupt('return', data);
+                firstResult = Array.isArray(data.results) && data.results[0];
 
-              case 8:
-                _context6.prev = 8;
+                if (!(firstResult && firstResult.errorMessage)) {
+                  _context6.next = 10;
+                  break;
+                }
+
+                return _context6.abrupt('return', {
+                  success: false,
+                  message: firstResult.errorMessage
+                });
+
+              case 10:
+                return _context6.abrupt('return', {
+                  success: true
+                });
+
+              case 11:
+                _context6.next = 17;
+                break;
+
+              case 13:
+                _context6.prev = 13;
                 _context6.t0 = _context6['catch'](1);
 
                 console.log(_context6.t0.stack || _context6.t0);
                 return _context6.abrupt('return', {
-                  error: _context6.t0,
+                  message: _context6.t0.message,
                   success: false
                 });
 
-              case 12:
+              case 17:
               case 'end':
                 return _context6.stop();
             }
           }
-        }, _callee6, this, [[1, 8]]);
+        }, _callee6, this, [[1, 13]]);
       }));
 
       function runConnectionTest() {
@@ -449,9 +468,7 @@ var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                _credentials = this.credentials;
-                serviceEmail = _credentials.serviceEmail;
-                certificate = _credentials.certificate;
+                _credentials = this.credentials, serviceEmail = _credentials.serviceEmail, certificate = _credentials.certificate;
                 auth = new googleapis.auth.JWT(
                 // email of google app admin...
                 serviceEmail,
@@ -473,7 +490,7 @@ var GoogleCalendarAdapter = (_temp = _class = function (_Adapter) {
                   });
                 }));
 
-              case 5:
+              case 3:
               case 'end':
                 return _context8.stop();
             }

@@ -85,14 +85,12 @@ function rateLimit(fn) {
     working++;
     recurse();
 
-    var _queue$shift = queue.shift();
-
-    var _queue$shift2 = (0, _slicedToArray3.default)(_queue$shift, 4);
-
-    var context = _queue$shift2[0];
-    var args = _queue$shift2[1];
-    var resolve = _queue$shift2[2];
-    var reject = _queue$shift2[3];
+    var _queue$shift = queue.shift(),
+        _queue$shift2 = (0, _slicedToArray3.default)(_queue$shift, 4),
+        context = _queue$shift2[0],
+        args = _queue$shift2[1],
+        resolve = _queue$shift2[2],
+        reject = _queue$shift2[3];
 
     try {
       resolve(fn.apply(context, args));
