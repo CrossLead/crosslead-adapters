@@ -150,7 +150,8 @@ export default class GoogleCalendarAdapter extends Adapter {
       runDate: moment().utc().toDate(),
       filterStartDate: filterStartDate,
       filterEndDate: filterEndDate,
-      emails: userProfiles
+      emails: userProfiles,
+      results: []
     };
 
 
@@ -164,7 +165,8 @@ export default class GoogleCalendarAdapter extends Adapter {
           filterEndDate,
           ...userProfile,
           success: true,
-          runDate: moment().utc().toDate()
+          runDate: moment().utc().toDate(),
+          errorMessage: null
         };
 
         try {
@@ -274,15 +276,26 @@ export default class GoogleCalendarAdapter extends Adapter {
     try {
       const data = await this.getBatchData(
         [ { email, emailAfterMapping: email } ],
-        moment().toDate(),
-        moment().add(-1, 'day').toDate()
+        moment().add(-1, 'day').toDate(),
+        moment().toDate()
       );
 
-      return data;
+      const firstResult = Array.isArray(data.results) && data.results[0];
+
+      if (firstResult && firstResult.errorMessage) {
+        return {
+          success: false,
+          message: firstResult.errorMessage
+        };
+      } else {
+        return {
+          success: true
+        };
+      }
     } catch (error) {
       console.log(error.stack || error);
       return {
-        error,
+        message: error.message,
         success: false
       };
     }
