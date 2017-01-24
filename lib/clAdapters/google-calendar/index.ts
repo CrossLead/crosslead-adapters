@@ -131,6 +131,11 @@ export default class GoogleCalendarAdapter extends Adapter {
     fields?: string
   ) {
 
+    if (filterStartDate.getTime() > filterEndDate.getTime()) {
+      throw new Error(`filterStartDate must be less than or equal to filterEndDate`);
+    }
+
+
     const { fieldNameMap } = GoogleCalendarAdapter;
 
     // api options...
