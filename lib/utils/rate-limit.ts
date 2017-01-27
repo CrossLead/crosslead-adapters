@@ -25,7 +25,7 @@ function rateLimit<T>(
   rate = 1000,
   count = 1
 ): (...args: any[]) => Promise<T> {
-  const queue: any[] = [];
+  const queue: [any, any[], ((out?: T) => void), ((err: Error) => void)][] = [];
   let working = 0;
 
   /**
@@ -46,11 +46,14 @@ function rateLimit<T>(
     if ((queue.length === 0) || (working === count)) return;
     working++;
     recurse();
-    const [context, args, resolve, reject] = queue.shift();
-    try {
-      resolve(fn.apply(context, args));
-    } catch (err) {
-      reject(err);
+    const next = queue.shift();
+    if (next) {
+      const [context, args, resolve, reject] = next;
+      try {
+        resolve(fn.apply(context, args));
+      } catch (err) {
+        reject(err);
+      }
     }
   }
 
