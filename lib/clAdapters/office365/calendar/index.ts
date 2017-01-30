@@ -68,7 +68,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
     'locationCoordinatesLongitude':        'Location.Coordinates.Longitude',
     'organizerName':                       'Organizer.EmailAddress.Name',
     'organizerEmail':                      'Organizer.EmailAddress.Address',
-    'recurrance':                          'Recurrance',
+    'recurrence':                          'Recurrence',
     'responseRequested':                   'ResponseRequested',
     'responseStatus':                      'ResponseStatus',
     'seriesMasterId':                      'SeriesMasterId',
