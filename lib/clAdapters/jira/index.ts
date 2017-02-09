@@ -114,13 +114,13 @@ export default class JiraAdapter extends Adapter {
 
   getUnresolvedEpicsForProject(projectId: string) {
     return this.getAllIssues({
-      jql: `project = ${projectId} AND issuetype = Epic AND resolution = Unresolved`
+      jql: `project = ${projectId} AND issuetype = "Epic Story" AND resolution = Unresolved`
     });
   }
 
   getEpicsForProject(projectId: string, formattedStartDate: Date, formattedEndDate: Date) {
     return this.getAllIssues({
-      jql: `project = ${projectId} AND issuetype = Epic AND
+      jql: `project = ${projectId} AND issuetype = "Epic Story" AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
   }
