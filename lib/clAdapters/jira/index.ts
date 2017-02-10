@@ -125,10 +125,9 @@ export default class JiraAdapter extends Adapter {
     });
   }
 
-  getIssuesForEpic(epicId: string, issueTypes: string[], formattedStartDate: Date, formattedEndDate: Date) {
+  getIssuesForEpic(epicKey: string, formattedStartDate: Date, formattedEndDate: Date) {
     return this.getAllIssues({
-      jql: `"Epic Link" = ${epicId} AND
-        issuetype IN (${issueTypes.join(',')}) AND
+      jql: `"Epic Link" = "${epicKey}" AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
   }
