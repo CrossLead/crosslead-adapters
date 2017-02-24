@@ -10,7 +10,7 @@
     "declaration": true,
     "allowJs": false,
     "lib": [
-      "es6"
+      "es6", "dom"
     ]
   },
   "files": [
