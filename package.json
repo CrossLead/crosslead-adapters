@@ -30,14 +30,14 @@
     "node-uuid": "1.4.3",
     "request-promise": "0.4.2",
     "@types/node": "6.0.60",
-    "@types/node-uuid": "^0.0.28",
-    "@types/request": "^0.0.39",
-    "@types/request-promise": "^4.1.33",
-    "typescript": "2.1.5"
+    "@types/node-uuid": "0.0.28",
+    "@types/request": "0.0.39",
+    "@types/request-promise": "4.1.33",
+    "typescript": "2.2.1"
   },
   "devDependencies": {
     "ava": "0.17.0",
-    "tslint": "4.3.1"
+    "tslint": "4.4.2"
   },
   "scripts": {
     "test": "npm run lint && npm run tsc && ava",

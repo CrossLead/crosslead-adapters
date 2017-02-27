@@ -57,7 +57,11 @@ export default class JiraAdapter extends Adapter {
     return new Promise<JiraAdapterRequestResult>((resolve) => {
       request(options, (error, response, body) => {
         let errorMessage = null;
-        let success = response && response.statusCode < 400;
+        let success = (
+          response &&
+          (typeof response.statusCode !== 'undefined') &&
+          response.statusCode < 400
+        );
 
         if (error) {
           success = false;
