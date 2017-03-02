@@ -230,12 +230,9 @@ export default class GoogleCalendarAdapter extends Adapter {
             );
           }))
           .filter((item: any) => {
-            /**
-             * only include calendars with read/owner status +
-             * exclude calendars from google itself (like holidays / contacts)
-             */
-            return visibleRoles.has(item.accessRole) && (
-              !item.id.includes('@group.v.calendar.google.com')
+            return (
+              item.id === userProfile.email ||
+              item.id === userProfile.emailAfterMapping
             );
           })
           .map('id')
