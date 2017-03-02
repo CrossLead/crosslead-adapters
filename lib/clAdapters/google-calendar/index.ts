@@ -191,7 +191,9 @@ export default class GoogleCalendarAdapter extends Adapter {
               }
 
               calendar.events.list(
-                requestOpts, (err: Error, d: any) => err ? rej(err) : res(d)
+                requestOpts, (err: Error, d: any) => {
+                  err ? rej(err) : res(d);
+                }
               );
             });
 
@@ -211,25 +213,44 @@ export default class GoogleCalendarAdapter extends Adapter {
             return data;
           };
 
+          const visibleRoles = new Set([
+            'owner',
+            'reader'
+          ]);
+
           /**
            * get all calendar ids in the users calendar
            */
-          const calendarIds = await new Promise((res, rej) => {
+          const calendarIds = _.chain(await new Promise((res, rej) => {
             calendar.calendarList.list(
               { ...opts, auth },
-              (err: Error, d: any) => err ? rej(err) : res(_.map(d.items, 'id'))
+              (err: Error, d: any) => {
+                err ? rej(err) : res(d.items);
+              }
             );
-          });
+          }))
+          .filter((item: any) => {
+            /**
+             * only include calendars with read/owner status +
+             * exclude calendars from google itself (like holidays / contacts)
+             */
+            return visibleRoles.has(item.accessRole) && (
+              !item.id.includes('@group.v.calendar.google.com')
+            );
+          })
+          .map('id')
+          .value();
 
           /**
            * get all items from all calendars in the date
            * range, and flatten
            */
           const items = _.flatten(await Promise.all(
-            _.map(calendarIds, (calendarId: string) =>
+            _.map(<any> calendarIds, (calendarId: string) =>
               getEvents({ ...opts, auth, calendarId }).then(r => r.items)
             )
           ));
+
 
           const data = _.map(items, (item: GoogleCalendarApiEvent) => {
 
