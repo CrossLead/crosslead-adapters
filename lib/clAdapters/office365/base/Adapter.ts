@@ -77,7 +77,9 @@ export default class Office365BaseAdapter extends Adapter {
 
   async getAccessToken() {
 
-    if (this.accessToken && this.accessTokenExpires > new Date()) {
+    if (this.accessToken &&
+        (typeof this.accessTokenExpires !== 'undefined') &&
+        this.accessTokenExpires > new Date()) {
       return this.accessToken;
     }
 

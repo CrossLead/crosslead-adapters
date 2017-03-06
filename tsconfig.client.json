@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "es5",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
@@ -9,12 +9,13 @@
     "experimentalDecorators": true,
     "outDir": "dist",
     "declaration": true,
-    "allowJs": false
+    "allowJs": false,
+    "lib": [
+      "es6", "dom"
+    ]
   },
-  "include": [
-    "./lib/**/*.ts",
-    "./test/**/*.ts",
-    "./*.d.ts"
+  "files": [
+    "lib/client/index.ts"
   ],
   "exclude": [
     "node_modules"

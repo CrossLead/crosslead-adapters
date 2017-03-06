@@ -177,20 +177,23 @@ export default class GoogleCalendarAdapter extends Adapter {
 
         try {
           // add auth tokens to request
-          opts.auth = await this.authorize(userProfile.emailAfterMapping);
+          const auth = await this.authorize(userProfile.emailAfterMapping);
 
           // function to recurse through pageTokens
-          const getEvents = async (data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
+          const getEvents = async (requestOpts: any, data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
 
             // request first results...
             const events = await new Promise<GoogleCalendarApiResult>((res, rej) => {
+
               // add page token if given
               if (data && data.nextPageToken) {
-                opts.pageToken = data.nextPageToken;
+                requestOpts.pageToken = data.nextPageToken;
               }
 
               calendar.events.list(
-                opts, (err: Error, d: any) => err ? rej(err) : res(d)
+                requestOpts, (err: Error, d: any) => {
+                  err ? rej(err) : res(d);
+                }
               );
             });
 
@@ -204,13 +207,47 @@ export default class GoogleCalendarAdapter extends Adapter {
             // if there is a token for the next page, continue...
             if (events.nextPageToken) {
               data.nextPageToken = events.nextPageToken;
-              return await getEvents(data);
+              return await getEvents(requestOpts, data);
             }
 
             return data;
           };
 
-          const { items } = await getEvents();
+          const visibleRoles = new Set([
+            'owner',
+            'reader'
+          ]);
+
+          /**
+           * get all calendar ids in the users calendar
+           */
+          const calendarIds = _.chain(await new Promise((res, rej) => {
+            calendar.calendarList.list(
+              { ...opts, auth },
+              (err: Error, d: any) => {
+                err ? rej(err) : res(d.items);
+              }
+            );
+          }))
+          .filter((item: any) => {
+            return (
+              item.id === userProfile.email ||
+              item.id === userProfile.emailAfterMapping
+            );
+          })
+          .map('id')
+          .value();
+
+          /**
+           * get all items from all calendars in the date
+           * range, and flatten
+           */
+          const items = _.flatten(await Promise.all(
+            _.map(<any> calendarIds, (calendarId: string) =>
+              getEvents({ ...opts, auth, calendarId }).then(r => r.items)
+            )
+          ));
+
 
           const data = _.map(items, (item: GoogleCalendarApiEvent) => {
 
