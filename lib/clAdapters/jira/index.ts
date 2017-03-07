@@ -116,22 +116,26 @@ export default class JiraAdapter extends Adapter {
     return this.makeRequest('issue/createmeta');
   }
 
-  getUnresolvedEpicsForProject(projectId: string) {
+  getIssueTypes() {
+    return this.makeRequest('issuetype');
+  }
+
+  getUnresolvedEpicsForProject(projectId: string, epicTypeId: string) {
     return this.getAllIssues({
-      jql: `project = ${projectId} AND issuetype = Epic AND resolution = Unresolved`
+      jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND resolution = Unresolved`
     });
   }
 
-  getEpicsForProject(projectId: string, formattedStartDate: Date, formattedEndDate: Date) {
+  getEpicsForProject(projectId: string, epicTypeId: string, formattedStartDate: Date, formattedEndDate: Date) {
     return this.getAllIssues({
-      jql: `project = ${projectId} AND issuetype = Epic AND
+      jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
   }
 
-  getIssuesForEpic(epicId: string, issueTypes: string[], formattedStartDate: Date, formattedEndDate: Date) {
+  getIssuesForEpic(epicKey: string, issueTypes: string[], formattedStartDate: Date, formattedEndDate: Date) {
     return this.getAllIssues({
-      jql: `"Epic Link" = ${epicId} AND
+      jql: `"Epic Link" = ${epicKey} AND
         issuetype IN (${issueTypes.join(',')}) AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
