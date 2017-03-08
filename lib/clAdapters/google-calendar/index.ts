@@ -143,7 +143,6 @@ export default class GoogleCalendarAdapter extends Adapter {
     // https://developers.google.com/google-apps/calendar/v3/
     const opts: any = {
       alwaysIncludeEmail:   true,
-      calendarId:           'primary',
       singleEvents:         true,
       timeMax:              filterEndDate.toISOString(),
       timeMin:              filterStartDate.toISOString(),
@@ -213,13 +212,18 @@ export default class GoogleCalendarAdapter extends Adapter {
             return data;
           };
 
-          const visibleRoles = new Set([
-            'owner',
-            'reader'
+          /**
+           * calendar ids we want to
+           * retrieve events from
+           */
+          const includedCalendarIds = new Set([
+            'primary',
+            userProfile.email,
+            userProfile.emailAfterMapping
           ]);
 
           /**
-           * get all calendar ids in the users calendar
+           * all calendar ids in the users calendar
            */
           const calendarIds = _.chain(await new Promise((res, rej) => {
             calendar.calendarList.list(
@@ -229,12 +233,7 @@ export default class GoogleCalendarAdapter extends Adapter {
               }
             );
           }))
-          .filter((item: any) => {
-            return (
-              item.id === userProfile.email ||
-              item.id === userProfile.emailAfterMapping
-            );
-          })
+          .filter((item: any) => includedCalendarIds.has(item.id))
           .map('id')
           .value();
 
