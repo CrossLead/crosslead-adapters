@@ -44,7 +44,7 @@
     "lint": "tslint \"./lib/**/*.js\" \"./lib/**/*.ts\"",
     "build-client": "tsc -p tsconfig.client.json",
     "tsc": "rm -rf dist && tsc",
-    "watch": "rm -rf dist && tsc -w"
+    "watch": "rm -rf dist && npm run build-client && tsc -w"
   },
   "ava": {
     "files": [
