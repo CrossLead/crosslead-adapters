@@ -33,10 +33,10 @@
     "@types/node-uuid": "0.0.28",
     "@types/request": "0.0.39",
     "@types/request-promise": "4.1.33",
-    "typescript": "2.2.1"
+    "typescript": "2.2.1",
+    "ava": "0.17.0"
   },
   "devDependencies": {
-    "ava": "0.17.0",
     "tslint": "4.4.2"
   },
   "scripts": {
