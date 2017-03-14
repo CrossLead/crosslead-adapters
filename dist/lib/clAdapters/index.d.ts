@@ -1,0 +1,9 @@
+export { default as Adapter } from './base/Adapter';
+export { default as CLMockAdapter } from './clMockAdapter';
+export { default as NetSuiteAdapter } from './netsuite/';
+export { default as Office365MailAdapter } from './office365/mail/';
+export { default as Office365CalendarAdapter } from './office365/calendar/';
+export { default as GoogleAdapter } from './google-mail/';
+export { default as GoogleCalendarAdapter } from './google-calendar/';
+export { default as JiraAdapter } from './jira/';
+export { default as SlackAdapter } from './slack/';

@@ -1,0 +1,29 @@
+import Adapter from '../base/Adapter';
+import * as request from 'request';
+export interface JiraRequestOpts extends request.CoreOptions {
+    uri: string;
+}
+export interface JiraAdapterRequestResult {
+    code: 200 | 500;
+    message: string;
+    data: any;
+    success: boolean;
+}
+export default class JiraAdapter extends Adapter {
+    apiVersion: number;
+    init(): Promise<void>;
+    /**
+     * Rate limit api requests to once per second
+     */
+    makeRequest(path: string, query?: any): Promise<JiraAdapterRequestResult>;
+    getAllIssues(params: any): Promise<any[]>;
+    runConnectionTest(): Promise<JiraAdapterRequestResult>;
+    getIssueHierarchy(): Promise<JiraAdapterRequestResult>;
+    getIssueTypes(): Promise<JiraAdapterRequestResult>;
+    getUnresolvedEpicsForProject(projectId: string, epicTypeId: string): Promise<any[]>;
+    getEpicsForProject(projectId: string, epicTypeId: string, formattedStartDate: Date, formattedEndDate: Date): Promise<any[]>;
+    getIssuesForEpic(epicKey: string, issueTypes: string[], formattedStartDate: Date, formattedEndDate: Date): Promise<any[]>;
+    getIssue(issueId: string): Promise<JiraAdapterRequestResult>;
+    getComments(issueId: string): Promise<JiraAdapterRequestResult>;
+    getUser(username: string): Promise<JiraAdapterRequestResult>;
+}
