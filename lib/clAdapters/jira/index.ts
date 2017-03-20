@@ -4,6 +4,14 @@ import * as url from 'url';
 import * as request from 'request';
 import rateLimit from '../../utils/rate-limit';
 
+export type JiraCredentials = {
+  username: string;
+  password: string;
+  host: string;
+  protocol: string;
+  port: string;
+}
+
 export interface JiraRequestOpts extends request.CoreOptions {
   uri: string;
 }
@@ -17,10 +25,16 @@ export interface JiraAdapterRequestResult {
 
 
 export default class JiraAdapter extends Adapter {
+  credentials: JiraCredentials;
+  sensitiveCredentialsFields:(keyof JiraCredentials)[] = ['password'];
 
   apiVersion = 2;
 
   async init() {}
+
+  async getFieldData() {
+    throw new Error('JIRA adapters currently do not support `getFieldData()`');
+  }
 
   /**
    * Rate limit api requests to once per second

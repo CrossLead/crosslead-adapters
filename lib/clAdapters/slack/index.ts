@@ -3,7 +3,12 @@ import * as request from 'request';
 import rateLimit from '../../utils/rate-limit';
 
 export default class SlackAdapter extends Adapter {
-
+  /**
+   * Credentials (access token) currently passed as request params.
+   * TODO: store in this property.
+   */
+  credentials = {};
+  sensitiveCredentialsFields = [];
 
   static baseApiUrl = 'https://slack.com/api';
 
@@ -34,4 +39,7 @@ export default class SlackAdapter extends Adapter {
   // null init function...
   async init() {}
 
+  async getFieldData() {
+    throw new Error('Slack adapters currently do not support `getFieldData()`');
+  }
 }

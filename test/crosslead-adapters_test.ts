@@ -1,5 +1,6 @@
 import test from 'ava';
 import CLAdapters from '../lib/';
+import NetSuiteAdapter from '../lib/clAdapters/netsuite/index';
 
 const NS_TEST_ACCOUNT_VALUE = '123456';
 
@@ -10,7 +11,7 @@ test('should exist in the proper namespace', function(t) {
 
 test('should return the NetSuite account as the extEntityKey', function(t) {
   const nsAdapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.NETSUITE);
-  t.true(nsAdapter instanceof CLAdapters.adapters.NetSuiteAdapter);
-  nsAdapter.credentials['account'] = NS_TEST_ACCOUNT_VALUE;
+  t.true(nsAdapter instanceof NetSuiteAdapter);
+  (<NetSuiteAdapter>nsAdapter).credentials.account = NS_TEST_ACCOUNT_VALUE;
   t.deepEqual(nsAdapter.extEntityKey, NS_TEST_ACCOUNT_VALUE);
 });

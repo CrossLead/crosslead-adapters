@@ -3,6 +3,7 @@ import * as util from 'util';
 import * as Fields from '../fields';
 import * as NetSuite from 'netsuite-js';
 import { Adapter, Configuration, Service } from '../base/index';
+import { AdapterCredentials } from '../base/Adapter';
 
 const implementedFields: {
   [key: number]: {
@@ -24,8 +25,6 @@ const implementedFields: {
 };
 
 /**
- * NetSuiteAdapter
- *
  * `credentials` format:
  * ```
  * {
@@ -35,6 +34,17 @@ const implementedFields: {
  *   role: 3
  * }
  * ```
+ */
+export type NetSuiteCredentials = {
+  email: string;
+  password: string;
+  account: string;
+  role: string;
+}
+
+/**
+ * NetSuiteAdapter
+ *
  * @class
  * @return {NetSuiteAdapter}
  */
@@ -57,6 +67,9 @@ export default class NetSuiteAdapter extends Adapter {
 
   _config: any;
   _service: any;
+
+  credentials: NetSuiteCredentials;
+  sensitiveCredentialsFields:(keyof NetSuiteCredentials)[] = ['password'];
 
   constructor() {
     super();
