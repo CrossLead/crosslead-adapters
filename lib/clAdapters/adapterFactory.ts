@@ -24,6 +24,15 @@ export default class AdapterFactory {
    * @param  {AdapterType} type
    * @return {BaseAdapter} concrete adapter subclass
    */
+  static createAdapter(type: Types.CUSTOM): never;
+  static createAdapter(type: Types.NETSUITE): NetSuiteAdapter;
+  static createAdapter(type: Types.CL_MOCK): CLMockAdapter;
+  static createAdapter(type: Types.OFFICE365): Office365MailAdapter;
+  static createAdapter(type: Types.OFFICE365_CALENDAR): Office365CalendarAdapter;
+  static createAdapter(type: Types.GOOGLE): GoogleAdapter;
+  static createAdapter(type: Types.GOOGLE_CALENDAR): GoogleCalendarAdapter;
+  static createAdapter(type: Types.JIRA): JiraAdapter;
+  static createAdapter(type: Types.SLACK): SlackAdapter;
   static createAdapter(type: Types) {
     switch (type) {
       case Types.CUSTOM:
