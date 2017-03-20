@@ -40,7 +40,7 @@ export type NetSuiteCredentials = {
   password: string;
   account: string;
   role: string;
-}
+};
 
 /**
  * NetSuiteAdapter
@@ -68,8 +68,13 @@ export default class NetSuiteAdapter extends Adapter {
   _config: any;
   _service: any;
 
-  credentials: NetSuiteCredentials;
-  sensitiveCredentialsFields:(keyof NetSuiteCredentials)[] = ['password'];
+  credentials: NetSuiteCredentials = {
+    email: '',
+    password: '',
+    account: '',
+    role: ''
+  };
+  sensitiveCredentialsFields: (keyof NetSuiteCredentials)[] = ['password'];
 
   constructor() {
     super();

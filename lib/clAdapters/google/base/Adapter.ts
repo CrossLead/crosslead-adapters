@@ -16,11 +16,15 @@ export type GoogleCredentials = {
   serviceEmail: string;
   email: string;
   certificate: string;
-}
+};
 
 abstract class GoogleBaseAdapter extends Adapter {
-  credentials: GoogleCredentials;
-  sensitiveCredentialsFields:(keyof GoogleCredentials)[] = ['certificate'];
+  credentials: GoogleCredentials = {
+    serviceEmail: '',
+    email: '',
+    certificate: ''
+  };
+  sensitiveCredentialsFields: (keyof GoogleCredentials)[] = ['certificate'];
 
   async getFieldData() {
     throw new Error('Google adapters currently do not support `getFieldData()`');

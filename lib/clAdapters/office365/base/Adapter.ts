@@ -13,7 +13,7 @@ export type Office365Credentials = {
   tenantId: string,
   certificate: string,
   certificateThumbprint: string
-}
+};
 
 export interface Office365AdapterGetUserInfoOptions {
   userProfile: any;
@@ -33,7 +33,7 @@ export interface Office365AdapterGetUserInfoOptions {
  */
 export default class Office365BaseAdapter extends Adapter {
   credentials: Office365Credentials;
-  sensitiveCredentialsFields:(keyof Office365Credentials)[] = ['certificateThumbprint'];
+  sensitiveCredentialsFields: (keyof Office365Credentials)[] = ['certificateThumbprint'];
 
   _config: Office365BaseConfiguration;
   _service: Office365BaseService;

@@ -88,7 +88,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
 
   async init() {
 
-    const { credentials } : { credentials: {[k: string]: string} } = this;
+    const { credentials }: { credentials: {[k: string]: string} } = this;
 
     if (!credentials) {
       throw new Error('credentials required for adapter.');

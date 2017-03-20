@@ -10,7 +10,7 @@ export type JiraCredentials = {
   host: string;
   protocol: string;
   port: string;
-}
+};
 
 export interface JiraRequestOpts extends request.CoreOptions {
   uri: string;
@@ -25,8 +25,14 @@ export interface JiraAdapterRequestResult {
 
 
 export default class JiraAdapter extends Adapter {
-  credentials: JiraCredentials;
-  sensitiveCredentialsFields:(keyof JiraCredentials)[] = ['password'];
+  credentials: JiraCredentials = {
+    username: '',
+    password: '',
+    host: '',
+    protocol: '',
+    port: ''
+  };
+  sensitiveCredentialsFields: (keyof JiraCredentials)[] = ['password'];
 
   apiVersion = 2;
 

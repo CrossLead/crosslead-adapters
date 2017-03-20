@@ -14,7 +14,7 @@ import * as Fields from './fields/';
 export type CLMockAdapterCredentials = {
   appId: string;
   apiKey: string;
-}
+};
 
 /**
  * CLMockAdapter
@@ -23,8 +23,11 @@ export type CLMockAdapterCredentials = {
  * @return {ClMockAdapter}
  */
 class CLMockAdapter extends BaseAdapter {
-  credentials: CLMockAdapterCredentials;
-  sensitiveCredentialsFields:(keyof CLMockAdapterCredentials)[] = ['apiKey'];
+  credentials: CLMockAdapterCredentials = {
+    appId: '',
+    apiKey: ''
+  };
+  sensitiveCredentialsFields: (keyof CLMockAdapterCredentials)[] = ['apiKey'];
   numResultsToGenerate: number;
 
   constructor() {
