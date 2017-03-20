@@ -191,8 +191,6 @@ class GoogleCalendarAdapter extends index_1.Adapter {
                         return Object.assign(individualRunStats, { data });
                     }
                     catch (error) {
-                        // if the batch collection failed...
-                        console.log('GoogleCalendarAdapter.getBatchData Error:', error.stack);
                         let errorMessage = error;
                         if (/invalid_grant/.test(errorMessage.toString())) {
                             errorMessage = `Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`;

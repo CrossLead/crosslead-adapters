@@ -396,7 +396,6 @@ function getBatchData(...args) {
         .catch((err) => {
         dataAdapterRunStats.success = false;
         dataAdapterRunStats.errorMessage = err;
-        console.log('GoogleMail GetBatchData Error: ' + JSON.stringify(err));
         return dataAdapterRunStats;
     });
 }
