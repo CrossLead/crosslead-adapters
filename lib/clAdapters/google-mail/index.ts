@@ -306,9 +306,9 @@ const getUserEmails = function(
       const entireMessage = err.message;
       const messageJson = entireMessage.replace(err.statusCode + ' - ', '');
       const messageData = JSON.parse(messageJson.replace(new RegExp('\\"', 'g'), '"'));
-      result.errorMessage = messageData.error.message;
+      result.errorMessage = new Error(messageData.error.message);
     } else {
-      result.errorMessage = JSON.stringify(err);
+      result.errorMessage = err;
     }
     return true;
   });

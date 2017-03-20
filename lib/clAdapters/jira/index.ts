@@ -77,7 +77,7 @@ export default class JiraAdapter extends Adapter {
 
         resolve({
           code: success ? 200 : 500,
-          message: errorMessage || error,
+          message: (errorMessage && new Error(errorMessage)) || error,
           data: body,
           success: success
         });

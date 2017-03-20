@@ -187,12 +187,12 @@ class Office365BaseAdapter extends Adapter_1.default {
             catch (err) {
                 Object.assign(userData, {
                     success: false,
-                    errorMessage: err.name !== 'StatusCodeError' ?
+                    errorMessage: new Error(err.name !== 'StatusCodeError' ?
                         JSON.stringify(err) :
                         JSON.parse(err.message
                             .replace(err.statusCode + ' - ', '')
                             .replace(/\"/g, '"'))
-                            .message
+                            .message)
                 });
                 return true;
             }
