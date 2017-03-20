@@ -1,17 +1,31 @@
+import { Certificate } from 'tls';
 import test from 'ava';
 import CLAdapters from '../lib/';
-import NetSuiteAdapter from '../lib/clAdapters/netsuite/index';
+import { GoogleCalendarAdapter, NetSuiteAdapter } from '../lib/clAdapters';
 
 const NS_TEST_ACCOUNT_VALUE = '123456';
 
-test('should exist in the proper namespace', function(t) {
+test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
   t.deepEqual(CLAdapters.AdapterTypes.NETSUITE, 2);
 });
 
-test('should return the NetSuite account as the extEntityKey', function(t) {
+test('should return the NetSuite account as the extEntityKey', t => {
   const nsAdapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.NETSUITE);
   t.true(nsAdapter instanceof NetSuiteAdapter);
   (<NetSuiteAdapter>nsAdapter).credentials.account = NS_TEST_ACCOUNT_VALUE;
   t.deepEqual(nsAdapter.extEntityKey, NS_TEST_ACCOUNT_VALUE);
+});
+
+test('should throw if missing credentials', async t => {
+  const a = new CLAdapters.adapters.NetSuiteAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.GOOGLE_CALENDAR);
+  t.true(adapter instanceof GoogleCalendarAdapter);
+  await t.throws(adapter.init());
+  (<GoogleCalendarAdapter>adapter).credentials = {
+    certificate: 'test',
+    serviceEmail: 'test@test.com',
+    email: 'test@test.com'
+  };
+  await t.notThrows(adapter.init());
 });
