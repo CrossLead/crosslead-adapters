@@ -33,7 +33,7 @@ export interface Office365AdapterGetUserInfoOptions {
  */
 export default class Office365BaseAdapter extends Adapter {
   credentials: Office365Credentials;
-  sensitiveCredentialsFields: (keyof Office365Credentials)[] = ['certificateThumbprint'];
+  sensitiveCredentialsFields: (keyof Office365Credentials)[] = ['certificate'];
 
   _config: Office365BaseConfiguration;
   _service: Office365BaseService;
