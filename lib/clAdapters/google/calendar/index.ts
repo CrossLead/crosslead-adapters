@@ -15,6 +15,21 @@ const credentialMappings: { [key: string]: string } = {
 
 
 
+function handleGoogleError(res: Function, rej: Function, returnVal?: any) {
+  return (err: any, result: any) => {
+    if (err) {
+      rej(
+        err instanceof Error
+          ? err
+          : new Error(JSON.stringify(err))
+      );
+    } else {
+      res(typeof returnVal !== 'undefined' ?  returnVal : result);
+    }
+  };
+}
+
+
 
 export const fieldNameMap = {
   // Desired...                          // Given...
@@ -191,9 +206,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
               }
 
               calendar.events.list(
-                requestOpts, (err: Error, d: any) => {
-                  err ? rej(err) : res(d);
-                }
+                requestOpts, handleGoogleError(res, rej)
               );
             });
 
@@ -229,9 +242,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           const calendarIds = _.chain(await new Promise((res, rej) => {
             calendar.calendarList.list(
               { ...opts, auth },
-              (err: Error, d: any) => {
-                err ? rej(err) : res(d.items);
-              }
+              (err: any, d: any) => handleGoogleError(res, rej)(err, d.items)
             );
           }))
           .filter((item: any) => includedCalendarIds.has(item.id))
@@ -284,13 +295,10 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           return Object.assign(individualRunStats, { data });
 
         } catch (error) {
-          // if the batch collection failed...
-          console.log('GoogleCalendarAdapter.getBatchData Error:', error.stack);
+          let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
 
-          let errorMessage = error;
-
-          if (/invalid_grant/.test(errorMessage.toString())) {
-            errorMessage = `Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`;
+          if (/invalid_grant/.test(errorMessage.message.toString())) {
+            errorMessage = new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`);
           }
 
           return Object.assign(individualRunStats, {
@@ -372,9 +380,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     );
 
     // await authorization
-    return new Promise((res, rej) => auth.authorize((err: Error) => {
-      err ? rej(err) : res(auth);
-    }));
+    return new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
   }
 
 }

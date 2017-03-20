@@ -19,6 +19,18 @@ const credentialMappings = {
     'serviceEmail': 'client_email',
     'email': 'adminEmail'
 };
+function handleGoogleError(res, rej, returnVal) {
+    return (err, result) => {
+        if (err) {
+            rej(err instanceof Error
+                ? err
+                : new Error(JSON.stringify(err)));
+        }
+        else {
+            res(typeof returnVal !== 'undefined' ? returnVal : result);
+        }
+    };
+}
 exports.fieldNameMap = {
     // Desired...                          // Given...
     'eventId': 'id',
@@ -121,9 +133,7 @@ class GoogleCalendarAdapter extends index_1.Adapter {
                                 if (data && data.nextPageToken) {
                                     requestOpts.pageToken = data.nextPageToken;
                                 }
-                                calendar.events.list(requestOpts, (err, d) => {
-                                    err ? rej(err) : res(d);
-                                });
+                                calendar.events.list(requestOpts, handleGoogleError(res, rej));
                             });
                             // if we already have data being accumulated, add to items
                             if (data) {
@@ -152,9 +162,7 @@ class GoogleCalendarAdapter extends index_1.Adapter {
                          * all calendar ids in the users calendar
                          */
                         const calendarIds = _.chain(yield new Promise((res, rej) => {
-                            calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => {
-                                err ? rej(err) : res(d.items);
-                            });
+                            calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d.items));
                         }))
                             .filter((item) => includedCalendarIds.has(item.id))
                             .map('id')
@@ -191,11 +199,9 @@ class GoogleCalendarAdapter extends index_1.Adapter {
                         return Object.assign(individualRunStats, { data });
                     }
                     catch (error) {
-                        // if the batch collection failed...
-                        console.log('GoogleCalendarAdapter.getBatchData Error:', error.stack);
-                        let errorMessage = error;
-                        if (/invalid_grant/.test(errorMessage.toString())) {
-                            errorMessage = `Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`;
+                        let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
+                        if (/invalid_grant/.test(errorMessage.message.toString())) {
+                            errorMessage = new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`);
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,
@@ -265,9 +271,7 @@ class GoogleCalendarAdapter extends index_1.Adapter {
             // ('sub' property of the json web token)
             email);
             // await authorization
-            return new Promise((res, rej) => auth.authorize((err) => {
-                err ? rej(err) : res(auth);
-            }));
+            return new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
         });
     }
 }
