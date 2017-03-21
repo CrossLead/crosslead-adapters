@@ -22,10 +22,23 @@ const rate_limit_1 = require("../../utils/rate-limit");
 class JiraAdapter extends Adapter_1.default {
     constructor() {
         super(...arguments);
+        this.credentials = {
+            username: '',
+            password: '',
+            host: '',
+            protocol: '',
+            port: ''
+        };
+        this.sensitiveCredentialsFields = ['password'];
         this.apiVersion = 2;
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () { });
+    }
+    getFieldData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('JIRA adapters currently do not support `getFieldData()`');
+        });
     }
     /**
      * Rate limit api requests to once per second

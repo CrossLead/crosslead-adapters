@@ -1,7 +1,8 @@
 import * as googleapis from 'googleapis';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Adapter, Configuration, Service } from '../base/index';
+import { Configuration, Service } from '../../base/index';
+import GoogleBaseAdapter from '../base/Adapter';
 
 // google calendar api
 const calendar = googleapis.calendar('v3');
@@ -74,7 +75,7 @@ export interface GoogleCalendarApiResult {
 
 
 
-export default class GoogleCalendarAdapter extends Adapter {
+export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
 
   static Configuration = Configuration;
   static Service = Service;
@@ -102,7 +103,7 @@ export default class GoogleCalendarAdapter extends Adapter {
 
   async init() {
 
-    const { credentials } = this;
+    const { credentials }: { credentials: {[k: string]: string} } = this;
 
     if (!credentials) {
       throw new Error('credentials required for adapter.');

@@ -5,32 +5,34 @@ import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as _ from 'lodash';
 
-import BaseAdapter from '../base/Adapter';
+import GoogleBaseAdapter from '../base/Adapter';
 import * as GoogleMail from './google-js.js';
 
 
-class GoogleAdapter extends BaseAdapter {
+class GoogleMailAdapter extends GoogleBaseAdapter {
+  _config: GoogleMail.Configuration;
+  _service: GoogleMail.Service;
   runConnectionTest = runConnectionTest;
   runMessageTest = runMessageTest;
   getBatchData = getBatchData;
+
+  init() {
+    const _this = this;
+    this._config = new GoogleMail.Configuration(this.credentials);
+    this._service = new GoogleMail.Service(this._config);
+    return this._service
+      .init()
+      .then(( /*client*/ ) => {
+        const msg = 'Successfully initialized gmail adapter for email: %s';
+        console.log(msg, _this.credentials.email);
+        return _this;
+      });
+  }
 }
 
-export default GoogleAdapter;
+export default GoogleMailAdapter;
 
-GoogleAdapter.prototype.init = function() {
-  const _this = this;
-  this._config = new GoogleMail.Configuration(this.credentials);
-  this._service = new GoogleMail.Service(this._config);
-  return this._service
-    .init()
-    .then(( /*client*/ ) => {
-      const msg = 'Successfully initialized gmail adapter for email: %s';
-      console.log(msg, _this.credentials.email);
-      return _this;
-    });
-};
-
-GoogleAdapter.prototype.reset = function() {
+GoogleMailAdapter.prototype.reset = function() {
   delete this._config;
   delete this._service;
 };

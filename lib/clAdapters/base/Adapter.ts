@@ -9,8 +9,6 @@ export interface AdapterCredentials {
   [key: string]: string;
 };
 
-
-
 /**
  * Abstract base class for all adapters
  *
@@ -18,7 +16,7 @@ export interface AdapterCredentials {
  * @abstract
  * @return {Adapter}
  */
-export default class Adapter {
+abstract class Adapter {
 
   /**
    * If this adapter supports external entity fields, it must provide
@@ -28,7 +26,14 @@ export default class Adapter {
    * @member {String}
    */
   extEntityKey: string;
-  credentials: AdapterCredentials = {};
+  abstract credentials: AdapterCredentials;
+
+  /**
+   * List of sensitive credentials fields for this adapter. Allows
+   * application code to implement specialized logic, such as
+   * encrypting values of passwords.
+   */
+  abstract sensitiveCredentialsFields: string[];
 
   constructor() {
     Object.defineProperty(this, 'extEntityKey', {
@@ -46,9 +51,7 @@ export default class Adapter {
    * @virtual
    * @return {Promise.<Adapter>} initialzed adapter
    */
-  async init(): Promise<any> {
-    throw new Error('Must be implemented by subclass');
-  }
+  abstract async init(): Promise<any>;
 
 
   /**
@@ -70,8 +73,8 @@ export default class Adapter {
    * @return {Number} result.count total results
    * @return {Object[]} result.results result objects
    */
-  getFieldData(field?: Field, query?: any): any {
-    throw new Error('Must be implemented by subclass');
-  }
+  abstract getFieldData(field?: Field, query?: any): any;
 
 }
+
+export default Adapter;

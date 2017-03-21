@@ -1,4 +1,4 @@
-import { Service, Configuration } from '../base/index';
+import { Service, Configuration } from '../../base/index';
 
 export class GoogleMailService extends Service {
   constructor(public config: Configuration)  {

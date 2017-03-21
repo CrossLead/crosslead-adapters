@@ -18,6 +18,17 @@ const Adapter_1 = require("../base/Adapter");
 const request = require("request");
 const rate_limit_1 = require("../../utils/rate-limit");
 class SlackAdapter extends Adapter_1.default {
+    constructor() {
+        super(...arguments);
+        this.credentials = {
+            access_token: '',
+            scope: '',
+            user_id: '',
+            team_name: '',
+            team_id: ''
+        };
+        this.sensitiveCredentialsFields = ['access_token'];
+    }
     /**
      * Rate limit (at prototype level) slack api calls to once per second.
      */
@@ -40,6 +51,11 @@ class SlackAdapter extends Adapter_1.default {
     // null init function...
     init() {
         return __awaiter(this, void 0, void 0, function* () { });
+    }
+    getFieldData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('Slack adapters currently do not support `getFieldData()`');
+        });
     }
 }
 SlackAdapter.baseApiUrl = 'https://slack.com/api';

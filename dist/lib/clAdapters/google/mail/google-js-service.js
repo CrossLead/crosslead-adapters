@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../base/index");
+const index_1 = require("../../base/index");
 class GoogleMailService extends index_1.Service {
     constructor(config) {
         super(config);

@@ -1,5 +1,12 @@
 import Adapter from '../base/Adapter';
 import * as request from 'request';
+export declare type JiraCredentials = {
+    username: string;
+    password: string;
+    host: string;
+    protocol: string;
+    port: string;
+};
 export interface JiraRequestOpts extends request.CoreOptions {
     uri: string;
 }
@@ -10,8 +17,11 @@ export interface JiraAdapterRequestResult {
     success: boolean;
 }
 export default class JiraAdapter extends Adapter {
+    credentials: JiraCredentials;
+    sensitiveCredentialsFields: (keyof JiraCredentials)[];
     apiVersion: number;
     init(): Promise<void>;
+    getFieldData(): Promise<void>;
     /**
      * Rate limit api requests to once per second
      */

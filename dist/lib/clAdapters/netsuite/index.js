@@ -18,15 +18,6 @@ const implementedFields = {
 /**
  * NetSuiteAdapter
  *
- * `credentials` format:
- * ```
- * {
- *   email: 'test@test.com',
- *   password: 'password',
- *   account: 123456,
- *   role: 3
- * }
- * ```
  * @class
  * @return {NetSuiteAdapter}
  */
@@ -45,6 +36,13 @@ class NetSuiteAdapter extends index_1.Adapter {
          * this._cachedDataByFieldType[Fields.Types.EXT_ENTITY]['customer'][10][3]
          */
         this._cachedDataByFieldType = {};
+        this.credentials = {
+            email: '',
+            password: '',
+            account: '',
+            role: ''
+        };
+        this.sensitiveCredentialsFields = ['password'];
         /**
          * @override
          */

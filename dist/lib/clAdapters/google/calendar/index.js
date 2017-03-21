@@ -11,7 +11,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const googleapis = require("googleapis");
 const moment = require("moment");
 const _ = require("lodash");
-const index_1 = require("../base/index");
+const index_1 = require("../../base/index");
+const Adapter_1 = require("../base/Adapter");
 // google calendar api
 const calendar = googleapis.calendar('v3');
 const credentialMappings = {
@@ -55,7 +56,7 @@ exports.fieldNameMap = {
     'hangoutLink': 'hangoutLink',
     'privacy': 'visibility'
 };
-class GoogleCalendarAdapter extends index_1.Adapter {
+class GoogleCalendarAdapter extends Adapter_1.default {
     // constructor needs to call super
     constructor() {
         super();

@@ -7,7 +7,13 @@ import Adapter                    from '../../base/Adapter';
 import Office365BaseService       from './Service';
 import Office365BaseConfiguration from './Configuration';
 
-
+export type Office365Credentials = {
+  email: string;
+  clientId: string,
+  tenantId: string,
+  certificate: string,
+  certificateThumbprint: string
+};
 
 export interface Office365AdapterGetUserInfoOptions {
   userProfile: any;
@@ -26,6 +32,8 @@ export interface Office365AdapterGetUserInfoOptions {
  * Common reset, runConnectionTest, and getAccessToken methods...
  */
 export default class Office365BaseAdapter extends Adapter {
+  credentials: Office365Credentials;
+  sensitiveCredentialsFields: (keyof Office365Credentials)[] = ['certificate'];
 
   _config: Office365BaseConfiguration;
   _service: Office365BaseService;
@@ -274,4 +282,7 @@ export default class Office365BaseAdapter extends Adapter {
 
   }
 
+  async getFieldData() {
+    throw new Error('Office365 adapters currently do not support `getFieldData()`');
+  }
 }

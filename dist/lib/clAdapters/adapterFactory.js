@@ -9,11 +9,6 @@ const adapterTypes_1 = require("./adapterTypes");
  * @return {AdapterFactory}
  */
 class AdapterFactory {
-    /**
-     * Static factory
-     * @param  {AdapterType} type
-     * @return {BaseAdapter} concrete adapter subclass
-     */
     static createAdapter(type) {
         switch (type) {
             case adapterTypes_1.default.CUSTOM:
@@ -35,7 +30,7 @@ class AdapterFactory {
             case adapterTypes_1.default.SLACK:
                 return new _1.SlackAdapter();
             default:
-                throw new Error('Unknown type');
+                throw new Error(`Unknown type ${type}`);
         }
     }
 }

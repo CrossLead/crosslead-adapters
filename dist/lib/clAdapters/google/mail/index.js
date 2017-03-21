@@ -7,28 +7,28 @@ const querystring = require("querystring");
 const _ = require("lodash");
 const Adapter_1 = require("../base/Adapter");
 const GoogleMail = require("./google-js.js");
-class GoogleAdapter extends Adapter_1.default {
+class GoogleMailAdapter extends Adapter_1.default {
     constructor() {
         super(...arguments);
         this.runConnectionTest = runConnectionTest;
         this.runMessageTest = runMessageTest;
         this.getBatchData = getBatchData;
     }
+    init() {
+        const _this = this;
+        this._config = new GoogleMail.Configuration(this.credentials);
+        this._service = new GoogleMail.Service(this._config);
+        return this._service
+            .init()
+            .then(() => {
+            const msg = 'Successfully initialized gmail adapter for email: %s';
+            console.log(msg, _this.credentials.email);
+            return _this;
+        });
+    }
 }
-exports.default = GoogleAdapter;
-GoogleAdapter.prototype.init = function () {
-    const _this = this;
-    this._config = new GoogleMail.Configuration(this.credentials);
-    this._service = new GoogleMail.Service(this._config);
-    return this._service
-        .init()
-        .then(() => {
-        const msg = 'Successfully initialized gmail adapter for email: %s';
-        console.log(msg, _this.credentials.email);
-        return _this;
-    });
-};
-GoogleAdapter.prototype.reset = function () {
+exports.default = GoogleMailAdapter;
+GoogleMailAdapter.prototype.reset = function () {
     delete this._config;
     delete this._service;
 };
