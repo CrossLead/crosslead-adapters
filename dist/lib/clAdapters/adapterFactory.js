@@ -9,11 +9,6 @@ const adapterTypes_1 = require("./adapterTypes");
  * @return {AdapterFactory}
  */
 class AdapterFactory {
-    /**
-     * Static factory
-     * @param  {AdapterType} type
-     * @return {BaseAdapter} concrete adapter subclass
-     */
     static createAdapter(type) {
         switch (type) {
             case adapterTypes_1.default.CUSTOM:
