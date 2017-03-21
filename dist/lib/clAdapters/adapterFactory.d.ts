@@ -1,4 +1,4 @@
-import { NetSuiteAdapter, CLMockAdapter } from './';
+import { NetSuiteAdapter, CLMockAdapter, Office365MailAdapter, Office365CalendarAdapter, GoogleAdapter, GoogleCalendarAdapter, JiraAdapter, SlackAdapter } from './';
 import Types from './adapterTypes';
 /**
  * Adapter factory
@@ -12,5 +12,5 @@ export default class AdapterFactory {
      * @param  {AdapterType} type
      * @return {BaseAdapter} concrete adapter subclass
      */
-    static createAdapter(type: Types): CLMockAdapter | NetSuiteAdapter;
+    static createAdapter(type: Types): CLMockAdapter | NetSuiteAdapter | Office365MailAdapter | Office365CalendarAdapter | GoogleAdapter | GoogleCalendarAdapter | JiraAdapter | SlackAdapter;
 }

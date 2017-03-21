@@ -1,4 +1,5 @@
-import { Adapter, Configuration, Service } from '../base/index';
+import { Configuration, Service } from '../../base/index';
+import GoogleBaseAdapter from '../base/Adapter';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
@@ -33,7 +34,7 @@ export interface GoogleCalendarApiResult {
     items: GoogleCalendarApiEvent[];
     nextPageToken?: string;
 }
-export default class GoogleCalendarAdapter extends Adapter {
+export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     static Configuration: typeof Configuration;
     static Service: typeof Service;
     static fieldNameMap: {

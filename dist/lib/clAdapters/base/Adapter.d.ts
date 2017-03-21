@@ -14,7 +14,7 @@ export interface AdapterCredentials {
  * @abstract
  * @return {Adapter}
  */
-export default class Adapter {
+declare abstract class Adapter {
     /**
      * If this adapter supports external entity fields, it must provide
      * a key to uniquely associate that field as having come from this
@@ -23,14 +23,20 @@ export default class Adapter {
      * @member {String}
      */
     extEntityKey: string;
-    credentials: AdapterCredentials;
+    abstract credentials: AdapterCredentials;
+    /**
+     * List of sensitive credentials fields for this adapter. Allows
+     * application code to implement specialized logic, such as
+     * encrypting values of passwords.
+     */
+    abstract sensitiveCredentialsFields: string[];
     constructor();
     /**
      * Connects to datasource. Requires `credentials` member to be filled out
      * @virtual
      * @return {Promise.<Adapter>} initialzed adapter
      */
-    init(): Promise<any>;
+    abstract init(): Promise<any>;
     /**
      * Adapters may be stateful. For instance, they may need to store
      * auth tokens, search continuation ids, etc or cache results.
@@ -48,5 +54,6 @@ export default class Adapter {
      * @return {Number} result.count total results
      * @return {Object[]} result.results result objects
      */
-    getFieldData(field?: Field, query?: any): any;
+    abstract getFieldData(field?: Field, query?: any): any;
 }
+export default Adapter;

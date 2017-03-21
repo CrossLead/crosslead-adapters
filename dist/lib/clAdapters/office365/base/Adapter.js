@@ -20,6 +20,10 @@ const Configuration_1 = require("./Configuration");
  * Common reset, runConnectionTest, and getAccessToken methods...
  */
 class Office365BaseAdapter extends Adapter_1.default {
+    constructor() {
+        super(...arguments);
+        this.sensitiveCredentialsFields = ['certificate'];
+    }
     reset() {
         delete this._config;
         delete this._service;
@@ -196,6 +200,11 @@ class Office365BaseAdapter extends Adapter_1.default {
                 });
                 return true;
             }
+        });
+    }
+    getFieldData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('Office365 adapters currently do not support `getFieldData()`');
         });
     }
 }

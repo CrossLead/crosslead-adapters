@@ -35,7 +35,7 @@ class AdapterFactory {
             case adapterTypes_1.default.SLACK:
                 return new _1.SlackAdapter();
             default:
-                throw new Error('Unknown type');
+                throw new Error(`Unknown type ${type}`);
         }
     }
 }

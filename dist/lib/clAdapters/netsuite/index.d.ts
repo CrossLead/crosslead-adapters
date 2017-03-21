@@ -1,7 +1,5 @@
 import { Adapter } from '../base/index';
 /**
- * NetSuiteAdapter
- *
  * `credentials` format:
  * ```
  * {
@@ -11,6 +9,16 @@ import { Adapter } from '../base/index';
  *   role: 3
  * }
  * ```
+ */
+export declare type NetSuiteCredentials = {
+    email: string;
+    password: string;
+    account: string;
+    role: string;
+};
+/**
+ * NetSuiteAdapter
+ *
  * @class
  * @return {NetSuiteAdapter}
  */
@@ -33,6 +41,8 @@ export default class NetSuiteAdapter extends Adapter {
     };
     _config: any;
     _service: any;
+    credentials: NetSuiteCredentials;
+    sensitiveCredentialsFields: (keyof NetSuiteCredentials)[];
     constructor();
     init(): any;
     reset(): void;
