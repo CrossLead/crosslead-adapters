@@ -13,7 +13,7 @@ test('should exist in the proper namespace', t => {
 test('should return the NetSuite account as the extEntityKey', t => {
   const nsAdapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.NETSUITE);
   t.true(nsAdapter instanceof NetSuiteAdapter);
-  (<NetSuiteAdapter>nsAdapter).credentials.account = NS_TEST_ACCOUNT_VALUE;
+  nsAdapter.credentials.account = NS_TEST_ACCOUNT_VALUE;
   t.deepEqual(nsAdapter.extEntityKey, NS_TEST_ACCOUNT_VALUE);
 });
 
@@ -22,7 +22,7 @@ test('should throw if missing credentials', async t => {
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.GOOGLE_CALENDAR);
   t.true(adapter instanceof GoogleCalendarAdapter);
   await t.throws(adapter.init());
-  (<GoogleCalendarAdapter>adapter).credentials = {
+  adapter.credentials = {
     certificate: 'test',
     serviceEmail: 'test@test.com',
     email: 'test@test.com'
