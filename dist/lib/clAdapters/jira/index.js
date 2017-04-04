@@ -5,15 +5,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const Adapter_1 = require("../base/Adapter");
 const url = require("url");
 const request = require("request");
@@ -40,9 +42,6 @@ class JiraAdapter extends Adapter_1.default {
             throw new Error('JIRA adapters currently do not support `getFieldData()`');
         });
     }
-    /**
-     * Rate limit api requests to once per second
-     */
     makeRequest(path, query) {
         const uri = url.format({
             protocol: this.credentials['protocol'] || 'https',
@@ -120,15 +119,33 @@ class JiraAdapter extends Adapter_1.default {
             jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND resolution = Unresolved`
         });
     }
+    getUnresolvedEpicsForProjects(projectIds, epicTypeId) {
+        return this.getAllIssues({
+            jql: `project IN (${projectIds.join(',')}) AND issuetype = ${epicTypeId} AND resolution = Unresolved`
+        });
+    }
     getEpicsForProject(projectId, epicTypeId, formattedStartDate, formattedEndDate) {
         return this.getAllIssues({
             jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
         });
     }
+    getEpicsForProjects(projectIds, epicTypeId, formattedStartDate, formattedEndDate) {
+        return this.getAllIssues({
+            jql: `project IN (${projectIds.join(',')}) AND issuetype = ${epicTypeId} AND
+      updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+        });
+    }
     getIssuesForEpic(epicKey, issueTypes, formattedStartDate, formattedEndDate) {
         return this.getAllIssues({
             jql: `"Epic Link" = ${epicKey} AND
+        issuetype IN (${issueTypes.join(',')}) AND
+        updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+        });
+    }
+    getIssuesForEpics(epicKeys, issueTypes, formattedStartDate, formattedEndDate) {
+        return this.getAllIssues({
+            jql: `"Epic Link" IN (${epicKeys.join(',')}) AND
         issuetype IN (${issueTypes.join(',')}) AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
         });
@@ -144,7 +161,11 @@ class JiraAdapter extends Adapter_1.default {
     }
 }
 __decorate([
-    rate_limit_1.default(200)
+    rate_limit_1.default(200),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
 ], JiraAdapter.prototype, "makeRequest", null);
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = JiraAdapter;
 //# sourceMappingURL=index.js.map

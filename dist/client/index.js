@@ -7,7 +7,6 @@
  * @ignore
  */
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * CLAdapters functionality available on client. Mostly a subset
  * of server functionality like common enums
