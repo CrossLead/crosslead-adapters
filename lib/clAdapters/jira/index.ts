@@ -146,16 +146,40 @@ export default class JiraAdapter extends Adapter {
     });
   }
 
-  getEpicsForProject(projectId: string, epicTypeId: string, formattedStartDate: Date, formattedEndDate: Date) {
+  getUnresolvedEpicsForProjects(projectIds: string[], epicTypeId: string) {
+    const projectIdsString : string = projectIds.join(',');
+    return this.getAllIssues({
+      jql: `project IN (${projectIdsString}) AND issuetype = ${epicTypeId} AND resolution = Unresolved`
+    });
+  }
+
+  getEpicsForProject(projectId: string, epicTypeId: string, formattedStartDate: string, formattedEndDate: string) {
     return this.getAllIssues({
       jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
   }
 
-  getIssuesForEpic(epicKey: string, issueTypes: string[], formattedStartDate: Date, formattedEndDate: Date) {
+  getEpicsForProjects(projectIds: string[], epicTypeId: string, formattedStartDate: string, formattedEndDate: string) {
+    const projectIdsString : string = projectIds.join(',');
+    return this.getAllIssues({
+      jql: `project IN (${projectIdsString}) AND issuetype = ${epicTypeId} AND
+      updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+    });
+  }
+
+  getIssuesForEpic(epicKey: string, issueTypes: string[], formattedStartDate: string, formattedEndDate: string) {
     return this.getAllIssues({
       jql: `"Epic Link" = ${epicKey} AND
+        issuetype IN (${issueTypes.join(',')}) AND
+        updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+    });
+  }
+
+  getIssuesForEpics(epicKeys: string[], issueTypes: string[], formattedStartDate: string, formattedEndDate: string) {
+    const epicKeysString : string = epicKeys.join(',');
+    return this.getAllIssues({
+      jql: `"Epic Link" IN (${epicKeysString}) AND
         issuetype IN (${issueTypes.join(',')}) AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
