@@ -147,9 +147,8 @@ export default class JiraAdapter extends Adapter {
   }
 
   getUnresolvedEpicsForProjects(projectIds: string[], epicTypeId: string) {
-    const projectIdsString : string = projectIds.join(',');
     return this.getAllIssues({
-      jql: `project IN (${projectIdsString}) AND issuetype = ${epicTypeId} AND resolution = Unresolved`
+      jql: `project IN (${projectIds.join(',')}) AND issuetype = ${epicTypeId} AND resolution = Unresolved`
     });
   }
 
@@ -161,9 +160,8 @@ export default class JiraAdapter extends Adapter {
   }
 
   getEpicsForProjects(projectIds: string[], epicTypeId: string, formattedStartDate: string, formattedEndDate: string) {
-    const projectIdsString : string = projectIds.join(',');
     return this.getAllIssues({
-      jql: `project IN (${projectIdsString}) AND issuetype = ${epicTypeId} AND
+      jql: `project IN (${projectIds.join(',')}) AND issuetype = ${epicTypeId} AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
   }
@@ -177,9 +175,8 @@ export default class JiraAdapter extends Adapter {
   }
 
   getIssuesForEpics(epicKeys: string[], issueTypes: string[], formattedStartDate: string, formattedEndDate: string) {
-    const epicKeysString : string = epicKeys.join(',');
     return this.getAllIssues({
-      jql: `"Epic Link" IN (${epicKeysString}) AND
+      jql: `"Epic Link" IN (${epicKeys.join(',')}) AND
         issuetype IN (${issueTypes.join(',')}) AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
     });
