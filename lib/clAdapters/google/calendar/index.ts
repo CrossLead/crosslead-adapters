@@ -242,7 +242,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           const calendarIds = _.chain(await new Promise((res, rej) => {
             calendar.calendarList.list(
               { ...opts, auth },
-              (err: any, d: any) => handleGoogleError(res, rej)(err, d.items)
+              (err: any, d: any) => handleGoogleError(res, rej)(err, d && d.items)
             );
           }))
           .filter((item: any) => includedCalendarIds.has(item.id))
@@ -255,7 +255,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
            */
           const items = _.flatten(await Promise.all(
             _.map(<any> calendarIds, (calendarId: string) =>
-              getEvents({ ...opts, auth, calendarId }).then(r => r.items)
+              getEvents({ ...opts, auth, calendarId }).then(r => r && r.items)
             )
           ));
 
