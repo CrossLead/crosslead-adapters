@@ -34,4 +34,20 @@ ava_1.default('should throw if missing credentials', (t) => __awaiter(this, void
     };
     yield t.notThrows(adapter.init());
 }));
+ava_1.default('should autodiscover active sync url', (t) => __awaiter(this, void 0, void 0, function* () {
+    const a = new _1.default.adapters.ActiveSyncCalendarAdapter();
+    const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.ACTIVE_SYNC_CALENDAR);
+    t.true(adapter instanceof clAdapters_1.ActiveSyncCalendarAdapter);
+    // const settings: any = await adapter.getAutodiscoverUrl('mark.bradley@crosslead.com', 'Cki$19#W' );
+    // console.log('settings', settings);
+    // await adapter.getCalendarData( 'mark.bradley@crosslead.com', 'Cki$19#W', settings.ExternalEwsUrl);
+    yield adapter.getCalendarData('mark.bradley@crosslead.com', 'Cki$19#W', 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
+    yield t.throws(adapter.init());
+    adapter.credentials = {
+        username: 'test',
+        email: 'test@test.com',
+        password: 'test@test.com'
+    };
+    yield t.notThrows(adapter.init());
+}));
 //# sourceMappingURL=crosslead-adapters_test.js.map

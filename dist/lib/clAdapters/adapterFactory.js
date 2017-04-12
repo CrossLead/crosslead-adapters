@@ -29,6 +29,8 @@ class AdapterFactory {
                 return new _1.JiraAdapter();
             case adapterTypes_1.default.SLACK:
                 return new _1.SlackAdapter();
+            case adapterTypes_1.default.ACTIVE_SYNC_CALENDAR:
+                return new _1.ActiveSyncCalendarAdapter();
             default:
                 throw new Error(`Unknown type ${type}`);
         }

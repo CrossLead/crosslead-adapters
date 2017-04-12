@@ -1,7 +1,7 @@
 import { Certificate } from 'tls';
 import test from 'ava';
 import CLAdapters from '../lib/';
-import { GoogleCalendarAdapter, NetSuiteAdapter } from '../lib/clAdapters';
+import { GoogleCalendarAdapter, NetSuiteAdapter, ActiveSyncCalendarAdapter } from '../lib/clAdapters';
 
 const NS_TEST_ACCOUNT_VALUE = '123456';
 
@@ -26,6 +26,25 @@ test('should throw if missing credentials', async t => {
     certificate: 'test',
     serviceEmail: 'test@test.com',
     email: 'test@test.com'
+  };
+  await t.notThrows(adapter.init());
+});
+
+test('should autodiscover active sync url', async t => {
+  const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
+  t.true(adapter instanceof ActiveSyncCalendarAdapter);
+
+  // const settings: any = await adapter.getAutodiscoverUrl('mark.bradley@crosslead.com', 'Cki$19#W' );
+  // console.log('settings', settings);
+  // await adapter.getCalendarData( 'mark.bradley@crosslead.com', 'Cki$19#W', settings.ExternalEwsUrl);
+  await adapter.getCalendarData( 'mark.bradley@crosslead.com', 'Cki$19#W', 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
+
+  await t.throws(adapter.init());
+  adapter.credentials = {
+    username: 'test',
+    email: 'test@test.com',
+    password: 'test@test.com'
   };
   await t.notThrows(adapter.init());
 });

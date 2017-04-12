@@ -7,3 +7,4 @@ export { default as GoogleAdapter } from './google/mail/';
 export { default as GoogleCalendarAdapter } from './google/calendar/';
 export { default as JiraAdapter } from './jira/';
 export { default as SlackAdapter } from './slack/';
+export { default as ActiveSyncCalendarAdapter } from './activeSync/calendar/';

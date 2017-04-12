@@ -13,7 +13,8 @@ enum AdapterTypes {
   GOOGLE_CALENDAR = 6,
   OFFICE365_CALENDAR = 7,
   JIRA = 8,
-  SLACK = 9
+  SLACK = 9,
+  ACTIVE_SYNC_CALENDAR = 10
 };
 
 

@@ -22,6 +22,13 @@
   },
   "keywords": [],
   "dependencies": {
+    "@types/node": "6.0.60",
+    "@types/node-uuid": "0.0.28",
+    "@types/request": "0.0.39",
+    "@types/request-promise": "4.1.33",
+    "asclient": "0.1.0",
+    "autodiscover-activesync": "git://github.com/CrossLead/autodiscover-activesync#ad8e26b1ab2bddf4eef9dde9df50ec5fbe78225f",
+    "event-rank": "0.0.9",
     "google-auth-library": "0.9.6",
     "googleapis": "17.1.0",
     "lodash": "3.10.1",
@@ -29,10 +36,6 @@
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
     "node-uuid": "1.4.3",
     "request-promise": "0.4.2",
-    "@types/node": "6.0.60",
-    "@types/node-uuid": "0.0.28",
-    "@types/request": "0.0.39",
-    "@types/request-promise": "4.1.33",
     "typescript": "2.2.1"
   },
   "devDependencies": {

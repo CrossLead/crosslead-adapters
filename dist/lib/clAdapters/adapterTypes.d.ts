@@ -13,5 +13,6 @@ declare enum AdapterTypes {
     OFFICE365_CALENDAR = 7,
     JIRA = 8,
     SLACK = 9,
+    ACTIVE_SYNC_CALENDAR = 10,
 }
 export default AdapterTypes;
