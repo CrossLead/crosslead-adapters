@@ -163,7 +163,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                          * all calendar ids in the users calendar
                          */
                         const calendarIds = _.chain(yield new Promise((res, rej) => {
-                            calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d.items));
+                            calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d && d.items));
                         }))
                             .filter((item) => includedCalendarIds.has(item.id))
                             .map('id')
@@ -172,7 +172,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                          * get all items from all calendars in the date
                          * range, and flatten
                          */
-                        const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => getEvents(Object.assign({}, opts, { auth, calendarId })).then(r => r.items))));
+                        const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => getEvents(Object.assign({}, opts, { auth, calendarId })).then(r => r && r.items))));
                         const data = _.map(items, (item) => {
                             const out = {};
                             _.each(fieldNameMap, (have, want) => {
