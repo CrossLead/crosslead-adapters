@@ -17,11 +17,7 @@ class GoogleError extends Error {
 exports.GoogleError = GoogleError;
 class InvalidGrantError extends GoogleError {
     constructor(messageOrError) {
-        // Need these typeguards to compile
-        if (typeof messageOrError === 'string')
-            super(messageOrError);
-        else
-            super(messageOrError);
+        super(messageOrError);
         Object.setPrototypeOf(this, InvalidGrantError.prototype);
         this.name = 'InvalidGrantError';
     }
@@ -29,10 +25,7 @@ class InvalidGrantError extends GoogleError {
 exports.InvalidGrantError = InvalidGrantError;
 class UnauthorizedClientError extends GoogleError {
     constructor(messageOrError) {
-        if (typeof messageOrError === 'string')
-            super(messageOrError);
-        else
-            super(messageOrError);
+        super(messageOrError);
         Object.setPrototypeOf(this, UnauthorizedClientError.prototype);
         this.name = 'UnauthorizedClientError';
     }

@@ -1,6 +1,5 @@
 export declare abstract class GoogleError extends Error {
-    constructor(message: string);
-    constructor(error: Error);
+    constructor(messageOrError: string | Error);
 }
 export declare class InvalidGrantError extends GoogleError {
     constructor(messageOrError: string | Error);

@@ -1,6 +1,4 @@
 export abstract class GoogleError extends Error {
-  constructor(message: string);
-  constructor(error: Error);
   constructor(messageOrError: string | Error) {
     if (typeof messageOrError === 'string') {
       super(messageOrError);
@@ -18,11 +16,7 @@ export abstract class GoogleError extends Error {
 
 export class InvalidGrantError extends GoogleError {
   constructor(messageOrError: string | Error) {
-    // Need these typeguards to compile
-    if (typeof messageOrError === 'string')
-      super(messageOrError);
-    else
-      super(messageOrError);
+    super(messageOrError);
     Object.setPrototypeOf(this, InvalidGrantError.prototype);
     this.name = 'InvalidGrantError';
   }
@@ -30,10 +24,7 @@ export class InvalidGrantError extends GoogleError {
 
 export class UnauthorizedClientError extends GoogleError {
   constructor(messageOrError: string | Error) {
-    if (typeof messageOrError === 'string')
-      super(messageOrError);
-    else
-      super(messageOrError);
+    super(messageOrError);
     Object.setPrototypeOf(this, UnauthorizedClientError.prototype);
     this.name = 'UnauthorizedClientError';
   }
