@@ -13,6 +13,7 @@ const moment = require("moment");
 const _ = require("lodash");
 const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
+const errors_1 = require("../errors");
 // google calendar api
 const calendar = googleapis.calendar('v3');
 const credentialMappings = {
@@ -23,9 +24,19 @@ const credentialMappings = {
 function handleGoogleError(res, rej, returnVal) {
     return (err, result) => {
         if (err) {
-            rej(err instanceof Error
-                ? err
-                : new Error(JSON.stringify(err)));
+            let mapped = err;
+            if (err instanceof Error) {
+                // Map to custom errors
+                if (/unauthorized_client/.test(err.message.toString()) &&
+                    !(err instanceof errors_1.UnauthorizedClientError)) {
+                    mapped = new errors_1.UnauthorizedClientError(err);
+                }
+                // TODO: other types
+            }
+            else {
+                mapped = new Error(JSON.stringify(err));
+            }
+            rej(mapped);
         }
         else {
             res(typeof returnVal !== 'undefined' ? returnVal : result);
@@ -202,7 +213,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                     catch (error) {
                         let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
                         if (/invalid_grant/.test(errorMessage.message.toString())) {
-                            errorMessage = new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`);
+                            errorMessage = new errors_1.InvalidGrantError(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`);
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,
