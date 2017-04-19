@@ -2,8 +2,10 @@ import { Certificate } from 'tls';
 import test from 'ava';
 import CLAdapters from '../lib/';
 import { GoogleCalendarAdapter, NetSuiteAdapter } from '../lib/clAdapters';
+import { InvalidGrantError } from '../lib/clAdapters/google/errors';
 
 const NS_TEST_ACCOUNT_VALUE = '123456';
+const error = new Error('Original message');
 
 test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
@@ -28,4 +30,9 @@ test('should throw if missing credentials', async t => {
     email: 'test@test.com'
   };
   await t.notThrows(adapter.init());
+});
+
+test('should have original stack when wrapping errors', t => {
+  const invalidGrantErr = new InvalidGrantError(error);
+  t.deepEqual(error.stack, invalidGrantErr.stack);
 });
