@@ -8,4 +8,7 @@ export interface UnauthorizedClient {
     err: Error;
 }
 export declare type GoogleError = InvalidGrant | UnauthorizedClient;
-export declare function createGoogleError<T extends GoogleErrorType>(kind: T, err?: Error): GoogleError;
+export declare function createGoogleError<T extends GoogleErrorType>(kind: T, err?: Error): {
+    kind: T;
+    err: Error;
+};
