@@ -1,34 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class GoogleError extends Error {
-    constructor(messageOrError) {
-        if (typeof messageOrError === 'string') {
-            super(messageOrError);
-            Error.captureStackTrace(this, this.constructor);
-        }
-        else {
-            super(messageOrError.message);
-            this.stack = messageOrError.stack;
-        }
-        // TypeScript: https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
-        Object.setPrototypeOf(this, GoogleError.prototype);
+function createGoogleError(kind, err) {
+    if (!err) {
+        err = new Error();
+        Error.captureStackTrace(err, createGoogleError);
+    }
+    // return {
+    //     kind,
+    //     err
+    // };
+    // Type value is not enforceable:
+    // Type '{ kind: T; err: Error; }' is not assignable to type 'GoogleError'.
+    // Ref: https://goo.gl/xza8z0
+    switch (kind) {
+        case 'InvalidGrant':
+        case 'UnauthorizedClient':
+            return {
+                kind,
+                err
+            };
+        default:
+            throw new Error('Invalid GoogleErrorType');
     }
 }
-exports.GoogleError = GoogleError;
-class InvalidGrantError extends GoogleError {
-    constructor(messageOrError) {
-        super(messageOrError);
-        Object.setPrototypeOf(this, InvalidGrantError.prototype);
-        this.name = 'InvalidGrantError';
-    }
-}
-exports.InvalidGrantError = InvalidGrantError;
-class UnauthorizedClientError extends GoogleError {
-    constructor(messageOrError) {
-        super(messageOrError);
-        Object.setPrototypeOf(this, UnauthorizedClientError.prototype);
-        this.name = 'UnauthorizedClientError';
-    }
-}
-exports.UnauthorizedClientError = UnauthorizedClientError;
+exports.createGoogleError = createGoogleError;
 //# sourceMappingURL=errors.js.map

@@ -1,9 +1,11 @@
-export declare abstract class GoogleError extends Error {
-    constructor(messageOrError: string | Error);
+export declare type GoogleErrorType = 'InvalidGrant' | 'UnauthorizedClient';
+export interface InvalidGrant {
+    kind: 'InvalidGrant';
+    err: Error;
 }
-export declare class InvalidGrantError extends GoogleError {
-    constructor(messageOrError: string | Error);
+export interface UnauthorizedClient {
+    kind: 'UnauthorizedClient';
+    err: Error;
 }
-export declare class UnauthorizedClientError extends GoogleError {
-    constructor(messageOrError: string | Error);
-}
+export declare type GoogleError = InvalidGrant | UnauthorizedClient;
+export declare function createGoogleError<T extends GoogleErrorType>(kind: T, err?: Error): GoogleError;

@@ -27,15 +27,16 @@ function handleGoogleError(res, rej, returnVal) {
             let mapped = err;
             if (err instanceof Error) {
                 // Map to custom errors
-                if (/unauthorized_client/.test(err.message.toString()) &&
-                    !(err instanceof errors_1.UnauthorizedClientError)) {
-                    mapped = new errors_1.UnauthorizedClientError(err);
+                if (/unauthorized_client/.test(err.message.toString())) {
+                    mapped = errors_1.createGoogleError('UnauthorizedClient', err);
                 }
                 // TODO: other types
             }
-            else {
+            else if (!err.kind) {
+                // Not a GoogleError
                 mapped = new Error(JSON.stringify(err));
             }
+            // Leave GoogleErrors
             rej(mapped);
         }
         else {
@@ -213,7 +214,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                     catch (error) {
                         let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
                         if (/invalid_grant/.test(errorMessage.message.toString())) {
-                            errorMessage = new errors_1.InvalidGrantError(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`);
+                            errorMessage = errors_1.createGoogleError('InvalidGrant', new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`));
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,

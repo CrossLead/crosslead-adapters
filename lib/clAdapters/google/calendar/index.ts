@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
-import { InvalidGrantError, UnauthorizedClientError } from '../errors';
+import { GoogleError, GoogleErrorType, createGoogleError } from '../errors';
 
 // google calendar api
 const calendar = googleapis.calendar('v3');
@@ -22,14 +22,18 @@ function handleGoogleError(res: Function, rej: Function, returnVal?: any) {
       let mapped = err;
       if (err instanceof Error) {
         // Map to custom errors
-        if (/unauthorized_client/.test(err.message.toString()) &&
-            !(err instanceof UnauthorizedClientError)) {
-          mapped = new UnauthorizedClientError(err);
+        if (/unauthorized_client/.test(err.message.toString())) {
+          mapped = createGoogleError(
+            'UnauthorizedClient',
+            err
+          );
         }
         // TODO: other types
-      } else {
+      } else if (!err.kind) {
+        // Not a GoogleError
         mapped = new Error(JSON.stringify(err));
       }
+      // Leave GoogleErrors
       rej(mapped);
     } else {
       res(typeof returnVal !== 'undefined' ?  returnVal : result);
@@ -303,10 +307,13 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           return Object.assign(individualRunStats, { data });
 
         } catch (error) {
-          let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
+          let errorMessage: GoogleError | Error = error instanceof Error ? error : new Error(JSON.stringify(error));
 
           if (/invalid_grant/.test(errorMessage.message.toString())) {
-            errorMessage = new InvalidGrantError(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`);
+            errorMessage = createGoogleError(
+              'InvalidGrant',
+              new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`)
+            );
           }
 
           return Object.assign(individualRunStats, {
