@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ava_1 = require("ava");
 const _1 = require("../lib/");
 const clAdapters_1 = require("../lib/clAdapters");
+const errors_1 = require("../lib/clAdapters/google/errors");
 const NS_TEST_ACCOUNT_VALUE = '123456';
 ava_1.default('should exist in the proper namespace', t => {
     t.truthy(_1.default.AdapterTypes);
@@ -34,4 +35,8 @@ ava_1.default('should throw if missing credentials', (t) => __awaiter(this, void
     };
     yield t.notThrows(adapter.init());
 }));
+ava_1.default('should generate error stack of callee', t => {
+    const e = errors_1.createGoogleError('InvalidGrant');
+    t.false(/createGoogleError/.test(e.err.stack || ''));
+});
 //# sourceMappingURL=crosslead-adapters_test.js.map

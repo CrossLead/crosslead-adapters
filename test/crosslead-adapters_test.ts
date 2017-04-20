@@ -2,6 +2,7 @@ import { Certificate } from 'tls';
 import test from 'ava';
 import CLAdapters from '../lib/';
 import { GoogleCalendarAdapter, NetSuiteAdapter } from '../lib/clAdapters';
+import { GoogleErrorType, createGoogleError } from '../lib/clAdapters/google/errors';
 
 const NS_TEST_ACCOUNT_VALUE = '123456';
 
@@ -28,4 +29,9 @@ test('should throw if missing credentials', async t => {
     email: 'test@test.com'
   };
   await t.notThrows(adapter.init());
+});
+
+test('should generate error stack of callee', t => {
+  const e = createGoogleError('InvalidGrant');
+  t.false(/createGoogleError/.test(e.err.stack || ''));
 });
