@@ -45,9 +45,9 @@ ava_1.default('should retrieve calendar data from active sync calendar adapter',
     //await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
     yield t.throws(adapter.init());
     adapter.credentials = {
-        username: 'test',
-        email: 'test@test.com',
-        password: 'test@test.com'
+        username: 'mark.bradley@crosslead.com',
+        email: 'mark.bradley@crosslead.com',
+        password: pw
     };
     yield t.notThrows(adapter.init());
 }));
