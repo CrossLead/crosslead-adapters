@@ -18,6 +18,5 @@ declare abstract class ActiveSyncBaseAdapter extends Adapter {
     credentials: ActiveSyncCredentials;
     sensitiveCredentialsFields: (keyof ActiveSyncCredentials)[];
     getFieldData(): Promise<void>;
-    getAutodiscoverUrl(emailAddress: string, password: string): Promise<any>;
 }
 export default ActiveSyncBaseAdapter;

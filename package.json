@@ -27,7 +27,6 @@
     "@types/request": "0.0.39",
     "@types/request-promise": "4.1.33",
     "asclient": "0.1.0",
-    "autodiscover-activesync": "git://github.com/CrossLead/autodiscover-activesync#ad8e26b1ab2bddf4eef9dde9df50ec5fbe78225f",
     "event-rank": "0.0.9",
     "google-auth-library": "0.9.6",
     "googleapis": "17.1.0",

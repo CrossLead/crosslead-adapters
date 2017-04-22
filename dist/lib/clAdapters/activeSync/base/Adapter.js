@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../base/index");
-const autodiscover = require("autodiscover-activesync");
 class ActiveSyncBaseAdapter extends index_1.Adapter {
     constructor() {
         super(...arguments);
@@ -23,16 +22,6 @@ class ActiveSyncBaseAdapter extends index_1.Adapter {
     getFieldData() {
         return __awaiter(this, void 0, void 0, function* () {
             throw new Error('Active Sync adapters currently do not support `getFieldData()`');
-        });
-    }
-    getAutodiscoverUrl(emailAddress, password) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield autodiscover({
-                emailAddress,
-                username: emailAddress,
-                password
-            });
-            return response;
         });
     }
 }

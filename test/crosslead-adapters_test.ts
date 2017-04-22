@@ -30,22 +30,23 @@ test('should throw if missing credentials', async t => {
   await t.notThrows(adapter.init());
 });
 
-test('should autodiscover active sync url', async t => {
+test('active sync should be listed as user linked type', async t => {
+  t.true(CLAdapters.AdapterLinkedAccountTypes.indexOf(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR) > -1 );
+});
+
+test('should retrieve calendar data from active sync calendar adapter', async t => {
   const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
   const pw: string = 'PASSWORD';
   t.true(adapter instanceof ActiveSyncCalendarAdapter);
 
-  // const settings: any = await adapter.getAutodiscoverUrl('mark.bradley@crosslead.com', pw );
-  // console.log('settings', settings);
-  // await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, settings.ExternalEwsUrl);
-  await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
+  //await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
 
   await t.throws(adapter.init());
   adapter.credentials = {
-    username: 'test',
-    email: 'test@test.com',
-    password: 'test@test.com'
+    username: 'mark.bradley@crosslead.com',
+    email: 'mark.bradley@crosslead.com',
+    password: pw
   };
   await t.notThrows(adapter.init());
 });

@@ -16,3 +16,4 @@ import * as _Fields from '../clAdapters/fields/';
 export const Fields = _Fields;
 export { default as AdapterStatus } from '../clAdapters/adapterStatus';
 export { default as AdapterTypes } from '../clAdapters/adapterTypes';
+export { default as AdapterLinkedAccountTypes } from '../clAdapters/adapterLinkedAccountTypes';

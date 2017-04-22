@@ -1,6 +1,5 @@
 import { Adapter } from '../../base/index';
 import { AdapterCredentials } from '../../base/Adapter';
-import * as autodiscover from 'autodiscover-activesync';
 
 /**
  * `credentials` format:
@@ -29,16 +28,6 @@ abstract class ActiveSyncBaseAdapter extends Adapter {
 
   async getFieldData() {
     throw new Error('Active Sync adapters currently do not support `getFieldData()`');
-  }
-
-  async getAutodiscoverUrl(emailAddress: string, password: string) {
-    const response: any = await autodiscover({
-      emailAddress,
-      username: emailAddress,
-      password
-    });
-
-    return response;
   }
 }
 
