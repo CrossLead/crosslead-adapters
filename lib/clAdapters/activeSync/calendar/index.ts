@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import * as asclient from 'asclient';
 import ActiveSyncBaseAdapter from '../base/Adapter';
+import autodiscover from 'autodiscover-activesync';
 
 // google calendar api
 const calendar = 'someurl';
@@ -384,32 +385,45 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
 
   async runConnectionTest() {
-    const { credentials: { email } } = this;
+
+    const { credentials }: { credentials: {[k: string]: string} } = this;
+
+    if (!credentials) {
+      throw new Error('credentials required for adapter.');
+    }
+
+    // map Google json keys to keys used in this library
+    for (const want in credentialMappings) {
+      const alternate = credentialMappings[want];
+      if (!credentials[want]) {
+        credentials[want] = credentials[alternate];
+      }
+    }
+
+    // validate required credential properties
+    Object.keys(credentialMappings)
+      .forEach(prop => {
+        if (!credentials[prop]) {
+          throw new Error(`Property ${prop} required in adapter credentials!`);
+        }
+      });
 
     try {
-      const data = await this.getBatchData(
-        [ { email, emailAfterMapping: email } ],
-        moment().add(-1, 'day').toDate(),
-        moment().toDate()
+      const connectUrl: string = await autodiscover({
+        emailAddress : credentials.email,
+        username: credentials.username,
+        password: credentials.password
+      });
+
+      credentials.connectUrl = connectUrl;
+
+      console.log(
+        `Successfully initialized active sync calendar adapter for email: ${credentials.email}`
       );
 
-      /*
-      const firstResult = Array.isArray(data.results) && data.results[0];
-
-      if (firstResult && firstResult.errorMessage) {
-        return {
-          success: false,
-          message: firstResult.errorMessage
-        };
-      } else {
-        return {
-          success: true
-        };
-      }
-      */
-
       return {
-        success: true
+        success : !!connectUrl,
+        connectUrl
       };
     } catch (error) {
       console.log(error.stack || error);
@@ -422,9 +436,29 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
 
   async runMessageTest() {
-    // TODO: does this need to be different?
-    console.warn('Note: runMessageTest() currently calls runConnectionTest()');
-    return this.runConnectionTest();
+    return true;
+    /*
+    const { credentials }: { credentials: {[k: string]: string} } = this;
+
+    const data = await this.getBatchData(
+      [ { email : credentials.email } ],
+      moment().add(-1, 'day').toDate(),
+      moment().toDate()
+    );
+
+    const firstResult = Array.isArray(data.results) && data.results[0];
+
+    if (firstResult && firstResult.errorMessage) {
+      return {
+        success: false,
+        message: firstResult.errorMessage
+      };
+    } else {
+      return {
+        success: true
+      };
+    }
+    */
   }
 
 

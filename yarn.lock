@@ -191,9 +191,9 @@ auto-bind@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/auto-bind/-/auto-bind-0.1.0.tgz#7a29efc8c2388d3d578e02fc2df531c81ffc1ee1"
 
-"autodiscover-activesync@git://github.com/CrossLead/autodiscover-activesync#ad8e26b1ab2bddf4eef9dde9df50ec5fbe78225f":
+"autodiscover-activesync@git://github.com/CrossLead/autodiscover-activesync#4c325d8199a901cfcbc6b27741b06984b06cb5c6":
   version "0.0.1"
-  resolved "git://github.com/CrossLead/autodiscover-activesync#ad8e26b1ab2bddf4eef9dde9df50ec5fbe78225f"
+  resolved "git://github.com/CrossLead/autodiscover-activesync#4c325d8199a901cfcbc6b27741b06984b06cb5c6"
   dependencies:
     "@types/denodeify" "1.2.30"
     "@types/request-promise" "4.1.33"
@@ -2037,20 +2037,20 @@ jwa@~1.0.0:
     buffer-equal-constant-time "^1.0.1"
     ecdsa-sig-formatter "^1.0.0"
 
-jws@^3.0.0, jws@^3.1.4:
+jws@^3.0.0, jws@~3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jws/-/jws-3.0.0.tgz#da5f267897dd4e9cf8137979db33fc54a3c05418"
+  dependencies:
+    base64url "~1.0.4"
+    jwa "~1.0.0"
+
+jws@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/jws/-/jws-3.1.4.tgz#f9e8b9338e8a847277d6444b1464f61880e050a2"
   dependencies:
     base64url "^2.0.0"
     jwa "^1.1.4"
     safe-buffer "^5.0.1"
-
-jws@~3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/jws/-/jws-3.0.0.tgz#da5f267897dd4e9cf8137979db33fc54a3c05418"
-  dependencies:
-    base64url "~1.0.4"
-    jwa "~1.0.0"
 
 kind-of@^3.0.2:
   version "3.1.0"

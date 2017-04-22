@@ -12,6 +12,7 @@ const moment = require("moment");
 const index_1 = require("../../base/index");
 const asclient = require("asclient");
 const Adapter_1 = require("../base/Adapter");
+const autodiscover_activesync_1 = require("autodiscover-activesync");
 // google calendar api
 const calendar = 'someurl';
 const credentialMappings = {
@@ -322,25 +323,35 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
     }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
-            const { credentials: { email } } = this;
-            try {
-                const data = yield this.getBatchData([{ email, emailAfterMapping: email }], moment().add(-1, 'day').toDate(), moment().toDate());
-                /*
-                const firstResult = Array.isArray(data.results) && data.results[0];
-          
-                if (firstResult && firstResult.errorMessage) {
-                  return {
-                    success: false,
-                    message: firstResult.errorMessage
-                  };
-                } else {
-                  return {
-                    success: true
-                  };
+            const { credentials } = this;
+            if (!credentials) {
+                throw new Error('credentials required for adapter.');
+            }
+            // map Google json keys to keys used in this library
+            for (const want in credentialMappings) {
+                const alternate = credentialMappings[want];
+                if (!credentials[want]) {
+                    credentials[want] = credentials[alternate];
                 }
-                */
+            }
+            // validate required credential properties
+            Object.keys(credentialMappings)
+                .forEach(prop => {
+                if (!credentials[prop]) {
+                    throw new Error(`Property ${prop} required in adapter credentials!`);
+                }
+            });
+            try {
+                const connectUrl = yield autodiscover_activesync_1.default({
+                    emailAddress: credentials.email,
+                    username: credentials.username,
+                    password: credentials.password
+                });
+                credentials.connectUrl = connectUrl;
+                console.log(`Successfully initialized active sync calendar adapter for email: ${credentials.email}`);
                 return {
-                    success: true
+                    success: !!connectUrl,
+                    connectUrl
                 };
             }
             catch (error) {
@@ -354,9 +365,29 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
     }
     runMessageTest() {
         return __awaiter(this, void 0, void 0, function* () {
-            // TODO: does this need to be different?
-            console.warn('Note: runMessageTest() currently calls runConnectionTest()');
-            return this.runConnectionTest();
+            return true;
+            /*
+            const { credentials }: { credentials: {[k: string]: string} } = this;
+        
+            const data = await this.getBatchData(
+              [ { email : credentials.email } ],
+              moment().add(-1, 'day').toDate(),
+              moment().toDate()
+            );
+        
+            const firstResult = Array.isArray(data.results) && data.results[0];
+        
+            if (firstResult && firstResult.errorMessage) {
+              return {
+                success: false,
+                message: firstResult.errorMessage
+              };
+            } else {
+              return {
+                success: true
+              };
+            }
+            */
         });
     }
     // create authenticated token for api requests for given user
