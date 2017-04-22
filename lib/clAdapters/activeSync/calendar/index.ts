@@ -11,7 +11,7 @@ const calendar = 'someurl';
 const credentialMappings: { [key: string]: string } = {
   'username' : 'username',
   'email'    : 'email',
-  'password' : 'password'
+  'password' : 'password',
 };
 
 
@@ -415,11 +415,13 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         password: credentials.password
       });
 
-      credentials.connectUrl = connectUrl;
+      this.credentials.connectUrl = connectUrl || '';
 
-      console.log(
-        `Successfully initialized active sync calendar adapter for email: ${credentials.email}`
-      );
+      if (connectUrl) {
+        console.log(
+          `Successfully connected to: ${connectUrl}`
+        );
+      }
 
       return {
         success : !!connectUrl,

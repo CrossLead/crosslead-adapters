@@ -15,13 +15,15 @@ export type ActiveSyncCredentials = {
   username: string;
   email: string;
   password: string;
+  connectUrl: string;
 };
 
 abstract class ActiveSyncBaseAdapter extends Adapter {
   credentials: ActiveSyncCredentials = {
     username: '',
     email: '',
-    password: ''
+    password: '',
+    connectUrl: ''
   };
 
   sensitiveCredentialsFields: (keyof ActiveSyncCredentials)[] = ['password'];

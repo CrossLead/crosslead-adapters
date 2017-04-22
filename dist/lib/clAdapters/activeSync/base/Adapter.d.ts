@@ -13,6 +13,7 @@ export declare type ActiveSyncCredentials = {
     username: string;
     email: string;
     password: string;
+    connectUrl: string;
 };
 declare abstract class ActiveSyncBaseAdapter extends Adapter {
     credentials: ActiveSyncCredentials;

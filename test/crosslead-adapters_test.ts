@@ -37,7 +37,7 @@ test('active sync should be listed as user linked type', async t => {
 test('should connect with given credentials', async t => {
   const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
-  const pw: string = 'PASSWORD';
+  const pw: string = 'password';
   t.true(adapter instanceof ActiveSyncCalendarAdapter);
 
   //await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
@@ -45,7 +45,8 @@ test('should connect with given credentials', async t => {
   adapter.credentials = {
     username: 'mark.bradley@crosslead.com',
     email: 'mark.bradley@crosslead.com',
-    password: pw
+    password: pw,
+    connectUrl: ''
   };
 
   const response = await adapter.runConnectionTest();

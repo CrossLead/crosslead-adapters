@@ -40,13 +40,14 @@ ava_1.default('active sync should be listed as user linked type', (t) => __await
 ava_1.default('should connect with given credentials', (t) => __awaiter(this, void 0, void 0, function* () {
     const a = new _1.default.adapters.ActiveSyncCalendarAdapter();
     const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.ACTIVE_SYNC_CALENDAR);
-    const pw = '8ChAgI0u*JxT';
+    const pw = 'password';
     t.true(adapter instanceof clAdapters_1.ActiveSyncCalendarAdapter);
     //await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
     adapter.credentials = {
         username: 'mark.bradley@crosslead.com',
         email: 'mark.bradley@crosslead.com',
-        password: pw
+        password: pw,
+        connectUrl: ''
     };
     const response = yield adapter.runConnectionTest();
     console.log(response);

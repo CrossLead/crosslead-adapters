@@ -15,7 +15,8 @@ class ActiveSyncBaseAdapter extends index_1.Adapter {
         this.credentials = {
             username: '',
             email: '',
-            password: ''
+            password: '',
+            connectUrl: ''
         };
         this.sensitiveCredentialsFields = ['password'];
     }
