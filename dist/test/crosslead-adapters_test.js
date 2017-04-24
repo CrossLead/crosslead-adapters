@@ -12,6 +12,10 @@ const ava_1 = require("ava");
 const _1 = require("../lib/");
 const clAdapters_1 = require("../lib/clAdapters");
 const NS_TEST_ACCOUNT_VALUE = '123456';
+const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
+const ACTIVE_SYNC_USERNAME = 'mark.bradley@crosslead.com';
+const ACTIVE_SYNC_PASSWORD = 'password';
+const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
 ava_1.default('should exist in the proper namespace', t => {
     t.truthy(_1.default.AdapterTypes);
     t.deepEqual(_1.default.AdapterTypes.NETSUITE, 2);
@@ -40,18 +44,29 @@ ava_1.default('active sync should be listed as user linked type', (t) => __await
 ava_1.default('should connect with given credentials', (t) => __awaiter(this, void 0, void 0, function* () {
     const a = new _1.default.adapters.ActiveSyncCalendarAdapter();
     const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.ACTIVE_SYNC_CALENDAR);
-    const pw = 'password';
     t.true(adapter instanceof clAdapters_1.ActiveSyncCalendarAdapter);
-    //await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
     adapter.credentials = {
-        username: 'mark.bradley@crosslead.com',
-        email: 'mark.bradley@crosslead.com',
-        password: pw,
+        username: ACTIVE_SYNC_USERNAME,
+        email: ACTIVE_SYNC_EMAIL,
+        password: ACTIVE_SYNC_PASSWORD,
         connectUrl: ''
     };
     const response = yield adapter.runConnectionTest();
-    console.log(response);
-    // await t.throws(adapter.init());
-    // await t.notThrows(adapter.init());
+    const expectedResponse = response.success ? ACTIVE_SYNC_VALID_URL : null;
+    t.true(response.connectUrl === expectedResponse);
+}));
+ava_1.default('should get calendar data', (t) => __awaiter(this, void 0, void 0, function* () {
+    const a = new _1.default.adapters.ActiveSyncCalendarAdapter();
+    const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.ACTIVE_SYNC_CALENDAR);
+    adapter.credentials = {
+        username: ACTIVE_SYNC_USERNAME,
+        email: ACTIVE_SYNC_EMAIL,
+        password: ACTIVE_SYNC_PASSWORD,
+        connectUrl: ACTIVE_SYNC_VALID_URL
+    };
+    const startDate = new Date('04-22-2017');
+    const endDate = new Date('04-24-2017');
+    const eventData = yield adapter.getData(startDate, endDate, {});
+    t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
 }));
 //# sourceMappingURL=crosslead-adapters_test.js.map

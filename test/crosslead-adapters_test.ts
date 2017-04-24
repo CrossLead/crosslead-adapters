@@ -2,8 +2,12 @@ import { Certificate } from 'tls';
 import test from 'ava';
 import CLAdapters from '../lib/';
 import { GoogleCalendarAdapter, NetSuiteAdapter, ActiveSyncCalendarAdapter } from '../lib/clAdapters';
-
 const NS_TEST_ACCOUNT_VALUE = '123456';
+
+const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
+const ACTIVE_SYNC_USERNAME = 'mark.bradley@crosslead.com';
+const ACTIVE_SYNC_PASSWORD = 'password';
+const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
 
 test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
@@ -37,22 +41,35 @@ test('active sync should be listed as user linked type', async t => {
 test('should connect with given credentials', async t => {
   const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
-  const pw: string = 'password';
   t.true(adapter instanceof ActiveSyncCalendarAdapter);
 
-  //await adapter.getCalendarData( 'mark.bradley@crosslead.com', pw, 'https://outlook.office365.com/Microsoft-Server-ActiveSync');
-
   adapter.credentials = {
-    username: 'mark.bradley@crosslead.com',
-    email: 'mark.bradley@crosslead.com',
-    password: pw,
+    username: ACTIVE_SYNC_USERNAME,
+    email: ACTIVE_SYNC_EMAIL,
+    password: ACTIVE_SYNC_PASSWORD,
     connectUrl: ''
   };
 
-  const response = await adapter.runConnectionTest();
+  const response: any = await adapter.runConnectionTest();
+  const expectedResponse = response.success ? ACTIVE_SYNC_VALID_URL : null;
 
-  console.log(response);
+  t.true(response.connectUrl === expectedResponse); 
+});
 
-  // await t.throws(adapter.init());
-  // await t.notThrows(adapter.init());
+test('should get calendar data', async t => {
+  const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
+
+  adapter.credentials = {
+    username: ACTIVE_SYNC_USERNAME,
+    email: ACTIVE_SYNC_EMAIL,
+    password: ACTIVE_SYNC_PASSWORD,
+    connectUrl: ACTIVE_SYNC_VALID_URL
+  };
+
+  const startDate = new Date('04-22-2017');
+  const endDate = new Date('04-24-2017');
+  const eventData = await adapter.getData(startDate, endDate, {});
+
+  t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
 });

@@ -4,36 +4,20 @@ export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
     'dateTimeCreated': string;
-    'dateTimeLastModified': string;
     'attendeeAddress': string;
     'attendeeName': string;
-    'iCalUId': string;
     'location': string;
     'status': string;
-    'isCreator': string;
-    'isOrganizer': string;
     'organizerEmail': string;
     'recurrence': string;
+    'responseRequested': string;
     'responseStatus': string;
-    'seriesMasterId': string;
     'dateTimeStart': string;
     'dateTimeEnd': string;
     'subject': string;
     'url': string;
-    'hangoutLink': string;
     'privacy': string;
 };
-export interface UserProfile {
-    email: string;
-    emailAfterMapping: string;
-}
-export declare type ActiveSyncCalendarApiEvent = {
-    [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
-};
-export interface ActiveSyncCalendarApiResult {
-    items: ActiveSyncCalendarApiEvent[];
-    nextPageToken?: string;
-}
 export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     static Configuration: typeof Configuration;
     static Service: typeof Service;
@@ -41,23 +25,18 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         'eventId': string;
         'attendees': string;
         'dateTimeCreated': string;
-        'dateTimeLastModified': string;
         'attendeeAddress': string;
         'attendeeName': string;
-        'iCalUId': string;
         'location': string;
         'status': string;
-        'isCreator': string;
-        'isOrganizer': string;
         'organizerEmail': string;
         'recurrence': string;
+        'responseRequested': string;
         'responseStatus': string;
-        'seriesMasterId': string;
         'dateTimeStart': string;
         'dateTimeEnd': string;
         'subject': string;
         'url': string;
-        'hangoutLink': string;
         'privacy': string;
     };
     _config: Configuration;
@@ -65,9 +44,15 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     constructor();
     reset(): this;
     init(): Promise<this>;
-    getCalendarData(email: string, password: string, endpoint: string): Promise<void>;
-    getBatchData(userProfiles: UserProfile[] | undefined, filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<{
-        results: never[];
+    getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
+        filterStartDate: Date;
+        filterEndDate: Date;
+        success: boolean;
+        runDate: any;
+        errorMessage: null;
+    } & {
+        errorMessage: any;
+        success: boolean;
     }>;
     runConnectionTest(): Promise<{
         success: boolean;
@@ -76,6 +61,4 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         message: any;
         success: boolean;
     }>;
-    runMessageTest(): Promise<boolean>;
-    authorize(userEmail: string): Promise<{}>;
 }
