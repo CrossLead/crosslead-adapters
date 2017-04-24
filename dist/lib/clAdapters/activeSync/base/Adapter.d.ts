@@ -6,6 +6,7 @@ import { Adapter } from '../../base/index';
  *   username: 'email@domain.com',
  *   email: 'email@domain.com', // Typically same as username
  *   password: 'PASSWORD',
+ *   connectUrl: '' // ActiveSync server endpoint
  * }
  * ```
  */

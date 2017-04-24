@@ -8,6 +8,7 @@ import { AdapterCredentials } from '../../base/Adapter';
  *   username: 'email@domain.com',
  *   email: 'email@domain.com', // Typically same as username
  *   password: 'PASSWORD',
+ *   connectUrl: '' // ActiveSync server endpoint
  * }
  * ```
  */
