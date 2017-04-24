@@ -65,7 +65,7 @@ ava_1.default('should get calendar data', (t) => __awaiter(this, void 0, void 0,
         connectUrl: ACTIVE_SYNC_VALID_URL
     };
     const startDate = new Date('04-22-2017');
-    const endDate = new Date('04-24-2017');
+    const endDate = new Date('04-26-2017');
     const eventData = yield adapter.getData(startDate, endDate, {});
     t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
 }));

@@ -19,6 +19,7 @@ const credentialMappings = {
     'email': 'email',
     'password': 'password',
 };
+const ACCEPTED_STATUS = '3';
 exports.fieldNameMap = {
     // Desired...                          // Given...
     // ? :                                 'TimeZone', // Do we need this?  I don't think so...
@@ -134,6 +135,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 }));
                 const mappedEvents = _.map(events || [], (originalEvent) => {
                     const mappedEvent = {};
+                    // console.log('event', JSON.stringify(originalEvent, null, 2));
                     // change to desired names
                     _.each(exports.fieldNameMap, (have, want) => {
                         const val = _.get(originalEvent, have);
@@ -150,10 +152,14 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                         const attendeePeople = attendees[0].Attendee;
                         mappedEvent['attendees'] = attendeePeople
                             .map((attendee) => {
+                            let acceptedStatus = _.get(attendee, 'AttendeeStatus[0]') || '0';
+                            if (acceptedStatus === ACCEPTED_STATUS) {
+                                acceptedStatus = 'Accepted';
+                            }
                             return {
                                 address: _.get(attendee, 'Email[0]'),
                                 name: _.get(attendee, 'Name[0]'),
-                                response: _.get(attendee, 'AttendeeStatus[0]')
+                                response: acceptedStatus
                             };
                         });
                     }
