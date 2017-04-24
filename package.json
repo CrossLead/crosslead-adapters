@@ -45,6 +45,7 @@
     "test": "npm run lint && npm run tsc && ava",
     "lint": "tslint \"./lib/**/*.js\" \"./lib/**/*.ts\"",
     "build-client": "tsc -p tsconfig.client.json",
+    "build": "npm run tsc && npm run build-client",
     "tsc": "rm -rf dist && tsc",
     "watch": "rm -rf dist && npm run build-client && tsc -w"
   },

@@ -2,6 +2,8 @@ import { Certificate } from 'tls';
 import test from 'ava';
 import CLAdapters from '../lib/';
 import { GoogleCalendarAdapter, NetSuiteAdapter, ActiveSyncCalendarAdapter } from '../lib/clAdapters';
+import { GoogleErrorType, createGoogleError } from '../lib/clAdapters/google/errors';
+
 const NS_TEST_ACCOUNT_VALUE = '123456';
 
 const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
@@ -72,4 +74,8 @@ test('should get calendar data', async t => {
   const eventData = await adapter.getData(startDate, endDate, {});
 
   t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
+});
+test('should generate error stack of callee', t => {
+  const e = createGoogleError('InvalidGrant');
+  t.false(/createGoogleError/.test(e.err.stack || ''));
 });

@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ava_1 = require("ava");
 const _1 = require("../lib/");
 const clAdapters_1 = require("../lib/clAdapters");
+const errors_1 = require("../lib/clAdapters/google/errors");
 const NS_TEST_ACCOUNT_VALUE = '123456';
 const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_USERNAME = 'mark.bradley@crosslead.com';
@@ -69,4 +70,9 @@ ava_1.default('should get calendar data', (t) => __awaiter(this, void 0, void 0,
     const eventData = yield adapter.getData(startDate, endDate, {});
     t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
 }));
+
+ava_1.default('should generate error stack of callee', t => {
+    const e = errors_1.createGoogleError('InvalidGrant');
+    t.false(/createGoogleError/.test(e.err.stack || ''));
+});
 //# sourceMappingURL=crosslead-adapters_test.js.map

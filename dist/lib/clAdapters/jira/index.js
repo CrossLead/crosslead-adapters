@@ -120,15 +120,33 @@ class JiraAdapter extends Adapter_1.default {
             jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND resolution = Unresolved`
         });
     }
+    getUnresolvedEpicsForProjects(projectIds, epicTypeId) {
+        return this.getAllIssues({
+            jql: `project IN (${projectIds.join(',')}) AND issuetype = ${epicTypeId} AND resolution = Unresolved`
+        });
+    }
     getEpicsForProject(projectId, epicTypeId, formattedStartDate, formattedEndDate) {
         return this.getAllIssues({
             jql: `project = ${projectId} AND issuetype = ${epicTypeId} AND
       updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
         });
     }
+    getEpicsForProjects(projectIds, epicTypeId, formattedStartDate, formattedEndDate) {
+        return this.getAllIssues({
+            jql: `project IN (${projectIds.join(',')}) AND issuetype = ${epicTypeId} AND
+      updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+        });
+    }
     getIssuesForEpic(epicKey, issueTypes, formattedStartDate, formattedEndDate) {
         return this.getAllIssues({
             jql: `"Epic Link" = ${epicKey} AND
+        issuetype IN (${issueTypes.join(',')}) AND
+        updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+        });
+    }
+    getIssuesForEpics(epicKeys, issueTypes, formattedStartDate, formattedEndDate) {
+        return this.getAllIssues({
+            jql: `"Epic Link" IN (${epicKeys.join(',')}) AND
         issuetype IN (${issueTypes.join(',')}) AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
         });
