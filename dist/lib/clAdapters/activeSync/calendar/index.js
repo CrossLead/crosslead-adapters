@@ -185,6 +185,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                         mappedRecurrence.firstDayOfWeek = _.get(recurrence, 'FirstDayOfWeek[0]');
                         mappedEvent['recurrence'] = mappedRecurrence;
                     }
+                    // console.log('mapped event', JSON.stringify(mappedEvent, null, 2));
                     return mappedEvent;
                 });
                 const results = [{

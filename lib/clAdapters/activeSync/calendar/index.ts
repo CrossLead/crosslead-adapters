@@ -194,7 +194,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
           mappedEvent['attendees'] = attendeePeople
             .map((attendee: any) => {
-              let  acceptedStatus: string = _.get(attendee, 'AttendeeStatus[0]') || '0';
+              let acceptedStatus: string = _.get(attendee, 'AttendeeStatus[0]') || '0';
 
               if (acceptedStatus === ACCEPTED_STATUS) {
                 acceptedStatus = 'Accepted';
@@ -234,6 +234,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           mappedEvent['recurrence'] = mappedRecurrence;
         }
 
+        // console.log('mapped event', JSON.stringify(mappedEvent, null, 2));
         return mappedEvent;
       });
 
@@ -280,7 +281,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       });
 
     try {
-      const connectUrl: string = await autodiscover({
+      const connectUrl: string | null = await autodiscover({
         emailAddress : credentials.email,
         username: credentials.username,
         password: credentials.password

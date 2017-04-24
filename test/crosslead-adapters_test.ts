@@ -4,10 +4,10 @@ import CLAdapters from '../lib/';
 import { GoogleCalendarAdapter, NetSuiteAdapter, ActiveSyncCalendarAdapter } from '../lib/clAdapters';
 const NS_TEST_ACCOUNT_VALUE = '123456';
 
-const ACTIVE_SYNC_EMAIL: string = 'mark.bradley@crosslead.com';
-const ACTIVE_SYNC_USERNAME: string = 'mark.bradley@crosslead.com';
-const ACTIVE_SYNC_PASSWORD: string = 'password';
-const ACTIVE_SYNC_VALID_URL: string = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
+const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
+const ACTIVE_SYNC_USERNAME = 'mark.bradley@crosslead.com';
+const ACTIVE_SYNC_PASSWORD = 'password';
+const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
 
 test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
@@ -68,7 +68,7 @@ test('should get calendar data', async t => {
   };
 
   const startDate = new Date('04-22-2017');
-  const endDate = new Date('04-26-2017');
+  const endDate = new Date('04-24-2017');
   const eventData = await adapter.getData(startDate, endDate, {});
 
   t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);

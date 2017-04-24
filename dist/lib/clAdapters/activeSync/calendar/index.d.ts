@@ -56,7 +56,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     }>;
     runConnectionTest(): Promise<{
         success: boolean;
-        connectUrl: string;
+        connectUrl: string | null;
     } | {
         message: any;
         success: boolean;
