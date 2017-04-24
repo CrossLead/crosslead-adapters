@@ -6,7 +6,8 @@ import {
   GoogleAdapter,
   GoogleCalendarAdapter,
   JiraAdapter,
-  SlackAdapter
+  SlackAdapter,
+  ActiveSyncCalendarAdapter
 } from './';
 
 import Types from './adapterTypes';
@@ -33,6 +34,7 @@ export default class AdapterFactory {
   static createAdapter(type: Types.GOOGLE_CALENDAR): GoogleCalendarAdapter;
   static createAdapter(type: Types.JIRA): JiraAdapter;
   static createAdapter(type: Types.SLACK): SlackAdapter;
+  static createAdapter(type: Types.ACTIVE_SYNC_CALENDAR): ActiveSyncCalendarAdapter;
   static createAdapter(type: Types) {
     switch (type) {
       case Types.CUSTOM:
@@ -53,6 +55,8 @@ export default class AdapterFactory {
         return new JiraAdapter();
       case Types.SLACK:
         return new SlackAdapter();
+      case Types.ACTIVE_SYNC_CALENDAR:
+        return new ActiveSyncCalendarAdapter();
       default:
         throw new Error(`Unknown type ${type}`);
     }

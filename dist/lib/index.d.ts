@@ -16,12 +16,14 @@ export declare const Fields: typeof _Fields;
 export declare const AdapterFactory: typeof _AdapterFactory;
 export declare const AdapterStatus: typeof _AdapterStatus;
 export declare const AdapterTypes: typeof _AdapterTypes;
+export declare const AdapterLinkedAccountTypes: _AdapterTypes[];
 export declare const adapters: typeof _adapters;
 export declare const ClAdaptersClient: typeof _ClAdaptersClient;
 declare var _default: {
     Fields: typeof _Fields;
     AdapterFactory: typeof _AdapterFactory;
     AdapterTypes: typeof _AdapterTypes;
+    AdapterLinkedAccountTypes: _AdapterTypes[];
     AdapterStatus: typeof _AdapterStatus;
     adapters: typeof _adapters;
 };

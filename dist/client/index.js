@@ -19,4 +19,6 @@ var adapterStatus_1 = require("../clAdapters/adapterStatus");
 exports.AdapterStatus = adapterStatus_1.default;
 var adapterTypes_1 = require("../clAdapters/adapterTypes");
 exports.AdapterTypes = adapterTypes_1.default;
+var adapterLinkedAccountTypes_1 = require("../clAdapters/adapterLinkedAccountTypes");
+exports.AdapterLinkedAccountTypes = adapterLinkedAccountTypes_1.default;
 //# sourceMappingURL=index.js.map

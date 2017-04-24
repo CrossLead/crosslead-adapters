@@ -18,4 +18,6 @@ var _6 = require("./jira/");
 exports.JiraAdapter = _6.default;
 var _7 = require("./slack/");
 exports.SlackAdapter = _7.default;
+var _8 = require("./activeSync/calendar/");
+exports.ActiveSyncCalendarAdapter = _8.default;
 //# sourceMappingURL=index.js.map

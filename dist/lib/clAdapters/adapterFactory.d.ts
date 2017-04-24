@@ -1,4 +1,4 @@
-import { NetSuiteAdapter, CLMockAdapter, Office365MailAdapter, Office365CalendarAdapter, GoogleAdapter, GoogleCalendarAdapter, JiraAdapter, SlackAdapter } from './';
+import { NetSuiteAdapter, CLMockAdapter, Office365MailAdapter, Office365CalendarAdapter, GoogleAdapter, GoogleCalendarAdapter, JiraAdapter, SlackAdapter, ActiveSyncCalendarAdapter } from './';
 import Types from './adapterTypes';
 /**
  * Adapter factory
@@ -21,4 +21,5 @@ export default class AdapterFactory {
     static createAdapter(type: Types.GOOGLE_CALENDAR): GoogleCalendarAdapter;
     static createAdapter(type: Types.JIRA): JiraAdapter;
     static createAdapter(type: Types.SLACK): SlackAdapter;
+    static createAdapter(type: Types.ACTIVE_SYNC_CALENDAR): ActiveSyncCalendarAdapter;
 }

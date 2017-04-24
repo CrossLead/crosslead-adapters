@@ -16,6 +16,7 @@ var AdapterTypes;
     AdapterTypes[AdapterTypes["OFFICE365_CALENDAR"] = 7] = "OFFICE365_CALENDAR";
     AdapterTypes[AdapterTypes["JIRA"] = 8] = "JIRA";
     AdapterTypes[AdapterTypes["SLACK"] = 9] = "SLACK";
+    AdapterTypes[AdapterTypes["ACTIVE_SYNC_CALENDAR"] = 10] = "ACTIVE_SYNC_CALENDAR";
 })(AdapterTypes || (AdapterTypes = {}));
 ;
 exports.default = AdapterTypes;
