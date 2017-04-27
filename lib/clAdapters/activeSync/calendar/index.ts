@@ -104,7 +104,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     return this;
   }
 
-  expandDaysOfWeek = function(daysOfWeek: number) {
+  private expandDaysOfWeek(daysOfWeek: number) {
     let arr: string[] = [];
 
     if ((daysOfWeek & 1) === 1) {
@@ -143,10 +143,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     // }
 
     return arr;
-  };
+  }
 
   // https://msdn.microsoft.com/en-us/library/dn292994(v=exchg.80).aspx
-  getRecurrence = function(startTime: any, filterEndDate: any, recurrenceObj: any) {
+  private getRecurrence(startTime: any, filterEndDate: any, recurrenceObj: any) {
     // If the recurrence ends before now, then check it
     if (recurrenceObj.Until) {
       if (filterEndDate.isAfter(moment(recurrenceObj.Until))) {
@@ -234,9 +234,9 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     }
 
     return recurrence;
-  };
+  }
 
-  isDeleted = function(exceptionsObj: any, event: any) {
+  private isDeleted(exceptionsObj: any, event: any) {
     if (!exceptionsObj) {
       return false;
     }
@@ -253,10 +253,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     }
 
     return false;
-  };
+  }
 
   // Create and add cloned instances of the event if recurrence, or just add the event
-  addToEvents = function(events: any[], folder: any, filterStartDate: any, filterEndDate: any) {
+  private addToEvents (events: any[], folder: any, filterStartDate: any, filterEndDate: any) {
     const adapter = this;
     const event: any = folder.ApplicationData[0];
 
@@ -299,7 +299,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     } else if (!adapter.isDeleted(exceptions, event)) {
       events.push(event);
     }
-  };
+  }
 
   async getData(filterStartDate: Date, filterEndDate: Date, properties: any) {
     if (filterStartDate.getTime() > filterEndDate.getTime()) {
@@ -444,7 +444,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           mappedEvent['recurrence'] = mappedRecurrence;
         }
 
-        console.log('mapped event', JSON.stringify(mappedEvent, null, 2));
+        // console.log('mapped event', JSON.stringify(mappedEvent, null, 2));
         return mappedEvent;
       });
 
