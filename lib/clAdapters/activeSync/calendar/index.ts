@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import 'moment-recur';
 import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import * as asclient from 'asclient';
@@ -11,6 +12,7 @@ const credentialMappings: { [key: string]: string } = {
   'password' : 'password',
 };
 
+const ORGANIZER_STATUS: string = '1';
 const ACCEPTED_STATUS: string = '3';
 
 export const fieldNameMap = {
@@ -102,6 +104,203 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     return this;
   }
 
+  private expandDaysOfWeek(daysOfWeek: number) {
+    let arr: string[] = [];
+
+    if ((daysOfWeek & 1) === 1) {
+      arr.push('Sunday');
+    }
+    if ((daysOfWeek & 2) === 2) {
+      arr.push('Monday');
+    }
+    if ((daysOfWeek & 4) === 4) {
+      arr.push('Tuesday');
+    }
+    if ((daysOfWeek & 8) === 8) {
+      arr.push('Wednesday');
+    }
+    if ((daysOfWeek & 16) === 16) {
+      arr.push('Thursday');
+    }
+    if ((daysOfWeek & 32) === 32) {
+      arr.push('Friday');
+    }
+
+    if ((daysOfWeek & 62) === 62) { // weekdays
+      arr = arr.concat(...['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
+    }
+
+    if ((daysOfWeek & 64) === 64) {
+      arr.push('Saturday');
+    }
+
+    if ((daysOfWeek & 65) === 65) { // Weekends
+      arr = arr.concat(...['Saturday', 'Sunday']);
+    }
+
+    // if ((daysOfWeek & 127) === 127) { // Last day of Month
+      // arr = arr.concat(...['Saturday', 'Sunday']);
+    // }
+
+    return arr;
+  }
+
+  // https://msdn.microsoft.com/en-us/library/dn292994(v=exchg.80).aspx
+  private getRecurrence(startTime: any, filterEndDate: any, recurrenceObj: any) {
+    // If the recurrence ends before now, then check it
+    if (recurrenceObj.Until) {
+      if (filterEndDate.isAfter(moment(recurrenceObj.Until))) {
+        return null;
+      }
+    }
+
+    let recurrence = startTime.recur();
+    const intervalStr = _.get(recurrenceObj, 'Interval[0]');
+    const type: number = parseInt(recurrenceObj.Type[0]);
+
+    switch (type) {
+      case 0: { // Daily
+        const daysOfWeek = _.get(recurrenceObj, 'DayOfWeek[0]');
+
+        if (daysOfWeek) {
+          const daysOfWeekInt: number = parseInt(daysOfWeek);
+          const daysOfWeekArr: string[] = this.expandDaysOfWeek(daysOfWeekInt);
+          recurrence = recurrence.every(daysOfWeekArr).daysOfWeek();
+        } else {
+          const interval: number = intervalStr ? parseInt(intervalStr) : 1;
+          recurrence = recurrence.every(interval).days();
+        }
+        break;
+      }
+      case 1: { // Weekly
+        const daysOfWeek: number = parseInt(_.get(recurrenceObj, 'DayOfWeek[0]'));
+
+        const daysOfWeekArr: string[] = this.expandDaysOfWeek(daysOfWeek);
+        recurrence = recurrence.every(daysOfWeekArr).daysOfWeek();
+
+        // Interval is optional, but how do I use it?
+
+        break;
+      }
+
+      case 2: {
+        // Monthly
+        const dayOfMonth: number = parseInt(_.get(recurrenceObj, 'DayOfMonth[0]'));
+
+        recurrence = recurrence.every(dayOfMonth).dayOfMonth();
+        // Interval is optional, but how do I use it?
+
+        break;
+      }
+      case 3: { // Monthly on nth day
+        const weekOfMonth: number = parseInt(_.get(recurrenceObj, 'WeekOfMonth[0]'));
+        const daysOfWeek: number = parseInt(_.get(recurrenceObj, 'DayOfWeek[0]'));
+
+        if (daysOfWeek === 127) { // Indicates day of month
+          recurrence = recurrence.every(weekOfMonth).dayOfMonth();
+        } else if (daysOfWeek === 62 || daysOfWeek === 65 ) { // Indicates nth weekday or weekend of month
+          const daysOfWeekArr: string[] = this.expandDaysOfWeek(daysOfWeek);
+          recurrence = recurrence.every(daysOfWeekArr).daysOfWeek()
+                        .every([weekOfMonth]).weeksOfMonthByDay();
+
+        }
+        // Interval is optional, but how do I use it?
+
+        break;
+      }
+      case 5: { // Yearly
+        const dayOfMonth: number = parseInt(_.get(recurrenceObj, 'DayOfMonth[0]'));
+        const monthOfYear: number = parseInt(_.get(recurrenceObj, 'MonthOfYear[0]'));
+
+        recurrence = recurrence.every(dayOfMonth).daysOfMonth()
+                               .every(monthOfYear).monthsOfYear();
+
+        // Interval is optional, but how do I use it?
+
+        break;
+      }
+
+      case 6: { // Yearly on nth day
+        const weekOfMonth: number = parseInt(_.get(recurrenceObj, 'WeekOfMonth[0]'));
+        const monthOfYear: number = parseInt(_.get(recurrenceObj, 'MonthOfYear[0]'));
+        // const daysOfWeek: number = parseInt(_.get(recurrenceObj, 'DayOfWeek[0]') || '0' );
+
+        recurrence = recurrence.every(weekOfMonth).weeksOfMonth()
+                               .every(monthOfYear).monthsOfYear();
+        // Interval is optional, but how do I use it?
+
+        break;
+      }
+    }
+
+    return recurrence;
+  }
+
+  private isDeleted(exceptionsObj: any, event: any) {
+    if (!exceptionsObj) {
+      return false;
+    }
+
+    const exceptions: any[] = _.get(exceptionsObj, 'Exception') || [];
+
+    for (const exception of exceptions) {
+      const deleted = _.get(exception, 'Deleted[0]');
+      const exStartTime = _.get(exception, 'ExceptionStartTime[0]');
+
+      if (deleted && exStartTime === event.StartTime[0]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  // Create and add cloned instances of the event if recurrence, or just add the event
+  private addToEvents (events: any[], folder: any, filterStartDate: any, filterEndDate: any) {
+    const adapter = this;
+    const event: any = folder.ApplicationData[0];
+
+    const startTime: any = moment(event.StartTime[0]);
+    const endTime: any = moment(event.EndTime[0]);
+    const exceptions: any = _.get(event, 'Exceptions[0]');
+    const recurrenceObj: any = _.get(event, 'Recurrence[0]');
+
+    if (recurrenceObj) {
+      const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
+
+      if (recurrence) {
+        const UID: string = event.UID[0];
+
+        for (const date: any = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
+
+          if (recurrence.matches(date)) {
+            startTime.year(date.year());
+            startTime.month(date.month());
+            startTime.date(date.date());
+            endTime.year(date.year());
+            endTime.month(date.month());
+            endTime.date(date.date());
+
+            const instanceEvent: any = _.clone(event);
+
+            // Set the iCalUId to the event id
+            instanceEvent.iCalUId = UID;
+            instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
+
+            instanceEvent.StartTime = [ startTime.utc().format().replace(/[-:]/g, '') ];
+            instanceEvent.EndTime = [ endTime.utc().format().replace(/[-:]/g, '') ];
+
+            if (!adapter.isDeleted(exceptions, instanceEvent)) {
+              events.push(instanceEvent);
+            }
+          }
+        }
+      }
+    } else if (!adapter.isDeleted(exceptions, event)) {
+      events.push(event);
+    }
+  }
+
   async getData(filterStartDate: Date, filterEndDate: Date, properties: any) {
     if (filterStartDate.getTime() > filterEndDate.getTime()) {
       throw new Error(`filterStartDate must be less than or equal to filterEndDate`);
@@ -157,15 +356,24 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       const startDate = moment(filterStartDate);
       const endDate = moment(filterEndDate);
 
-      const events = _.compact(_.map(folders, (folder: any) => {
-        const event = folder.ApplicationData[0];
-        const startTime = moment(event.StartTime[0]);
-        const endTime = moment(event.EndTime[0]);
+      const adapter = this;
+      // console.log('folders', JSON.stringify(folders, null, 2));
+
+      const rawEvents: any[] = [];
+
+      _.each(folders, (folder: any) => {
+        adapter.addToEvents(rawEvents, folder, startDate, endDate);
+      });
+
+      const events: any[] = _.compact(_.map(rawEvents, (event: any) => {
+        const startTime: any = moment(event.StartTime[0]);
+        const endTime: any = moment(event.EndTime[0]);
 
         if (startTime.isBefore(startDate) || endTime.isAfter(endDate) ) {
           return null;
         }
 
+        // console.log('event', JSON.stringify(event, null, 2));
         return event;
       }));
 
@@ -183,8 +391,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           }
         });
 
-        if (mappedEvent.responseStatus && mappedEvent.responseStatus.Response) {
-          mappedEvent.responseStatus = mappedEvent.responseStatus.Response;
+        const responseStatus = _.get(mappedEvent, 'responseStatus');
+
+        if (mappedEvent.responseStatus === ACCEPTED_STATUS || mappedEvent.responseStatus === ORGANIZER_STATUS) {
+          mappedEvent.responseStatus = 'Accepted';
         }
 
         const attendees = originalEvent[fieldNameMap['attendees']];
@@ -210,8 +420,8 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           mappedEvent['attendees'] = [];
         }
 
-        // Make it the same as the eventId for now, since it does not look like this value available
-        mappedEvent.iCalUId = mappedEvent.eventId;
+        // Make it the same as the eventId for now, since it does not look like this value is available
+        mappedEvent.iCalUId = originalEvent.iCalUId || mappedEvent.eventId;
 
         const recurrence = mappedEvent['recurrence'];
 
