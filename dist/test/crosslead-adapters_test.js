@@ -65,12 +65,11 @@ ava_1.default('should get calendar data', (t) => __awaiter(this, void 0, void 0,
         password: ACTIVE_SYNC_PASSWORD,
         connectUrl: ACTIVE_SYNC_VALID_URL
     };
-    const startDate = new Date('04-22-2017');
-    const endDate = new Date('04-24-2017');
+    const startDate = new Date('04-26-2017');
+    const endDate = new Date('04-27-2017');
     const eventData = yield adapter.getData(startDate, endDate, {});
     t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
 }));
-
 ava_1.default('should generate error stack of callee', t => {
     const e = errors_1.createGoogleError('InvalidGrant');
     t.false(/createGoogleError/.test(e.err.stack || ''));

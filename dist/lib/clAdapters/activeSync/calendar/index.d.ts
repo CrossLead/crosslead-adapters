@@ -1,3 +1,4 @@
+import 'moment-recur';
 import { Configuration, Service } from '../../base/index';
 import ActiveSyncBaseAdapter from '../base/Adapter';
 export declare const fieldNameMap: {
@@ -44,6 +45,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     constructor();
     reset(): this;
     init(): Promise<this>;
+    expandDaysOfWeek: (daysOfWeek: number) => string[];
+    getRecurrence: (startTime: any, filterEndDate: any, recurrenceObj: any) => any;
+    isDeleted: (exceptionsObj: any, event: any) => boolean;
+    addToEvents: (events: any[], folder: any, filterStartDate: any, filterEndDate: any) => void;
     getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
         filterStartDate: Date;
         filterEndDate: Date;
