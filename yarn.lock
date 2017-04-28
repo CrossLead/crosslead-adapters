@@ -191,9 +191,9 @@ auto-bind@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/auto-bind/-/auto-bind-0.1.0.tgz#7a29efc8c2388d3d578e02fc2df531c81ffc1ee1"
 
-"autodiscover-activesync@git://github.com/CrossLead/autodiscover-activesync#4c325d8199a901cfcbc6b27741b06984b06cb5c6":
+autodiscover-activesync@0.0.1:
   version "0.0.1"
-  resolved "git://github.com/CrossLead/autodiscover-activesync#4c325d8199a901cfcbc6b27741b06984b06cb5c6"
+  resolved "https://registry.yarnpkg.com/autodiscover-activesync/-/autodiscover-activesync-0.0.1.tgz#4aff2fb86cb1aea9534f8ed01788577114c5f1c2"
   dependencies:
     "@types/denodeify" "1.2.30"
     "@types/request-promise" "4.1.33"
