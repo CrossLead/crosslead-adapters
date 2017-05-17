@@ -244,8 +244,8 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
            */
           const includedCalendarIds = new Set([
             'primary',
-            userProfile.email,
-            userProfile.emailAfterMapping
+            userProfile.email.toLowerCase(),
+            userProfile.emailAfterMapping.toLowerCase()
           ]);
 
           /**
@@ -257,7 +257,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
               (err: any, d: any) => handleGoogleError(res, rej)(err, d && d.items)
             );
           }))
-          .filter((item: any) => includedCalendarIds.has(item.id))
+          .filter((item: any) => includedCalendarIds.has(item.id.toLowerCase()))
           .map('id')
           .value();
 

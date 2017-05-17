@@ -168,8 +168,8 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                          */
                         const includedCalendarIds = new Set([
                             'primary',
-                            userProfile.email,
-                            userProfile.emailAfterMapping
+                            userProfile.email.toLowerCase(),
+                            userProfile.emailAfterMapping.toLowerCase()
                         ]);
                         /**
                          * all calendar ids in the users calendar
@@ -177,7 +177,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                         const calendarIds = _.chain(yield new Promise((res, rej) => {
                             calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d && d.items));
                         }))
-                            .filter((item) => includedCalendarIds.has(item.id))
+                            .filter((item) => includedCalendarIds.has(item.id.toLowerCase()))
                             .map('id')
                             .value();
                         /**
