@@ -219,30 +219,31 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         }
         return false;
     }
-    addExceptionEvent(event, exceptionsObj, filterStartDate, filterEndDate) {
+    getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate) {
         const exceptions = _.get(exceptionsObj, 'Exception') || [];
+        const exceptionEvents = [];
+        const adapter = this;
         for (const exception of exceptions) {
-            const deleted = _.get(exception, 'Deleted[0]');
-            if (!deleted) {
-                const startTimeStr = _.get(exception, 'StartTime[0]') ||
-                    _.get(exception, 'DtStamp[0]') ||
-                    _.get(exception, 'ExceptionStartTime[0]');
-                const endTimeStr = _.get(exception, 'EndTime[0]');
-                if (startTimeStr && endTimeStr) {
-                    const startTime = moment(startTimeStr);
-                    const endTime = moment(endTimeStr);
-                    if (startTime.isSameOrAfter(filterStartDate) && endTime.isSameOrBefore(filterEndDate)) {
-                        // Set the iCalUId to the event id
-                        event.iCalUId = event.UID[0];
-                        event.UID = [event.iCalUId + `-${startTime.year()}${startTime.month()}${startTime.date()}`];
-                        event.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
-                        event.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
-                        return true;
+            const startTimeStr = _.get(exception, 'StartTime[0]') ||
+                _.get(exception, 'DtStamp[0]');
+            const endTimeStr = _.get(exception, 'EndTime[0]');
+            if (startTimeStr && endTimeStr) {
+                const startTime = moment(startTimeStr);
+                const endTime = moment(endTimeStr);
+                if (startTime.isSameOrAfter(filterStartDate) && endTime.isSameOrBefore(filterEndDate)) {
+                    const instanceEvent = _.clone(event);
+                    // Set the iCalUId to the event id
+                    instanceEvent.iCalUId = event.UID[0];
+                    instanceEvent.UID = [instanceEvent.iCalUId + `-${startTime.year()}${startTime.month()}${startTime.date()}`];
+                    instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
+                    instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
+                    if (!adapter.isDeleted(exceptionsObj, instanceEvent)) {
+                        exceptionEvents.push(instanceEvent);
                     }
                 }
             }
         }
-        return false;
+        return exceptionEvents;
     }
     // Create and add cloned instances of the event if recurrence, or just add the event
     addToEvents(events, folder, filterStartDate, filterEndDate) {
@@ -251,9 +252,9 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         const startTime = moment(event.StartTime[0]);
         const endTime = moment(event.EndTime[0]);
         const exceptions = _.get(event, 'Exceptions[0]');
-        if (adapter.addExceptionEvent(event, exceptions, filterStartDate, filterEndDate) &&
-            !adapter.isDeleted(exceptions, event)) {
-            events.push(event);
+        const exceptionEvents = adapter.getExceptionEvents(event, exceptions, filterStartDate, filterEndDate);
+        if (exceptionEvents.length) {
+            events.push(...exceptionEvents);
         }
         else {
             const recurrenceObj = _.get(event, 'Recurrence[0]');
@@ -347,7 +348,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 }));
                 const mappedEvents = _.map(events || [], (originalEvent) => {
                     const mappedEvent = {};
-                    // console.log(originalEvent.Subject[0]);
+                    // console.log(originalEvent.StartTime[0] + ':' + originalEvent.Subject[0]);
                     // change to desired names
                     _.each(exports.fieldNameMap, (have, want) => {
                         const val = _.get(originalEvent, have);

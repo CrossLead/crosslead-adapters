@@ -60,7 +60,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     private expandDaysOfWeek(daysOfWeek);
     private getRecurrence(startTime, filterEndDate, recurrenceObj);
     private isDeleted(exceptionsObj, event);
-    private addExceptionEvent(event, exceptionsObj, filterStartDate, filterEndDate);
+    private getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate);
     private addToEvents(events, folder, filterStartDate, filterEndDate);
     getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
         filterStartDate: Date;
