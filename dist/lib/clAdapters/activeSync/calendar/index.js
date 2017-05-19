@@ -22,6 +22,18 @@ const credentialMappings = {
 };
 const ORGANIZER_STATUS = '1';
 const ACCEPTED_STATUS = '3';
+/**
+ * ActiveSync fields
+ *
+ * MeetingStatus
+ *
+ * 0 The event is an appointment, which has no attendees.
+ * 1 or 9 The event is a meeting and the user is the meeting organizer.
+ * 3 or 11 This event is a meeting, and the user is not the meeting organizer; the meeting was received from someone else.
+ * 5 or 13 The meeting has been canceled and the user was the meeting organizer.
+ * 7 or 15 The meeting has been canceled. The user was not the meeting organizer; the meeting was received from someone else.
+ *
+ */
 exports.fieldNameMap = {
     // Desired...                          // Given...
     // ? :                                 'TimeZone', // Do we need this?  I don't think so...
@@ -121,7 +133,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
     getRecurrence(startTime, filterEndDate, recurrenceObj) {
         // If the recurrence ends before now, then check it
         if (recurrenceObj.Until) {
-            if (filterEndDate.isAfter(moment(recurrenceObj.Until))) {
+            if (filterEndDate.isAfter(moment(recurrenceObj.Until[0]))) {
                 return null;
             }
         }
@@ -143,10 +155,14 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 break;
             }
             case 1: {
-                const daysOfWeek = parseInt(_.get(recurrenceObj, 'DayOfWeek[0]'));
-                const daysOfWeekArr = this.expandDaysOfWeek(daysOfWeek);
-                recurrence = recurrence.every(daysOfWeekArr).daysOfWeek();
-                // Interval is optional, but how do I use it?
+                if (intervalStr && parseInt(intervalStr) > 1) {
+                    recurrence = recurrence.every(parseInt(intervalStr)).weeks();
+                }
+                else {
+                    const daysOfWeek = parseInt(_.get(recurrenceObj, 'DayOfWeek[0]'));
+                    const daysOfWeekArr = this.expandDaysOfWeek(daysOfWeek);
+                    recurrence = recurrence.every(daysOfWeekArr).daysOfWeek();
+                }
                 break;
             }
             case 2: {
@@ -196,10 +212,34 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         }
         const exceptions = _.get(exceptionsObj, 'Exception') || [];
         for (const exception of exceptions) {
-            const deleted = _.get(exception, 'Deleted[0]');
             const exStartTime = _.get(exception, 'ExceptionStartTime[0]');
-            if (deleted && exStartTime === event.StartTime[0]) {
+            if (exStartTime === event.StartTime[0]) {
                 return true;
+            }
+        }
+        return false;
+    }
+    addExceptionEvent(event, exceptionsObj, filterStartDate, filterEndDate) {
+        const exceptions = _.get(exceptionsObj, 'Exception') || [];
+        for (const exception of exceptions) {
+            const deleted = _.get(exception, 'Deleted[0]');
+            if (!deleted) {
+                const startTimeStr = _.get(exception, 'StartTime[0]') ||
+                    _.get(exception, 'DtStamp[0]') ||
+                    _.get(exception, 'ExceptionStartTime[0]');
+                const endTimeStr = _.get(exception, 'EndTime[0]');
+                if (startTimeStr && endTimeStr) {
+                    const startTime = moment(startTimeStr);
+                    const endTime = moment(endTimeStr);
+                    if (startTime.isSameOrAfter(filterStartDate) && endTime.isSameOrBefore(filterEndDate)) {
+                        // Set the iCalUId to the event id
+                        event.iCalUId = event.UID[0];
+                        event.UID = [event.iCalUId + `-${startTime.year()}${startTime.month()}${startTime.date()}`];
+                        event.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
+                        event.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -211,34 +251,40 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         const startTime = moment(event.StartTime[0]);
         const endTime = moment(event.EndTime[0]);
         const exceptions = _.get(event, 'Exceptions[0]');
-        const recurrenceObj = _.get(event, 'Recurrence[0]');
-        if (recurrenceObj) {
-            const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
-            if (recurrence) {
-                const UID = event.UID[0];
-                for (const date = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
-                    if (recurrence.matches(date)) {
-                        startTime.year(date.year());
-                        startTime.month(date.month());
-                        startTime.date(date.date());
-                        endTime.year(date.year());
-                        endTime.month(date.month());
-                        endTime.date(date.date());
-                        const instanceEvent = _.clone(event);
-                        // Set the iCalUId to the event id
-                        instanceEvent.iCalUId = UID;
-                        instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
-                        instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
-                        instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
-                        if (!adapter.isDeleted(exceptions, instanceEvent)) {
-                            events.push(instanceEvent);
+        if (adapter.addExceptionEvent(event, exceptions, filterStartDate, filterEndDate) &&
+            !adapter.isDeleted(exceptions, event)) {
+            events.push(event);
+        }
+        else {
+            const recurrenceObj = _.get(event, 'Recurrence[0]');
+            if (recurrenceObj) {
+                const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
+                if (recurrence) {
+                    const UID = event.UID[0];
+                    for (const date = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
+                        if (recurrence.matches(date)) {
+                            startTime.year(date.year());
+                            startTime.month(date.month());
+                            startTime.date(date.date());
+                            endTime.year(date.year());
+                            endTime.month(date.month());
+                            endTime.date(date.date());
+                            const instanceEvent = _.clone(event);
+                            // Set the iCalUId to the event id
+                            instanceEvent.iCalUId = UID;
+                            instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
+                            instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
+                            instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
+                            if (!adapter.isDeleted(exceptions, instanceEvent)) {
+                                events.push(instanceEvent);
+                            }
                         }
                     }
                 }
             }
-        }
-        else if (!adapter.isDeleted(exceptions, event)) {
-            events.push(event);
+            else if (!adapter.isDeleted(exceptions, event)) {
+                events.push(event);
+            }
         }
     }
     getData(filterStartDate, filterEndDate, properties) {
@@ -301,7 +347,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 }));
                 const mappedEvents = _.map(events || [], (originalEvent) => {
                     const mappedEvent = {};
-                    // console.log('event', JSON.stringify(originalEvent, null, 2));
+                    // console.log(originalEvent.Subject[0]);
                     // change to desired names
                     _.each(exports.fieldNameMap, (have, want) => {
                         const val = _.get(originalEvent, have);

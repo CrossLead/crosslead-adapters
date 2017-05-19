@@ -69,8 +69,8 @@ test('should get calendar data', async t => {
     connectUrl: ACTIVE_SYNC_VALID_URL
   };
 
-  const startDate = new Date('04-26-2017');
-  const endDate = new Date('04-27-2017');
+  const startDate = new Date('05-15-2017');
+  const endDate = new Date('05-16-2017');
   const eventData = await adapter.getData(startDate, endDate, {});
 
   t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);

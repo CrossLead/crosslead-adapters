@@ -1,6 +1,18 @@
 import 'moment-recur';
 import { Configuration, Service } from '../../base/index';
 import ActiveSyncBaseAdapter from '../base/Adapter';
+/**
+ * ActiveSync fields
+ *
+ * MeetingStatus
+ *
+ * 0 The event is an appointment, which has no attendees.
+ * 1 or 9 The event is a meeting and the user is the meeting organizer.
+ * 3 or 11 This event is a meeting, and the user is not the meeting organizer; the meeting was received from someone else.
+ * 5 or 13 The meeting has been canceled and the user was the meeting organizer.
+ * 7 or 15 The meeting has been canceled. The user was not the meeting organizer; the meeting was received from someone else.
+ *
+ */
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
@@ -48,6 +60,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     private expandDaysOfWeek(daysOfWeek);
     private getRecurrence(startTime, filterEndDate, recurrenceObj);
     private isDeleted(exceptionsObj, event);
+    private addExceptionEvent(event, exceptionsObj, filterStartDate, filterEndDate);
     private addToEvents(events, folder, filterStartDate, filterEndDate);
     getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
         filterStartDate: Date;
