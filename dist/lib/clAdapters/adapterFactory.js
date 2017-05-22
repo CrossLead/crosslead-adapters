@@ -31,6 +31,8 @@ class AdapterFactory {
                 return new _1.SlackAdapter();
             case adapterTypes_1.default.ACTIVE_SYNC_CALENDAR:
                 return new _1.ActiveSyncCalendarAdapter();
+            case adapterTypes_1.default.EXCHANGE_SERVICE_CALENDAR:
+                return new _1.ExchangeServiceCalendarAdapter();
             default:
                 throw new Error(`Unknown type ${type}`);
         }

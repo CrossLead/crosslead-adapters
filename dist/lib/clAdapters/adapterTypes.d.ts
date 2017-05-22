@@ -14,5 +14,6 @@ declare enum AdapterTypes {
     JIRA = 8,
     SLACK = 9,
     ACTIVE_SYNC_CALENDAR = 10,
+    EXCHANGE_SERVICE_CALENDAR = 11,
 }
 export default AdapterTypes;

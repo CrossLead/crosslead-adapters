@@ -11,6 +11,11 @@ const ACTIVE_SYNC_USERNAME: string = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_PASSWORD: string = 'password';
 const ACTIVE_SYNC_VALID_URL: string = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
 
+const EXCHANGE_SERVICE_EMAIL: string = 'email';
+const EXCHANGE_SERVICE_PASSWORD: string = 'password';
+const EXCHANGE_SERVICE_USER_EMAIL: string = 'email';
+const EXCHANGE_SERVICE_CONNECT_URL: string = 'https://eas.comcast.com';
+
 test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
   t.deepEqual(CLAdapters.AdapterTypes.NETSUITE, 2);
@@ -58,7 +63,7 @@ test('should connect with given credentials', async t => {
   t.true(response.connectUrl === expectedResponse);
 });
 
-test('should get calendar data', async t => {
+test('should get active sync calendar data', async t => {
   const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
 
@@ -79,4 +84,21 @@ test('should get calendar data', async t => {
 test('should generate error stack of callee', t => {
   const e = createGoogleError('InvalidGrant');
   t.false(/createGoogleError/.test(e.err.stack || ''));
+});
+
+test('should get exchange service account calendar data', async t => {
+  const a = new CLAdapters.adapters.ExchangeServiceCalendarAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+
+  adapter.credentials = {
+    email: EXCHANGE_SERVICE_EMAIL,
+    password: EXCHANGE_SERVICE_PASSWORD,
+    connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+  };
+
+  const startDate = new Date('05-15-2017');
+  const endDate = new Date('05-16-2017');
+  const connTest = await adapter.runConnectionTest(EXCHANGE_SERVICE_USER_EMAIL);
+
+  t.true(EXCHANGE_SERVICE_PASSWORD === 'password' ? true : connTest.success);
 });
