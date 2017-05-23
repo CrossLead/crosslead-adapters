@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
 import { GoogleError, GoogleErrorType, createGoogleError } from '../errors';
+import rateLimit from '../../../utils/rate-limit';
 
 // google calendar api
 const calendar = googleapis.calendar('v3');
@@ -209,18 +210,13 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           // function to recurse through pageTokens
           const getEvents = async (requestOpts: any, data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
 
+            // add page token if given
+            if (data && data.nextPageToken) {
+              requestOpts.pageToken = data.nextPageToken;
+            }
+
             // request first results...
-            const events = await new Promise<GoogleCalendarApiResult>((res, rej) => {
-
-              // add page token if given
-              if (data && data.nextPageToken) {
-                requestOpts.pageToken = data.nextPageToken;
-              }
-
-              calendar.events.list(
-                requestOpts, handleGoogleError(res, rej)
-              );
-            });
+            const events = await this.getEvents(requestOpts);
 
             // if we already have data being accumulated, add to items
             if (data) {
@@ -396,6 +392,15 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
 
     // await authorization
     return new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
+  }
+
+  @rateLimit()
+  getEvents(requestOpts: any) {
+    return new Promise<GoogleCalendarApiResult>((res, rej) => {
+      calendar.events.list(
+        requestOpts, handleGoogleError(res, rej)
+      );
+    });
   }
 
 }
