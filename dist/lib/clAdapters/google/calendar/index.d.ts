@@ -92,4 +92,5 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
         success: boolean;
     }>;
     authorize(email: string): Promise<{}>;
+    getEvents(requestOpts: any): Promise<GoogleCalendarApiResult>;
 }

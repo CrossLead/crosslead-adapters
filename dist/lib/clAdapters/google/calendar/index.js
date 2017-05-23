@@ -1,4 +1,10 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -14,6 +20,7 @@ const _ = require("lodash");
 const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
 const errors_1 = require("../errors");
+const rate_limit_1 = require("../../../utils/rate-limit");
 // google calendar api
 const calendar = googleapis.calendar('v3');
 const credentialMappings = {
@@ -140,14 +147,12 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                         const auth = yield this.authorize(userProfile.emailAfterMapping);
                         // function to recurse through pageTokens
                         const getEvents = (requestOpts, data) => __awaiter(this, void 0, void 0, function* () {
+                            // add page token if given
+                            if (data && data.nextPageToken) {
+                                requestOpts.pageToken = data.nextPageToken;
+                            }
                             // request first results...
-                            const events = yield new Promise((res, rej) => {
-                                // add page token if given
-                                if (data && data.nextPageToken) {
-                                    requestOpts.pageToken = data.nextPageToken;
-                                }
-                                calendar.events.list(requestOpts, handleGoogleError(res, rej));
-                            });
+                            const events = yield this.getEvents(requestOpts);
                             // if we already have data being accumulated, add to items
                             if (data) {
                                 data.items.push(...events.items);
@@ -287,10 +292,18 @@ class GoogleCalendarAdapter extends Adapter_1.default {
             return new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
         });
     }
+    getEvents(requestOpts) {
+        return new Promise((res, rej) => {
+            calendar.events.list(requestOpts, handleGoogleError(res, rej));
+        });
+    }
 }
 GoogleCalendarAdapter.Configuration = index_1.Configuration;
 GoogleCalendarAdapter.Service = index_1.Service;
 // convert the names of the api response data
 GoogleCalendarAdapter.fieldNameMap = exports.fieldNameMap;
+__decorate([
+    rate_limit_1.default()
+], GoogleCalendarAdapter.prototype, "getEvents", null);
 exports.default = GoogleCalendarAdapter;
 //# sourceMappingURL=index.js.map
