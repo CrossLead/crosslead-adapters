@@ -94,7 +94,8 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     }>;
     private initEws();
     private findItem(userEmail, startDate, endDate);
-    runConnectionTest(userEmail: string): Promise<{
+    private getFolder(userEmail);
+    runConnectionTest(): Promise<{
         success: boolean;
         data: any;
     } | {

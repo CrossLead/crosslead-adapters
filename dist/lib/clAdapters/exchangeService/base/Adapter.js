@@ -13,7 +13,7 @@ class ExchangeServiceBaseAdapter extends index_1.Adapter {
     constructor() {
         super(...arguments);
         this.credentials = {
-            email: '',
+            username: '',
             password: '',
             connectUrl: ''
         };

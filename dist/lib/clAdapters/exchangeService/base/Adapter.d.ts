@@ -3,14 +3,14 @@ import { Adapter } from '../../base/index';
  * `credentials` format:
  * ```
  * {
- *   email: 'email@domain.com',
+ *   username: 'USERNAME',
  *   password: 'PASSWORD',
  *   connectUrl: '' // Exchange EWS server endpoint
  * }
  * ```
  */
 export declare type ExchangeServiceCredentials = {
-    email: string;
+    username: string;
     password: string;
     connectUrl: string;
 };

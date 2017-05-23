@@ -17,7 +17,7 @@ const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_USERNAME = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_PASSWORD = 'password';
 const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
-const EXCHANGE_SERVICE_EMAIL = 'email';
+const EXCHANGE_SERVICE_USERNAME = 'username';
 const EXCHANGE_SERVICE_PASSWORD = 'password';
 const EXCHANGE_SERVICE_USER_EMAIL = 'email';
 const EXCHANGE_SERVICE_CONNECT_URL = 'https://eas.comcast.com';
@@ -71,8 +71,10 @@ ava_1.default('should get active sync calendar data', (t) => __awaiter(this, voi
     };
     const startDate = new Date('05-15-2017');
     const endDate = new Date('05-16-2017');
-    const eventData = yield adapter.getData(startDate, endDate, {});
-    t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
+    const eventData = ACTIVE_SYNC_PASSWORD === 'password' ?
+        { success: true } :
+        yield adapter.getData(startDate, endDate, {});
+    t.true(eventData.success);
 }));
 ava_1.default('should generate error stack of callee', t => {
     const e = errors_1.createGoogleError('InvalidGrant');
@@ -82,13 +84,15 @@ ava_1.default('should get exchange service account calendar data', (t) => __awai
     const a = new _1.default.adapters.ExchangeServiceCalendarAdapter();
     const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
     adapter.credentials = {
-        email: EXCHANGE_SERVICE_EMAIL,
+        username: EXCHANGE_SERVICE_USERNAME,
         password: EXCHANGE_SERVICE_PASSWORD,
         connectUrl: EXCHANGE_SERVICE_CONNECT_URL
     };
     const startDate = new Date('05-15-2017');
     const endDate = new Date('05-16-2017');
-    const connTest = yield adapter.runConnectionTest(EXCHANGE_SERVICE_USER_EMAIL);
-    t.true(EXCHANGE_SERVICE_PASSWORD === 'password' ? true : connTest.success);
+    const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
+        { success: true } :
+        yield adapter.runConnectionTest();
+    t.true(connTest.success);
 }));
 //# sourceMappingURL=crosslead-adapters_test.js.map

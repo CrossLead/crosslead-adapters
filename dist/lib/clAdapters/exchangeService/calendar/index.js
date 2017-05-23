@@ -16,11 +16,13 @@ const asclient = require("asclient");
 const Adapter_1 = require("../base/Adapter");
 const EWS = require("node-ews");
 const credentialMappings = {
-    'email': 'email',
-    'password': 'password',
+    username: 'username',
+    password: 'password',
+    connectUrl: 'connectUrl'
 };
 const ORGANIZER_STATUS = '1';
 const ACCEPTED_STATUS = '3';
+const TEST_EMAIL = 'mark.bradley@crosslead.com';
 exports.fieldNameMap = {
     // Desired...                          // Given...
     // ? :                                 'TimeZone', // Do we need this?  I don't think so...
@@ -103,8 +105,8 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             this._config = new ExchangeServiceCalendarAdapter.Configuration(credentials);
             this._service = new ExchangeServiceCalendarAdapter.Service(this._config);
             yield this._service.init();
-            const { email: email } = credentials;
-            console.log(`Successfully initialized active sync calendar adapter for email: ${email}`);
+            const { username: username } = credentials;
+            console.log(`Successfully initialized active sync calendar adapter for username: ${username}`);
             return this;
         });
     }
@@ -306,7 +308,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             if (filterStartDate.getTime() > filterEndDate.getTime()) {
                 throw new Error(`filterStartDate must be less than or equal to filterEndDate`);
             }
-            const { email: username, password, connectUrl: endpoint } = this.credentials;
+            const { username, password, connectUrl: endpoint } = this.credentials;
             const individualRunStats = {
                 filterStartDate,
                 filterEndDate,
@@ -579,7 +581,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             }
         });
         const ewsConfig = {
-            username: this.credentials.email,
+            username: this.credentials.username,
             password: this.credentials.password,
             host: this.credentials.connectUrl
         };
@@ -614,26 +616,52 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                     }
                 }
             };
-            yield this.ews.run('FindItem', ewsArgs);
+            return this.ews.run('FindItem', ewsArgs);
         });
     }
-    runConnectionTest(userEmail) {
+    getFolder(userEmail) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.ews) {
+                throw new Error('EWS has not been inited!');
+            }
+            const ewsArgs = {
+                FolderShape: {
+                    BaseShape: 'IdOnly'
+                },
+                FolderIds: {
+                    DistinguishedFolderId: {
+                        attributes: {
+                            Id: 'calendar'
+                        },
+                        Mailbox: {
+                            EmailAddress: userEmail
+                        }
+                    }
+                }
+            };
+            return this.ews.run('GetFolder', ewsArgs);
+        });
+    }
+    runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
             this.initEws();
             try {
-                // const result = this.findItem(userEmail, '2017-05-20T05:00:00Z', '2017-05-21T05:00:00Z');
+                // const result = await this.findItem(TEST_EMAIL, '2017-05-20T05:00:00Z', '2017-05-21T05:00:00Z');
+                // const result = await this.getFolder(TEST_EMAIL);
+                // Just call a the method to expand a distribution list to get a response
                 const result = yield this.ews.run('ExpandDL', {
                     'Mailbox': {
-                        EmailAddress: userEmail
+                        EmailAddress: 'all@company.com'
                     }
                 });
+                // console.log('result', JSON.stringify(result, null, 2));
                 return {
                     success: true,
                     data: result
                 };
             }
             catch (error) {
-                console.log(error.stack || error);
+                // console.log(error.stack || error);
                 return {
                     message: error.message,
                     success: false

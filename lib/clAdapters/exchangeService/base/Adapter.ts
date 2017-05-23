@@ -5,21 +5,21 @@ import { AdapterCredentials } from '../../base/Adapter';
  * `credentials` format:
  * ```
  * {
- *   email: 'email@domain.com',
+ *   username: 'USERNAME',
  *   password: 'PASSWORD',
  *   connectUrl: '' // Exchange EWS server endpoint
  * }
  * ```
  */
 export type ExchangeServiceCredentials = {
-  email: string;
+  username: string;
   password: string;
   connectUrl: string;
 };
 
 abstract class ExchangeServiceBaseAdapter extends Adapter {
   credentials: ExchangeServiceCredentials = {
-    email: '',
+    username: '',
     password: '',
     connectUrl: ''
   };
