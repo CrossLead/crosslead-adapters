@@ -288,13 +288,35 @@ class GoogleCalendarAdapter extends Adapter_1.default {
             // the email of the individual we want to authenticate
             // ('sub' property of the json web token)
             email);
-            // await authorization
-            return new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
+            try {
+                return yield new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
+            }
+            catch (err) {
+                if (/invalid_request/.test(err.message)) {
+                    throw new Error(`Authorization failure, message = ${err.message} options = ${JSON.stringify({
+                        serviceEmail,
+                        email
+                    })}`);
+                }
+                throw err;
+            }
         });
     }
     getEvents(requestOpts) {
-        return new Promise((res, rej) => {
-            calendar.events.list(requestOpts, handleGoogleError(res, rej));
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield new Promise((res, rej) => {
+                    calendar.events.list(requestOpts, handleGoogleError(res, rej));
+                });
+            }
+            catch (err) {
+                if (/invalid_request/.test(err.message)) {
+                    throw new Error(`getEvents failed with
+                message = ${err.message} request
+                options = ${JSON.stringify(requestOpts)}`);
+                }
+                throw err;
+            }
         });
     }
 }

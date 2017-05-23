@@ -390,17 +390,39 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
       email
     );
 
-    // await authorization
-    return new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
+    try {
+      return await new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
+    } catch (err) {
+      if (/invalid_request/.test(err.message)) {
+        throw new Error(
+          `Authorization failure, message = ${err.message} options = ${JSON.stringify({
+            serviceEmail,
+            email
+          })}`
+        );
+      }
+      throw err;
+    }
   }
 
   @rateLimit()
-  getEvents(requestOpts: any) {
-    return new Promise<GoogleCalendarApiResult>((res, rej) => {
-      calendar.events.list(
-        requestOpts, handleGoogleError(res, rej)
-      );
-    });
+  async getEvents(requestOpts: any) {
+    try {
+      return await new Promise<GoogleCalendarApiResult>((res, rej) => {
+        calendar.events.list(
+          requestOpts, handleGoogleError(res, rej)
+        );
+      });
+    } catch (err) {
+      if (/invalid_request/.test(err.message)) {
+        throw new Error(
+            `getEvents failed with
+                message = ${err.message} request
+                options = ${JSON.stringify(requestOpts)}`
+        );
+      }
+      throw err;
+    }
   }
 
 }
