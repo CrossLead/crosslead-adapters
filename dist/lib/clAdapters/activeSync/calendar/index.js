@@ -140,6 +140,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         let recurrence = startTime.recur();
         const intervalStr = _.get(recurrenceObj, 'Interval[0]');
         const type = parseInt(recurrenceObj.Type[0]);
+        const occurrencesStr = _.get(recurrenceObj, 'Occurrences[0]');
         switch (type) {
             case 0: {
                 const daysOfWeek = _.get(recurrenceObj, 'DayOfWeek[0]');
@@ -183,6 +184,11 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                     recurrence = recurrence.every(daysOfWeekArr).daysOfWeek()
                         .every([weekOfMonth]).weeksOfMonthByDay();
                 }
+                else {
+                    const dayOfWeek = this.expandDaysOfWeek(daysOfWeek)[0];
+                    recurrence = recurrence.every(dayOfWeek).daysOfWeek()
+                        .every([weekOfMonth - 1]).weeksOfMonthByDay();
+                }
                 // Interval is optional, but how do I use it?
                 break;
             }
@@ -204,6 +210,18 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 break;
             }
         }
+        if (occurrencesStr) {
+            recurrence = this.checkOccurences(recurrence, parseInt(occurrencesStr), filterEndDate);
+        }
+        return recurrence;
+    }
+    checkOccurences(recurrence, occurrences, filterEndDate) {
+        if (occurrences) {
+            const lastDate = recurrence.next(occurrences).reverse()[0];
+            if (filterEndDate.isAfter(lastDate)) {
+                return null;
+            }
+        }
         return recurrence;
     }
     isDeleted(exceptionsObj, event) {
@@ -212,8 +230,9 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         }
         const exceptions = _.get(exceptionsObj, 'Exception') || [];
         for (const exception of exceptions) {
-            const exStartTime = _.get(exception, 'ExceptionStartTime[0]');
-            if (exStartTime === event.StartTime[0]) {
+            const exExStartTime = _.get(exception, 'ExceptionStartTime[0]');
+            const exStartTime = _.get(exception, 'StartTime[0]');
+            if (exExStartTime === event.StartTime[0] && exExStartTime !== exStartTime) {
                 return true;
             }
         }
@@ -238,6 +257,10 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                     instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
                     instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
                     if (!adapter.isDeleted(exceptionsObj, instanceEvent)) {
+                        // Set the new subject if it is specified
+                        if (exception.Subject) {
+                            instanceEvent.Subject = exception.Subject;
+                        }
                         exceptionEvents.push(instanceEvent);
                     }
                 }
@@ -256,37 +279,42 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         if (exceptionEvents.length) {
             events.push(...exceptionEvents);
         }
-        else {
-            const recurrenceObj = _.get(event, 'Recurrence[0]');
-            if (recurrenceObj) {
-                const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
-                if (recurrence) {
-                    const UID = event.UID[0];
-                    for (const date = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
-                        if (recurrence.matches(date)) {
-                            startTime.year(date.year());
-                            startTime.month(date.month());
-                            startTime.date(date.date());
-                            endTime.year(date.year());
-                            endTime.month(date.month());
-                            endTime.date(date.date());
-                            const instanceEvent = _.clone(event);
-                            // Set the iCalUId to the event id
-                            instanceEvent.iCalUId = UID;
-                            instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
-                            instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
-                            instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
-                            if (!adapter.isDeleted(exceptions, instanceEvent)) {
-                                events.push(instanceEvent);
-                            }
+        const recurrenceObj = _.get(event, 'Recurrence[0]');
+        if (recurrenceObj) {
+            const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
+            if (recurrence) {
+                const UID = event.UID[0];
+                for (const date = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
+                    if (recurrence.matches(date)) {
+                        startTime.year(date.year());
+                        startTime.month(date.month());
+                        startTime.date(date.date());
+                        endTime.year(date.year());
+                        endTime.month(date.month());
+                        endTime.date(date.date());
+                        const instanceEvent = _.clone(event);
+                        // Set the iCalUId to the event id
+                        instanceEvent.iCalUId = UID;
+                        instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
+                        instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
+                        instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
+                        if (!adapter.isDeleted(exceptions, instanceEvent) && !this.eventExists(events, instanceEvent)) {
+                            events.push(instanceEvent);
                         }
                     }
                 }
             }
-            else if (!adapter.isDeleted(exceptions, event)) {
-                events.push(event);
-            }
         }
+        else if (!adapter.isDeleted(exceptions, event) && !this.eventExists(events, event)) {
+            events.push(event);
+        }
+    }
+    eventExists(events, event) {
+        const startTime = event.StartTime[0];
+        const subject = event.Subject[0];
+        return !!_.find(events, (ev) => {
+            return ev.StartTime[0] === startTime && ev.Subject[0] === subject;
+        });
     }
     getData(filterStartDate, filterEndDate, properties) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -346,6 +374,9 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                     // console.log('event', JSON.stringify(event, null, 2));
                     return event;
                 }));
+                events.sort((a, b) => {
+                    return a.StartTime[0].localeCompare(b.StartTime[0]);
+                });
                 const mappedEvents = _.map(events || [], (originalEvent) => {
                     const mappedEvent = {};
                     // console.log(originalEvent.StartTime[0] + ':' + originalEvent.Subject[0]);

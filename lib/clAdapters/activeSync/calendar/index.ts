@@ -170,6 +170,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     let recurrence = startTime.recur();
     const intervalStr = _.get(recurrenceObj, 'Interval[0]');
     const type: number = parseInt(recurrenceObj.Type[0]);
+    const occurrencesStr = _.get(recurrenceObj, 'Occurrences[0]');
 
     switch (type) {
       case 0: { // Daily
@@ -218,7 +219,12 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           recurrence = recurrence.every(daysOfWeekArr).daysOfWeek()
                         .every([weekOfMonth]).weeksOfMonthByDay();
 
+        } else {
+          const dayOfWeek: string = this.expandDaysOfWeek(daysOfWeek)[0];
+          recurrence = recurrence.every(dayOfWeek).daysOfWeek()
+                        .every([weekOfMonth - 1]).weeksOfMonthByDay();
         }
+
         // Interval is optional, but how do I use it?
 
         break;
@@ -248,6 +254,22 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       }
     }
 
+    if (occurrencesStr) {
+      recurrence = this.checkOccurences(recurrence, parseInt(occurrencesStr), filterEndDate);
+    }
+
+    return recurrence;
+  }
+
+  private checkOccurences(recurrence: any, occurrences: number, filterEndDate: any ) {
+    if (occurrences) {
+      const lastDate = recurrence.next(occurrences).reverse()[0];
+
+      if (filterEndDate.isAfter(lastDate)) {
+        return null;
+      }
+    }
+
     return recurrence;
   }
 
@@ -259,9 +281,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     const exceptions: any[] = _.get(exceptionsObj, 'Exception') || [];
 
     for (const exception of exceptions) {
-      const exStartTime = _.get(exception, 'ExceptionStartTime[0]');
+      const exExStartTime = _.get(exception, 'ExceptionStartTime[0]');
+      const exStartTime = _.get(exception, 'StartTime[0]');
 
-      if (exStartTime === event.StartTime[0]) {
+      if (exExStartTime === event.StartTime[0] && exExStartTime !== exStartTime) {
         return true;
       }
     }
@@ -295,6 +318,12 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           instanceEvent.EndTime = [ endTime.utc().format().replace(/[-:]/g, '') ];
 
           if (!adapter.isDeleted(exceptionsObj, instanceEvent)) {
+
+            // Set the new subject if it is specified
+            if (exception.Subject) {
+              instanceEvent.Subject = exception.Subject;
+            }
+
             exceptionEvents.push(instanceEvent);
           }
         }
@@ -317,44 +346,53 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
     if (exceptionEvents.length) {
       events.push(...exceptionEvents);
-    } else {
-      const recurrenceObj: any = _.get(event, 'Recurrence[0]');
+    }
 
-      if (recurrenceObj) {
-        const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
+    const recurrenceObj: any = _.get(event, 'Recurrence[0]');
 
-        if (recurrence) {
-          const UID: string = event.UID[0];
+    if (recurrenceObj) {
+      const recurrence = adapter.getRecurrence(startTime, filterEndDate, recurrenceObj);
 
-          for (const date: any = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
+      if (recurrence) {
+        const UID: string = event.UID[0];
 
-            if (recurrence.matches(date)) {
-              startTime.year(date.year());
-              startTime.month(date.month());
-              startTime.date(date.date());
-              endTime.year(date.year());
-              endTime.month(date.month());
-              endTime.date(date.date());
+        for (const date: any = moment(filterStartDate); date.isSameOrBefore(filterEndDate); date.add(1, 'days')) {
 
-              const instanceEvent: any = _.clone(event);
+          if (recurrence.matches(date)) {
+            startTime.year(date.year());
+            startTime.month(date.month());
+            startTime.date(date.date());
+            endTime.year(date.year());
+            endTime.month(date.month());
+            endTime.date(date.date());
 
-              // Set the iCalUId to the event id
-              instanceEvent.iCalUId = UID;
-              instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
+            const instanceEvent: any = _.clone(event);
 
-              instanceEvent.StartTime = [ startTime.utc().format().replace(/[-:]/g, '') ];
-              instanceEvent.EndTime = [ endTime.utc().format().replace(/[-:]/g, '') ];
+            // Set the iCalUId to the event id
+            instanceEvent.iCalUId = UID;
+            instanceEvent.UID = [UID + `-${date.year()}${date.month()}${date.date()}`];
 
-              if (!adapter.isDeleted(exceptions, instanceEvent)) {
-                events.push(instanceEvent);
-              }
+            instanceEvent.StartTime = [ startTime.utc().format().replace(/[-:]/g, '') ];
+            instanceEvent.EndTime = [ endTime.utc().format().replace(/[-:]/g, '') ];
+
+            if (!adapter.isDeleted(exceptions, instanceEvent) && !this.eventExists(events, instanceEvent)) {
+              events.push(instanceEvent);
             }
           }
         }
-      } else if (!adapter.isDeleted(exceptions, event)) {
-        events.push(event);
       }
+    } else if (!adapter.isDeleted(exceptions, event) && !this.eventExists(events, event)) {
+      events.push(event);
     }
+  }
+
+  private eventExists(events: any[], event: any) {
+    const startTime = event.StartTime[0];
+    const subject = event.Subject[0];
+
+    return !!_.find(events, (ev: any) => {
+      return ev.StartTime[0] === startTime && ev.Subject[0] === subject;
+    });
   }
 
   async getData(filterStartDate: Date, filterEndDate: Date, properties: any) {
@@ -432,6 +470,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         // console.log('event', JSON.stringify(event, null, 2));
         return event;
       }));
+
+      events.sort( (a: any, b: any) => {
+        return a.StartTime[0].localeCompare(b.StartTime[0]);
+      });
 
       const mappedEvents = _.map(events || [], (originalEvent: any) => {
         const mappedEvent: any = {};

@@ -59,9 +59,11 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     init(): Promise<this>;
     private expandDaysOfWeek(daysOfWeek);
     private getRecurrence(startTime, filterEndDate, recurrenceObj);
+    private checkOccurences(recurrence, occurrences, filterEndDate);
     private isDeleted(exceptionsObj, event);
     private getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate);
     private addToEvents(events, folder, filterStartDate, filterEndDate);
+    private eventExists(events, event);
     getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
         filterStartDate: Date;
         filterEndDate: Date;
