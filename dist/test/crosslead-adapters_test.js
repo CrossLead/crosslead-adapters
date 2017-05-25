@@ -19,8 +19,8 @@ const ACTIVE_SYNC_PASSWORD = 'password';
 const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
 const EXCHANGE_SERVICE_USERNAME = 'username';
 const EXCHANGE_SERVICE_PASSWORD = 'password';
-const EXCHANGE_SERVICE_USER_EMAIL = 'email';
-const EXCHANGE_SERVICE_CONNECT_URL = 'https://eas.comcast.com';
+const EXCHANGE_SERVICE_USER_EMAIL = 'mark.bradley@crosslead.com';
+const EXCHANGE_SERVICE_CONNECT_URL = 'https://eas.comcast.com'; // /EWS/Exchange.asmx
 ava_1.default('should exist in the proper namespace', t => {
     t.truthy(_1.default.AdapterTypes);
     t.deepEqual(_1.default.AdapterTypes.NETSUITE, 2);
@@ -88,8 +88,8 @@ ava_1.default('should get exchange service account calendar data', (t) => __awai
         password: EXCHANGE_SERVICE_PASSWORD,
         connectUrl: EXCHANGE_SERVICE_CONNECT_URL
     };
-    const startDate = new Date('05-15-2017');
-    const endDate = new Date('05-16-2017');
+    // const startDate = new Date('05-15-2017');
+    // const endDate = new Date('05-16-2017');
     const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
         { success: true } :
         yield adapter.runConnectionTest();

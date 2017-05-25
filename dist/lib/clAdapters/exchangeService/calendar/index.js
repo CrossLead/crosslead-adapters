@@ -568,7 +568,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             }
         });
     }
-    initEws() {
+    initEws(emailAddress) {
         const { credentials } = this;
         if (!credentials) {
             throw new Error('credentials required for adapter.');
@@ -585,7 +585,50 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             password: this.credentials.password,
             host: this.credentials.connectUrl
         };
+        if (emailAddress) {
+            this.soapHeader = {
+                't:ExchangeImpersonation': {
+                    't:ConnectingSID': {
+                        't:PrimarySmtpAddress': emailAddress
+                    }
+                }
+            };
+        }
         this.ews = new EWS(ewsConfig);
+    }
+    getOptionalAttendees(item) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.ews) {
+                throw new Error('EWS has not been inited!');
+            }
+            const ewsArgs = {
+                ItemShape: {
+                    BaseShape: 'IdOnly',
+                    AdditionalProperties: [
+                        {
+                            FieldURI: {
+                                attributes: {
+                                    FieldURI: 'calendar:OptionalAttendees'
+                                }
+                            }
+                        }
+                    ]
+                },
+                ItemIds: [
+                    {
+                        ItemId: {
+                            attributes: {
+                                Id: 'AAAaAENoYXJsaWVfSGVycmluQGNvbWNhc3QuY29tAEYAAAAAAEZFRVD4aRlDkMB+MOCFFlkHAK1mMxd6s0JEoaYzaFf6u00AAAUIo0UAAFHWG9oSQLxCkl4PYLFJM5sAAa0mCjMAAA==',
+                                ChangeKey: 'DwAAABYAAABR1hvaEkC8QpJeD2CxSTObAAGtfpfn'
+                            }
+                        }
+                    }
+                ]
+            };
+            const result = yield this.ews.run('GetItem', ewsArgs, this.soapHeader);
+            const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.OptionalAttendees.Attendee');
+            return attendees;
+        });
     }
     findItem(userEmail, startDate, endDate) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -597,7 +640,14 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                     Traversal: 'Shallow'
                 },
                 ItemShape: {
-                    BaseShape: 'AllProperties'
+                    BaseShape: 'IdOnly',
+                    AdditionalProperties: {
+                        FieldURI: {
+                            attributes: {
+                                FieldURI: 'calendar:RequiredAttendees'
+                            }
+                        }
+                    }
                 },
                 CalendarView: {
                     attributes: {
@@ -609,14 +659,12 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                     DistinguishedFolderId: {
                         attributes: {
                             Id: 'calendar'
-                        },
-                        Mailbox: {
-                            EmailAddress: userEmail
                         }
                     }
                 }
             };
-            return this.ews.run('FindItem', ewsArgs);
+            // const items = 'ResponseMessages.FindItemResponseMessage.Items.CalendarItem'
+            return this.ews.run('FindItem', ewsArgs, this.soapHeader);
         });
     }
     getFolder(userEmail) {
@@ -639,14 +687,16 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                     }
                 }
             };
-            return this.ews.run('GetFolder', ewsArgs);
+            return this.ews.run('GetFolder', ewsArgs, this.soapHeader);
         });
     }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.initEws();
+            this.initEws(TEST_EMAIL);
             try {
+                // const result = await this.getItem();
                 // const result = await this.findItem(TEST_EMAIL, '2017-05-20T05:00:00Z', '2017-05-21T05:00:00Z');
+                // const result = await this.findItem(TEST_EMAIL, '2017-05-23T05:00:00Z', '2017-05-24T05:00:00Z' );
                 // const result = await this.getFolder(TEST_EMAIL);
                 // Just call a the method to expand a distribution list to get a response
                 const result = yield this.ews.run('ExpandDL', {
@@ -654,14 +704,14 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                         EmailAddress: 'all@company.com'
                     }
                 });
-                // console.log('result', JSON.stringify(result, null, 2));
+                console.log('result', JSON.stringify(result, null, 2));
                 return {
                     success: true,
                     data: result
                 };
             }
             catch (error) {
-                // console.log(error.stack || error);
+                console.log(error.stack || error);
                 return {
                     message: error.message,
                     success: false

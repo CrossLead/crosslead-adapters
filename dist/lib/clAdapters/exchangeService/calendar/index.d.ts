@@ -54,6 +54,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     _config: Configuration;
     _service: Service;
     ews: any;
+    soapHeader: any;
     constructor();
     reset(): this;
     init(): Promise<this>;
@@ -92,7 +93,8 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             data: any;
         })[];
     }>;
-    private initEws();
+    private initEws(emailAddress?);
+    private getOptionalAttendees(item);
     private findItem(userEmail, startDate, endDate);
     private getFolder(userEmail);
     runConnectionTest(): Promise<{

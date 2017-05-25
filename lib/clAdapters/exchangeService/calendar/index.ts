@@ -92,6 +92,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
   _config: Configuration;
   _service: Service;
   ews: any;
+  soapHeader: any;
 
   // constructor needs to call super
   constructor() {
@@ -728,7 +729,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     }
   }
 
-  private initEws() {
+  private initEws(emailAddress?: string) {
     const { credentials }: { credentials: {[k: string]: string} } = this;
 
     if (!credentials) {
@@ -749,7 +750,52 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
       host: this.credentials.connectUrl
     };
 
+    if (emailAddress) {
+      this.soapHeader = {
+        't:ExchangeImpersonation' : {
+          't:ConnectingSID' : {
+            't:PrimarySmtpAddress' : emailAddress
+          }
+        }
+      };
+    }
+
     this.ews = new EWS(ewsConfig);
+  }
+
+  private async getOptionalAttendees(item: any) {
+    if (!this.ews) {
+      throw new Error('EWS has not been inited!');
+    }
+
+    const ewsArgs = {
+      ItemShape : {
+       BaseShape : 'IdOnly',
+        AdditionalProperties : [
+          {
+            FieldURI : {
+              attributes : {
+                FieldURI : 'calendar:OptionalAttendees'
+              }
+            }
+          }
+        ]
+      },
+      ItemIds : [
+        {
+          ItemId : {
+            attributes : {
+              Id : 'AAAaAENoYXJsaWVfSGVycmluQGNvbWNhc3QuY29tAEYAAAAAAEZFRVD4aRlDkMB+MOCFFlkHAK1mMxd6s0JEoaYzaFf6u00AAAUIo0UAAFHWG9oSQLxCkl4PYLFJM5sAAa0mCjMAAA==',
+              ChangeKey : 'DwAAABYAAABR1hvaEkC8QpJeD2CxSTObAAGtfpfn'
+            }
+          }
+        }
+      ]
+    };
+
+    const result = await this.ews.run('GetItem', ewsArgs, this.soapHeader);
+    const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.OptionalAttendees.Attendee');
+    return attendees;
   }
 
   private async findItem(userEmail: string, startDate: string, endDate: string) {
@@ -762,7 +808,14 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         Traversal : 'Shallow'
       },
       ItemShape : {
-        BaseShape : 'AllProperties'
+        BaseShape : 'IdOnly',
+        AdditionalProperties : {
+          FieldURI : {
+            attributes : {
+              FieldURI : 'calendar:RequiredAttendees'
+            }
+          }
+        }
       },
       CalendarView : {
         attributes : {
@@ -774,15 +827,13 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         DistinguishedFolderId : {
           attributes : {
             Id : 'calendar'
-          },
-          Mailbox : {
-            EmailAddress : userEmail
           }
         }
       }
     };
 
-    return this.ews.run('FindItem', ewsArgs);
+    // const items = 'ResponseMessages.FindItemResponseMessage.Items.CalendarItem'
+    return this.ews.run('FindItem', ewsArgs, this.soapHeader);
   }
 
   private async getFolder(userEmail: string) {
@@ -806,14 +857,16 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
       }
     };
 
-    return this.ews.run('GetFolder', ewsArgs);
+    return this.ews.run('GetFolder', ewsArgs, this.soapHeader);
   }
 
   async runConnectionTest() {
-    this.initEws();
+    this.initEws(TEST_EMAIL);
 
     try {
+      // const result = await this.getItem();
       // const result = await this.findItem(TEST_EMAIL, '2017-05-20T05:00:00Z', '2017-05-21T05:00:00Z');
+      // const result = await this.findItem(TEST_EMAIL, '2017-05-23T05:00:00Z', '2017-05-24T05:00:00Z' );
       // const result = await this.getFolder(TEST_EMAIL);
 
       // Just call a the method to expand a distribution list to get a response
@@ -823,14 +876,14 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         }
       });
 
-      // console.log('result', JSON.stringify(result, null, 2));
+      console.log('result', JSON.stringify(result, null, 2));
 
       return {
         success: true,
         data: result
       };
     } catch (error) {
-      // console.log(error.stack || error);
+      console.log(error.stack || error);
       return {
         message: error.message,
         success: false
