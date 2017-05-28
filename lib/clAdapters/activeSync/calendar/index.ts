@@ -87,7 +87,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       throw new Error('credentials required for adapter.');
     }
 
-    // map Google json keys to keys used in this library
+    // map json keys to keys used in this library
     for (const want in credentialMappings) {
       const alternate = credentialMappings[want];
       if (!credentials[want]) {
@@ -531,7 +531,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       throw new Error('credentials required for adapter.');
     }
 
-    // map Google json keys to keys used in this library
+    // map keys to keys used in this library
     for (const want in credentialMappings) {
       const alternate = credentialMappings[want];
       if (!credentials[want]) {

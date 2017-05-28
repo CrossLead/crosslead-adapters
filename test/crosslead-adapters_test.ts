@@ -74,8 +74,8 @@ test('should get active sync calendar data', async t => {
     connectUrl: ACTIVE_SYNC_VALID_URL
   };
 
-  const startDate = new Date('05-15-2017');
-  const endDate = new Date('05-16-2017');
+  const startDate = new Date('05-26-2017');
+  const endDate = new Date('05-26-2017');
   const eventData = ACTIVE_SYNC_PASSWORD === 'password' ?
                       { success : true } :
                       await adapter.getData(startDate, endDate, {});
@@ -88,6 +88,23 @@ test('should generate error stack of callee', t => {
   t.false(/createGoogleError/.test(e.err.stack || ''));
 });
 
+test('should connect to exchange service account', async t => {
+  const a = new CLAdapters.adapters.ExchangeServiceCalendarAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+
+  adapter.credentials = {
+    username: EXCHANGE_SERVICE_USERNAME,
+    password: EXCHANGE_SERVICE_PASSWORD,
+    connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+  };
+
+  const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
+                     { success: true } :
+                     await adapter.runConnectionTest();
+
+  t.true(connTest.success);
+});
+
 test('should get exchange service account calendar data', async t => {
   const a = new CLAdapters.adapters.ExchangeServiceCalendarAdapter();
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
@@ -98,11 +115,24 @@ test('should get exchange service account calendar data', async t => {
     connectUrl: EXCHANGE_SERVICE_CONNECT_URL
   };
 
-  // const startDate = new Date('05-15-2017');
-  // const endDate = new Date('05-16-2017');
-  const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
-                     { success: true } :
-                     await adapter.runConnectionTest();
+  const startDate = new Date('05-15-2017');
+  const endDate = new Date('05-16-2017');
 
-  t.true(connTest.success);
+  if (EXCHANGE_SERVICE_PASSWORD === 'password') {
+    return;
+  }
+
+  const userProfile = {
+    email : EXCHANGE_SERVICE_USER_EMAIL,
+    emailAfterMapping : EXCHANGE_SERVICE_USER_EMAIL
+  };
+
+  const results = await adapter.getBatchData(
+                    [userProfile],
+                    startDate,
+                    endDate
+                  );
+
+  console.log(results);
+  // t.true(connTest.success);
 });

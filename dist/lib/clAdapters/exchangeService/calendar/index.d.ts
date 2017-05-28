@@ -4,31 +4,29 @@ import ExchangeServiceBaseAdapter from '../base/Adapter';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
+    'categories': string;
     'dateTimeCreated': string;
     'attendeeAddress': string;
     'attendeeName': string;
-    'location': string;
-    'status': string;
+    'hasAttachments': string;
+    'importance': string;
+    'allDay': string;
+    'canceled': string;
+    'locationName': string;
+    'organizerName': string;
     'organizerEmail': string;
-    'recurrence': string;
     'responseRequested': string;
     'responseStatus': string;
+    'showAs': string;
     'dateTimeStart': string;
     'dateTimeEnd': string;
     'subject': string;
-    'url': string;
+    'type': string;
     'privacy': string;
 };
 export interface UserProfile {
     email: string;
     emailAfterMapping: string;
-}
-export declare type ExchangeServiceApiEvent = {
-    [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
-};
-export interface ExchangeServiceApiResult {
-    items: ExchangeServiceApiEvent[];
-    nextPageToken?: string;
 }
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
     static Configuration: typeof Configuration;
@@ -36,19 +34,24 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     static fieldNameMap: {
         'eventId': string;
         'attendees': string;
+        'categories': string;
         'dateTimeCreated': string;
         'attendeeAddress': string;
         'attendeeName': string;
-        'location': string;
-        'status': string;
+        'hasAttachments': string;
+        'importance': string;
+        'allDay': string;
+        'canceled': string;
+        'locationName': string;
+        'organizerName': string;
         'organizerEmail': string;
-        'recurrence': string;
         'responseRequested': string;
         'responseStatus': string;
+        'showAs': string;
         'dateTimeStart': string;
         'dateTimeEnd': string;
         'subject': string;
-        'url': string;
+        'type': string;
         'privacy': string;
     };
     _config: Configuration;
@@ -58,21 +61,6 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     constructor();
     reset(): this;
     init(): Promise<this>;
-    private expandDaysOfWeek(daysOfWeek);
-    private getRecurrence(startTime, filterEndDate, recurrenceObj);
-    private isDeleted(exceptionsObj, event);
-    private getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate);
-    private addToEvents(events, folder, filterStartDate, filterEndDate);
-    getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
-        filterStartDate: Date;
-        filterEndDate: Date;
-        success: boolean;
-        runDate: any;
-        errorMessage: null;
-    } & {
-        errorMessage: any;
-        success: boolean;
-    }>;
     getBatchData(userProfiles: UserProfile[] | undefined, filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<{
         success: boolean;
         runDate: any;
@@ -90,13 +78,17 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             filterStartDate: Date;
             filterEndDate: Date;
         } & {
-            data: any;
+            data: {
+                [key: string]: string;
+            }[];
         })[];
     }>;
-    private initEws(emailAddress?);
-    private getOptionalAttendees(item);
-    private findItem(userEmail, startDate, endDate);
-    private getFolder(userEmail);
+    private setImpersonationUser(emailAddress);
+    private initEws();
+    private attachAttendees(out, item);
+    private getOptionalAttendees(itemId, itemChangeKey);
+    private getRequiredAttendees(itemId, itemChangeKey);
+    private findItem(startDate, endDate);
     runConnectionTest(): Promise<{
         success: boolean;
         data: any;

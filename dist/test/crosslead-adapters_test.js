@@ -69,8 +69,8 @@ ava_1.default('should get active sync calendar data', (t) => __awaiter(this, voi
         password: ACTIVE_SYNC_PASSWORD,
         connectUrl: ACTIVE_SYNC_VALID_URL
     };
-    const startDate = new Date('05-15-2017');
-    const endDate = new Date('05-16-2017');
+    const startDate = new Date('05-26-2017');
+    const endDate = new Date('05-26-2017');
     const eventData = ACTIVE_SYNC_PASSWORD === 'password' ?
         { success: true } :
         yield adapter.getData(startDate, endDate, {});
@@ -80,6 +80,19 @@ ava_1.default('should generate error stack of callee', t => {
     const e = errors_1.createGoogleError('InvalidGrant');
     t.false(/createGoogleError/.test(e.err.stack || ''));
 });
+ava_1.default('should connect to exchange service account', (t) => __awaiter(this, void 0, void 0, function* () {
+    const a = new _1.default.adapters.ExchangeServiceCalendarAdapter();
+    const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+    adapter.credentials = {
+        username: EXCHANGE_SERVICE_USERNAME,
+        password: EXCHANGE_SERVICE_PASSWORD,
+        connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+    };
+    const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
+        { success: true } :
+        yield adapter.runConnectionTest();
+    t.true(connTest.success);
+}));
 ava_1.default('should get exchange service account calendar data', (t) => __awaiter(this, void 0, void 0, function* () {
     const a = new _1.default.adapters.ExchangeServiceCalendarAdapter();
     const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
@@ -88,11 +101,17 @@ ava_1.default('should get exchange service account calendar data', (t) => __awai
         password: EXCHANGE_SERVICE_PASSWORD,
         connectUrl: EXCHANGE_SERVICE_CONNECT_URL
     };
-    // const startDate = new Date('05-15-2017');
-    // const endDate = new Date('05-16-2017');
-    const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
-        { success: true } :
-        yield adapter.runConnectionTest();
-    t.true(connTest.success);
+    const startDate = new Date('05-15-2017');
+    const endDate = new Date('05-16-2017');
+    if (EXCHANGE_SERVICE_PASSWORD === 'password') {
+        return;
+    }
+    const userProfile = {
+        email: EXCHANGE_SERVICE_USER_EMAIL,
+        emailAfterMapping: EXCHANGE_SERVICE_USER_EMAIL
+    };
+    const results = yield adapter.getBatchData([userProfile], startDate, endDate);
+    console.log(results);
+    // t.true(connTest.success);
 }));
 //# sourceMappingURL=crosslead-adapters_test.js.map
