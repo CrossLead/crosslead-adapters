@@ -10,6 +10,7 @@ export declare const fieldNameMap: {
     'attendeeName': string;
     'hasAttachments': string;
     'importance': string;
+    'iCalUId': string;
     'allDay': string;
     'canceled': string;
     'locationName': string;
@@ -22,6 +23,7 @@ export declare const fieldNameMap: {
     'dateTimeEnd': string;
     'subject': string;
     'type': string;
+    'url': string;
     'privacy': string;
 };
 export interface UserProfile {
@@ -40,6 +42,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         'attendeeName': string;
         'hasAttachments': string;
         'importance': string;
+        'iCalUId': string;
         'allDay': string;
         'canceled': string;
         'locationName': string;
@@ -52,6 +55,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         'dateTimeEnd': string;
         'subject': string;
         'type': string;
+        'url': string;
         'privacy': string;
     };
     _config: Configuration;
@@ -79,12 +83,11 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             filterEndDate: Date;
         } & {
             data: {
-                [key: string]: string;
+                [key: string]: any;
             }[];
         })[];
     }>;
     private setImpersonationUser(emailAddress);
-    private initEws();
     private attachAttendees(out, item);
     private getOptionalAttendees(itemId, itemChangeKey);
     private getRequiredAttendees(itemId, itemChangeKey);

@@ -98,6 +98,7 @@ test('should connect to exchange service account', async t => {
     connectUrl: EXCHANGE_SERVICE_CONNECT_URL
   };
 
+  await adapter.init();
   const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
                      { success: true } :
                      await adapter.runConnectionTest();
@@ -122,6 +123,7 @@ test('should get exchange service account calendar data', async t => {
     return;
   }
 
+  await adapter.init();
   const userProfile = {
     email : EXCHANGE_SERVICE_USER_EMAIL,
     emailAfterMapping : EXCHANGE_SERVICE_USER_EMAIL
@@ -133,6 +135,5 @@ test('should get exchange service account calendar data', async t => {
                     endDate
                   );
 
-  console.log(results);
-  // t.true(connTest.success);
+  t.true(results.success);
 });

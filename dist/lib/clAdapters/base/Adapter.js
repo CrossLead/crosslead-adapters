@@ -25,6 +25,9 @@ class Adapter {
      * requires recalling `init()`
      */
     reset() { }
+    parseBoolean(str) {
+        return !str || str === 'true' || str === 'TRUE';
+    }
 }
 exports.default = Adapter;
 //# sourceMappingURL=Adapter.js.map

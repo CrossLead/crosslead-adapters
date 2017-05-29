@@ -19,8 +19,6 @@ const credentialMappings = {
     password: 'password',
     connectUrl: 'connectUrl'
 };
-const ORGANIZER_STATUS = '1';
-const ACCEPTED_STATUS = '3';
 const TEST_EMAIL = 'mark.bradley@crosslead.com';
 exports.fieldNameMap = {
     // Desired...                          // Given...
@@ -32,7 +30,7 @@ exports.fieldNameMap = {
     'attendeeName': 'Mailbox.EmailAddress.Name',
     'hasAttachments': 'HasAttachments',
     'importance': 'Importance',
-    // 'iCalUId':                             'iCalUId',
+    'iCalUId': 'ItemId.attributes.Id',
     'allDay': 'IsAllDayEvent',
     'canceled': 'IsCancelled',
     // 'isOrganizer':                         'IsOrganizer',
@@ -47,35 +45,9 @@ exports.fieldNameMap = {
     'dateTimeEnd': 'End',
     'subject': 'Subject',
     'type': 'CalendarItemType',
-    // 'url':                                 'WebLink',
+    'url': 'NetShowUrl',
     'privacy': 'Sensitivity'
 };
-function handleExchangeError(res, rej, returnVal) {
-    return (err, result) => {
-        if (err) {
-            let mapped = err;
-            if (err instanceof Error) {
-                // Map to custom errors
-                if (/unauthorized_client/.test(err.message.toString())) {
-                    // mapped = createGoogleError(
-                    //   'UnauthorizedClient',
-                    //   err
-                    // );
-                }
-                // TODO: other types
-            }
-            else if (!err.kind) {
-                // Not a GoogleError
-                mapped = new Error(JSON.stringify(err));
-            }
-            // Leave GoogleErrors
-            rej(mapped);
-        }
-        else {
-            res(typeof returnVal !== 'undefined' ? returnVal : result);
-        }
-    };
-}
 class ExchangeServiceCalendarAdapter extends Adapter_1.default {
     // constructor needs to call super
     constructor() {
@@ -88,7 +60,6 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('inited!');
             const { credentials } = this;
             if (!credentials) {
                 throw new Error('credentials required for adapter.');
@@ -110,8 +81,13 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             this._config = new ExchangeServiceCalendarAdapter.Configuration(credentials);
             this._service = new ExchangeServiceCalendarAdapter.Service(this._config);
             yield this._service.init();
-            const { username: username } = credentials;
-            console.log(`Successfully initialized active sync calendar adapter for username: ${username}`);
+            const ewsConfig = {
+                username: credentials.username,
+                password: credentials.password,
+                host: credentials.connectUrl
+            };
+            this.ews = new EWS(ewsConfig);
+            console.log(`Successfully initialized active sync calendar adapter for username: ${credentials.username}`);
             return this;
         });
     }
@@ -131,7 +107,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 results: []
             };
             try {
-                this.initEws();
+                const adapter = this;
                 // collect events for this group of emails
                 const results = yield Promise.all(userProfiles.map((userProfile) => __awaiter(this, void 0, void 0, function* () {
                     const individualRunStats = Object.assign({ filterStartDate,
@@ -141,37 +117,54 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                         const result = yield this.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
                         const items = _.get(result, 'ResponseMessages.FindItemResponseMessage.RootFolder.Items.CalendarItem');
                         const data = [];
-                        for (const item of items) {
-                            console.log('item', JSON.stringify(item, null, 2));
-                            const out = {};
-                            _.each(fieldNameMap, (have, want) => {
-                                let modified = _.get(item, have);
-                                if (/^dateTime/.test(want)) {
-                                    modified = new Date(modified);
-                                }
-                                if (modified !== undefined) {
-                                    out[want] = modified;
-                                }
-                            });
-                            yield this.attachAttendees(out, item);
-                            out['attendees'] = _.map(out['attendees'], (attendee) => {
-                                const { Mailbox: email, ResponseType: responseStatus } = attendee;
-                                return { address: email.EmailAddress, response: responseStatus };
-                            });
-                            console.log('out', JSON.stringify(out, null, 2));
-                            data.push(out);
+                        if (items && items.length) {
+                            for (const item of items) {
+                                const out = {};
+                                _.each(fieldNameMap, (have, want) => {
+                                    let modified = _.get(item, have);
+                                    if (/^dateTime/.test(want)) {
+                                        modified = new Date(modified);
+                                    }
+                                    if (modified !== undefined) {
+                                        out[want] = modified;
+                                    }
+                                });
+                                yield this.attachAttendees(out, item);
+                                out.attendees = _.map(out.attendees, (attendee) => {
+                                    const { Mailbox: email, ResponseType: response } = attendee;
+                                    return { address: email.EmailAddress, response };
+                                });
+                                _.remove(out.attendees, (attendee) => {
+                                    return !attendee.address;
+                                });
+                                out.canceled = adapter.parseBoolean(out.canceled);
+                                out.allDay = adapter.parseBoolean(out.allDay);
+                                out.hasAttachments = adapter.parseBoolean(out.hasAttachments);
+                                data.push(out);
+                            }
                         }
-                        // console.log('data', JSON.stringify(data, null, 2));
-                        // request all events for this user in the given time frame
                         return Object.assign(individualRunStats, { data });
                     }
                     catch (error) {
                         let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
-                        if (/invalid_grant/.test(errorMessage.message.toString())) {
+                        if (/primary SMTP address must be specified/.test(errorMessage.message.toString())) {
                             errorMessage = {
-                                type: 'InvalidGrant',
-                                error: new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Exchange Calendar account.`)
+                                type: 'InvalidPrimaryAddress',
+                                error: new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
                             };
+                        }
+                        else if (/SMTP address has no mailbox associated/.test(errorMessage.message.toString())) {
+                            errorMessage = {
+                                type: 'InvalidAddress',
+                                error: new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
+                            };
+                        }
+                        else if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
+                            // Service account is unauthorized-- throw error to exit all
+                            throw error;
+                        }
+                        else {
+                            console.log('unknown error', error);
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,
@@ -198,25 +191,6 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 }
             }
         };
-    }
-    initEws() {
-        const { credentials } = this;
-        if (!credentials) {
-            throw new Error('credentials required for adapter.');
-        }
-        // validate required credential properties
-        Object.keys(credentialMappings)
-            .forEach(prop => {
-            if (!credentials[prop]) {
-                throw new Error(`Property ${prop} required in adapter credentials!`);
-            }
-        });
-        const ewsConfig = {
-            username: this.credentials.username,
-            password: this.credentials.password,
-            host: this.credentials.connectUrl
-        };
-        this.ews = new EWS(ewsConfig);
     }
     attachAttendees(out, item) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -346,7 +320,6 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
     }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.initEws();
             try {
                 // Just call a the method to expand a distribution list to get a response
                 const result = yield this.ews.run('ExpandDL', {
@@ -354,7 +327,6 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                         EmailAddress: 'all@company.com'
                     }
                 });
-                // console.log('result', JSON.stringify(result, null, 2));
                 return {
                     success: true,
                     data: result

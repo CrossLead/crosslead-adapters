@@ -12,8 +12,6 @@ const credentialMappings: { [key: string]: string } = {
   connectUrl : 'connectUrl'
 };
 
-const ORGANIZER_STATUS: string = '1';
-const ACCEPTED_STATUS: string = '3';
 const TEST_EMAIL: string = 'mark.bradley@crosslead.com';
 
 export const fieldNameMap = {
@@ -26,7 +24,7 @@ export const fieldNameMap = {
   'attendeeName':                        'Mailbox.EmailAddress.Name',
   'hasAttachments':                      'HasAttachments',
   'importance':                          'Importance',
-  // 'iCalUId':                             'iCalUId',
+  'iCalUId':                             'ItemId.attributes.Id', //   'iCalUId',
   'allDay':                              'IsAllDayEvent',
   'canceled':                            'IsCancelled',
   // 'isOrganizer':                         'IsOrganizer',
@@ -41,7 +39,7 @@ export const fieldNameMap = {
   'dateTimeEnd':                         'End',
   'subject':                             'Subject',
   'type':                                'CalendarItemType',
-  // 'url':                                 'WebLink',
+  'url':                                 'NetShowUrl',
   'privacy':                             'Sensitivity'
 };
 
@@ -50,40 +48,12 @@ export interface UserProfile {
   emailAfterMapping: string;
 }
 
-function handleExchangeError(res: Function, rej: Function, returnVal?: any) {
-  return (err: any, result: any) => {
-    if (err) {
-      let mapped = err;
-      if (err instanceof Error) {
-        // Map to custom errors
-        if (/unauthorized_client/.test(err.message.toString())) {
-          // mapped = createGoogleError(
-          //   'UnauthorizedClient',
-          //   err
-          // );
-        }
-        // TODO: other types
-      } else if (!err.kind) {
-        // Not a GoogleError
-        mapped = new Error(JSON.stringify(err));
-      }
-      // Leave GoogleErrors
-      rej(mapped);
-    } else {
-      res(typeof returnVal !== 'undefined' ?  returnVal : result);
-    }
-  };
-}
-
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
-
   static Configuration = Configuration;
   static Service = Service;
 
   // convert the names of the api response data
   static fieldNameMap = fieldNameMap;
-
-
 
   _config: Configuration;
   _service: Service;
@@ -95,17 +65,13 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     super();
   }
 
-
   reset() {
     delete this._config;
     delete this._service;
     return this;
   }
 
-
   async init() {
-    console.log('inited!');
-
     const { credentials }: { credentials: {[k: string]: string} } = this;
 
     if (!credentials) {
@@ -133,10 +99,16 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
 
     await this._service.init();
 
-    const { username: username } = credentials;
+    const ewsConfig = {
+      username: credentials.username,
+      password: credentials.password,
+      host: credentials.connectUrl
+    };
+
+    this.ews = new EWS(ewsConfig);
 
     console.log(
-      `Successfully initialized active sync calendar adapter for username: ${username}`
+      `Successfully initialized active sync calendar adapter for username: ${credentials.username}`
     );
 
     return this;
@@ -166,7 +138,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     };
 
     try {
-      this.initEws();
+      const adapter = this;
 
       // collect events for this group of emails
       const results = await Promise.all(userProfiles.map(async(userProfile) => {
@@ -187,43 +159,57 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
 
           const data = [];
 
-          for (const item of items) {
-            console.log('item', JSON.stringify(item, null, 2));
-            const out: { [key: string]: string } = {};
+          if (items && items.length) {
+            for (const item of items) {
+              const out: { [key: string]: any } = {};
 
-            _.each(fieldNameMap, (have: string, want: string) => {
-              let modified = _.get(item, have);
-              if (/^dateTime/.test(want)) {
-                modified = new Date(modified);
-              }
-              if (modified !== undefined) {
-                out[want] = modified;
-              }
-            });
+              _.each(fieldNameMap, (have: string, want: string) => {
+                let modified = _.get(item, have);
+                if (/^dateTime/.test(want)) {
+                  modified = new Date(modified);
+                }
+                if (modified !== undefined) {
+                  out[want] = modified;
+                }
+              });
 
-            await this.attachAttendees(out, item);
+              await this.attachAttendees(out, item);
 
-            out['attendees'] = _.map(out['attendees'], (attendee: any) => {
-              const { Mailbox : email, ResponseType : responseStatus } = attendee;
-              return { address: email.EmailAddress, response: responseStatus };
-            });
+              out.attendees = _.map(out.attendees, (attendee: any) => {
+                const { Mailbox : email, ResponseType : response } = attendee;
+                return { address: email.EmailAddress, response };
+              });
 
-            console.log('out', JSON.stringify(out, null, 2));
-            data.push(out);
+              _.remove(out.attendees, (attendee: any) => {
+                return !attendee.address;
+              });
+
+              out.canceled = adapter.parseBoolean(out.canceled);
+              out.allDay = adapter.parseBoolean(out.allDay);
+              out.hasAttachments = adapter.parseBoolean(out.hasAttachments);
+              data.push(out);
+            }
           }
 
-          // console.log('data', JSON.stringify(data, null, 2));
-
-          // request all events for this user in the given time frame
           return Object.assign(individualRunStats, { data });
         } catch (error) {
           let errorMessage: any = error instanceof Error ? error : new Error(JSON.stringify(error));
 
-          if (/invalid_grant/.test(errorMessage.message.toString())) {
+          if (/primary SMTP address must be specified/.test(errorMessage.message.toString())) {
             errorMessage = {
-              type : 'InvalidGrant',
-              error : new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Exchange Calendar account.`)
+              type : 'InvalidPrimaryAddress',
+              error : new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
             };
+          } else if (/SMTP address has no mailbox associated/.test(errorMessage.message.toString())) {
+            errorMessage = {
+              type : 'InvalidAddress',
+              error : new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
+            };
+          } else if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
+            // Service account is unauthorized-- throw error to exit all
+            throw error;
+          } else {
+            console.log('unknown error', error);
           }
 
           return Object.assign(individualRunStats, {
@@ -252,30 +238,6 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         }
       }
     };
-  }
-
-  private initEws() {
-    const { credentials }: { credentials: {[k: string]: string} } = this;
-
-    if (!credentials) {
-      throw new Error('credentials required for adapter.');
-    }
-
-    // validate required credential properties
-    Object.keys(credentialMappings)
-      .forEach(prop => {
-        if (!credentials[prop]) {
-          throw new Error(`Property ${prop} required in adapter credentials!`);
-        }
-      });
-
-    const ewsConfig = {
-      username: this.credentials.username,
-      password: this.credentials.password,
-      host: this.credentials.connectUrl
-    };
-
-    this.ews = new EWS(ewsConfig);
   }
 
   private async attachAttendees(out: any, item: any) {
@@ -409,8 +371,6 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
   }
 
   async runConnectionTest() {
-    this.initEws();
-
     try {
       // Just call a the method to expand a distribution list to get a response
       const result = await this.ews.run('ExpandDL', {
@@ -418,8 +378,6 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
           EmailAddress: 'all@company.com'
         }
       });
-
-      // console.log('result', JSON.stringify(result, null, 2));
 
       return {
         success: true,

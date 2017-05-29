@@ -88,6 +88,7 @@ ava_1.default('should connect to exchange service account', (t) => __awaiter(thi
         password: EXCHANGE_SERVICE_PASSWORD,
         connectUrl: EXCHANGE_SERVICE_CONNECT_URL
     };
+    yield adapter.init();
     const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
         { success: true } :
         yield adapter.runConnectionTest();
@@ -106,12 +107,12 @@ ava_1.default('should get exchange service account calendar data', (t) => __awai
     if (EXCHANGE_SERVICE_PASSWORD === 'password') {
         return;
     }
+    yield adapter.init();
     const userProfile = {
         email: EXCHANGE_SERVICE_USER_EMAIL,
         emailAfterMapping: EXCHANGE_SERVICE_USER_EMAIL
     };
     const results = yield adapter.getBatchData([userProfile], startDate, endDate);
-    console.log(results);
-    // t.true(connTest.success);
+    t.true(results.success);
 }));
 //# sourceMappingURL=crosslead-adapters_test.js.map
