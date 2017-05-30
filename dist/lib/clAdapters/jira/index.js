@@ -24,6 +24,7 @@ class JiraAdapter extends Adapter_1.default {
         super(...arguments);
         this.credentials = {
             username: '',
+            email: '',
             password: '',
             host: '',
             protocol: '',

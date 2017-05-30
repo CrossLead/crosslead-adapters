@@ -2,6 +2,7 @@ import Adapter from '../base/Adapter';
 import * as request from 'request';
 export declare type JiraCredentials = {
     username: string;
+    email: string;
     password: string;
     host: string;
     protocol: string;

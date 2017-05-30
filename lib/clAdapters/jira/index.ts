@@ -6,6 +6,7 @@ import rateLimit from '../../utils/rate-limit';
 
 export type JiraCredentials = {
   username: string;
+  email: string;
   password: string;
   host: string;
   protocol: string;
@@ -27,6 +28,7 @@ export interface JiraAdapterRequestResult {
 export default class JiraAdapter extends Adapter {
   credentials: JiraCredentials = {
     username: '',
+    email: '',
     password: '',
     host: '',
     protocol: '',
