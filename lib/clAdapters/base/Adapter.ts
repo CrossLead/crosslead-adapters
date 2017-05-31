@@ -75,6 +75,9 @@ abstract class Adapter {
    */
   abstract getFieldData(field?: Field, query?: any): any;
 
+  public parseBoolean(str?: string) {
+    return !str || str === 'true' || str === 'TRUE';
+  }
 }
 
 export default Adapter;

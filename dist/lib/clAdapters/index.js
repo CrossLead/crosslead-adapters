@@ -20,4 +20,6 @@ var _7 = require("./slack/");
 exports.SlackAdapter = _7.default;
 var _8 = require("./activeSync/calendar/");
 exports.ActiveSyncCalendarAdapter = _8.default;
+var _9 = require("./exchangeService/calendar/");
+exports.ExchangeServiceCalendarAdapter = _9.default;
 //# sourceMappingURL=index.js.map

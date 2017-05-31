@@ -55,5 +55,6 @@ declare abstract class Adapter {
      * @return {Object[]} result.results result objects
      */
     abstract getFieldData(field?: Field, query?: any): any;
+    parseBoolean(str?: string): boolean;
 }
 export default Adapter;

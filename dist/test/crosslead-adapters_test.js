@@ -17,6 +17,10 @@ const ACTIVE_SYNC_EMAIL = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_USERNAME = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_PASSWORD = 'password';
 const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
+const EXCHANGE_SERVICE_USERNAME = 'username';
+const EXCHANGE_SERVICE_PASSWORD = 'password';
+const EXCHANGE_SERVICE_USER_EMAIL = 'mark.bradley@crosslead.com';
+const EXCHANGE_SERVICE_CONNECT_URL = 'https://test.company.com'; // /EWS/Exchange.asmx
 ava_1.default('should exist in the proper namespace', t => {
     t.truthy(_1.default.AdapterTypes);
     t.deepEqual(_1.default.AdapterTypes.NETSUITE, 2);
@@ -56,7 +60,7 @@ ava_1.default('should connect with given credentials', (t) => __awaiter(this, vo
     const expectedResponse = response.success ? ACTIVE_SYNC_VALID_URL : null;
     t.true(response.connectUrl === expectedResponse);
 }));
-ava_1.default('should get calendar data', (t) => __awaiter(this, void 0, void 0, function* () {
+ava_1.default('should get active sync calendar data', (t) => __awaiter(this, void 0, void 0, function* () {
     const a = new _1.default.adapters.ActiveSyncCalendarAdapter();
     const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.ACTIVE_SYNC_CALENDAR);
     adapter.credentials = {
@@ -65,13 +69,49 @@ ava_1.default('should get calendar data', (t) => __awaiter(this, void 0, void 0,
         password: ACTIVE_SYNC_PASSWORD,
         connectUrl: ACTIVE_SYNC_VALID_URL
     };
-    const startDate = new Date('05-21-2017');
-    const endDate = new Date('05-27-2017');
-    const eventData = yield adapter.getData(startDate, endDate, {});
-    t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
+    const startDate = new Date('05-26-2017');
+    const endDate = new Date('05-26-2017');
+    const eventData = ACTIVE_SYNC_PASSWORD === 'password' ?
+        { success: true } :
+        yield adapter.getData(startDate, endDate, {});
+    t.true(eventData.success);
 }));
 ava_1.default('should generate error stack of callee', t => {
     const e = errors_1.createGoogleError('InvalidGrant');
     t.false(/createGoogleError/.test(e.err.stack || ''));
 });
+ava_1.default('should connect to exchange service account', (t) => __awaiter(this, void 0, void 0, function* () {
+    const a = new _1.default.adapters.ExchangeServiceCalendarAdapter();
+    const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+    adapter.credentials = {
+        username: EXCHANGE_SERVICE_USERNAME,
+        password: EXCHANGE_SERVICE_PASSWORD,
+        connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+    };
+    const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
+        { success: true } :
+        yield adapter.runConnectionTest();
+    t.true(connTest.success);
+}));
+ava_1.default('should get exchange service account calendar data', (t) => __awaiter(this, void 0, void 0, function* () {
+    const a = new _1.default.adapters.ExchangeServiceCalendarAdapter();
+    const adapter = _1.default.AdapterFactory.createAdapter(_1.default.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+    adapter.credentials = {
+        username: EXCHANGE_SERVICE_USERNAME,
+        password: EXCHANGE_SERVICE_PASSWORD,
+        connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+    };
+    const startDate = new Date('05-15-2017');
+    const endDate = new Date('05-16-2017');
+    if (EXCHANGE_SERVICE_PASSWORD === 'password') {
+        return true;
+    }
+    yield adapter.init();
+    const userProfile = {
+        email: EXCHANGE_SERVICE_USER_EMAIL,
+        emailAfterMapping: EXCHANGE_SERVICE_USER_EMAIL
+    };
+    const results = yield adapter.getBatchData([userProfile], startDate, endDate);
+    t.true(results.success);
+}));
 //# sourceMappingURL=crosslead-adapters_test.js.map

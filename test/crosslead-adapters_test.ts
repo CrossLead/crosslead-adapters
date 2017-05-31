@@ -11,6 +11,11 @@ const ACTIVE_SYNC_USERNAME: string = 'mark.bradley@crosslead.com';
 const ACTIVE_SYNC_PASSWORD: string = 'password';
 const ACTIVE_SYNC_VALID_URL: string = 'https://outlook.office365.com/Microsoft-Server-ActiveSync';
 
+const EXCHANGE_SERVICE_USERNAME: string = 'username';
+const EXCHANGE_SERVICE_PASSWORD: string = 'password';
+const EXCHANGE_SERVICE_USER_EMAIL: string = 'mark.bradley@crosslead.com';
+const EXCHANGE_SERVICE_CONNECT_URL: string = 'https://test.company.com'; // /EWS/Exchange.asmx
+
 test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
   t.deepEqual(CLAdapters.AdapterTypes.NETSUITE, 2);
@@ -58,7 +63,7 @@ test('should connect with given credentials', async t => {
   t.true(response.connectUrl === expectedResponse);
 });
 
-test('should get calendar data', async t => {
+test('should get active sync calendar data', async t => {
   const a = new CLAdapters.adapters.ActiveSyncCalendarAdapter();
   const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.ACTIVE_SYNC_CALENDAR);
 
@@ -69,14 +74,65 @@ test('should get calendar data', async t => {
     connectUrl: ACTIVE_SYNC_VALID_URL
   };
 
-  const startDate = new Date('05-21-2017');
-  const endDate = new Date('05-27-2017');
-  const eventData = await adapter.getData(startDate, endDate, {});
+  const startDate = new Date('05-26-2017');
+  const endDate = new Date('05-26-2017');
+  const eventData = ACTIVE_SYNC_PASSWORD === 'password' ?
+                      { success : true } :
+                      await adapter.getData(startDate, endDate, {});
 
-  t.true(ACTIVE_SYNC_PASSWORD === 'password' ? true : eventData.success);
+  t.true(eventData.success);
 });
 
 test('should generate error stack of callee', t => {
   const e = createGoogleError('InvalidGrant');
   t.false(/createGoogleError/.test(e.err.stack || ''));
+});
+
+test('should connect to exchange service account', async t => {
+  const a = new CLAdapters.adapters.ExchangeServiceCalendarAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+
+  adapter.credentials = {
+    username: EXCHANGE_SERVICE_USERNAME,
+    password: EXCHANGE_SERVICE_PASSWORD,
+    connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+  };
+
+  const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
+                     { success: true } :
+                     await adapter.runConnectionTest();
+
+  t.true(connTest.success);
+});
+
+test('should get exchange service account calendar data', async t => {
+  const a = new CLAdapters.adapters.ExchangeServiceCalendarAdapter();
+  const adapter = CLAdapters.AdapterFactory.createAdapter(CLAdapters.AdapterTypes.EXCHANGE_SERVICE_CALENDAR);
+
+  adapter.credentials = {
+    username: EXCHANGE_SERVICE_USERNAME,
+    password: EXCHANGE_SERVICE_PASSWORD,
+    connectUrl: EXCHANGE_SERVICE_CONNECT_URL
+  };
+
+  const startDate = new Date('05-15-2017');
+  const endDate = new Date('05-16-2017');
+
+  if (EXCHANGE_SERVICE_PASSWORD === 'password') {
+    return true;
+  }
+
+  await adapter.init();
+  const userProfile = {
+    email : EXCHANGE_SERVICE_USER_EMAIL,
+    emailAfterMapping : EXCHANGE_SERVICE_USER_EMAIL
+  };
+
+  const results = await adapter.getBatchData(
+                    [userProfile],
+                    startDate,
+                    endDate
+                  );
+
+  t.true(results.success);
 });
