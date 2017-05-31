@@ -55,7 +55,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
   static fieldNameMap = fieldNameMap;
 
   _config: Configuration;
-  _service: any;
+  _service: ExchangeServiceService;
 
   // constructor needs to call super
   constructor() {

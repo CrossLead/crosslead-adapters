@@ -59,7 +59,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         'privacy': string;
     };
     _config: Configuration;
-    _service: any;
+    _service: ExchangeServiceService;
     constructor();
     reset(): this;
     init(): Promise<this>;
