@@ -1,10 +1,9 @@
 import * as moment from 'moment';
-import 'moment-recur';
 import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
-import * as asclient from 'asclient';
 import ExchangeServiceBaseAdapter from '../base/Adapter';
-import * as EWS from 'node-ews';
+import ExchangeServiceService from '../base/Service';
+import { createExchangeServiceError } from '../errors';
 
 const credentialMappings: { [key: string]: string } = {
   username : 'username',
@@ -50,15 +49,13 @@ export interface UserProfile {
 
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
   static Configuration = Configuration;
-  static Service = Service;
+  static Service = ExchangeServiceService;
 
   // convert the names of the api response data
   static fieldNameMap = fieldNameMap;
 
   _config: Configuration;
-  _service: Service;
-  ews: any;
-  soapHeader: any;
+  _service: any;
 
   // constructor needs to call super
   constructor() {
@@ -95,17 +92,9 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
       });
 
     this._config  = new ExchangeServiceCalendarAdapter.Configuration(credentials);
-    this._service = new ExchangeServiceCalendarAdapter.Service(this._config);
+    this._service = new ExchangeServiceService(this._config);
 
     await this._service.init();
-
-    const ewsConfig = {
-      username: credentials.username,
-      password: credentials.password,
-      host: credentials.connectUrl
-    };
-
-    this.ews = new EWS(ewsConfig);
 
     console.log(
       `Successfully initialized active sync calendar adapter for username: ${credentials.username}`
@@ -151,16 +140,17 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
           errorMessage: null
         };
 
-        this.setImpersonationUser(userProfile.emailAfterMapping);
+        this._service.setImpersonationUser(userProfile.emailAfterMapping);
 
         try {
-          const result = await this.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
+          const result = await this._service.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
           const items = _.get(result, 'ResponseMessages.FindItemResponseMessage.RootFolder.Items.CalendarItem');
 
           const data = [];
 
           if (items && items.length) {
             for (const item of items) {
+              console.log(item);
               const out: { [key: string]: any } = {};
 
               _.each(fieldNameMap, (have: string, want: string) => {
@@ -196,15 +186,15 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
           let errorMessage: any = error instanceof Error ? error : new Error(JSON.stringify(error));
 
           if (/primary SMTP address must be specified/.test(errorMessage.message.toString())) {
-            errorMessage = {
-              type : 'InvalidPrimaryAddress',
-              error : new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
-            };
+            errorMessage = createExchangeServiceError(
+              'NotPrimaryEmail',
+              new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
+            );
           } else if (/SMTP address has no mailbox associated/.test(errorMessage.message.toString())) {
-            errorMessage = {
-              type : 'InvalidAddress',
-              error : new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
-            };
+            errorMessage = createExchangeServiceError(
+              'NoMailbox',
+              new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
+            );
           } else if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
             // Service account is unauthorized-- throw error to exit all
             throw error;
@@ -218,33 +208,31 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             data: []
           });
         }
-
       }));
 
       return Object.assign(groupRunStats, { results });
     } catch (error) {
+      let errorMessage: any = error instanceof Error ? error : new Error(JSON.stringify(error));
+
+      if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
+        errorMessage = createExchangeServiceError(
+          'UnauthorizedClient',
+          new Error('Crendentials are not valid for ExchangeService.')
+        );
+      }
+
       return Object.assign(groupRunStats, {
-        errorMessage: error,
+        errorMessage,
         success: false
       });
     }
-  }
-
-  private setImpersonationUser(emailAddress: string) {
-    this.soapHeader = {
-      't:ExchangeImpersonation' : {
-        't:ConnectingSID' : {
-          't:PrimarySmtpAddress' : emailAddress
-        }
-      }
-    };
   }
 
   private async attachAttendees(out: any, item: any) {
     const attributes = _.get(item, 'ItemId.attributes');
     const itemId = _.get(attributes, 'Id');
     const itemChangeKey = _.get(attributes, 'ChangeKey');
-    let attendees = await this.getRequiredAttendees(itemId, itemChangeKey);
+    let attendees = await this._service.getRequiredAttendees(itemId, itemChangeKey);
 
     // If an object is returned
     if (attendees) {
@@ -259,7 +247,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
       out.attendees = [];
     }
 
-    attendees = await this.getOptionalAttendees(itemId, itemChangeKey);
+    attendees = await this._service.getOptionalAttendees(itemId, itemChangeKey);
 
     if (attendees) {
       if (attendees.length) {
@@ -270,110 +258,12 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     }
   }
 
-  private async getOptionalAttendees(itemId: string, itemChangeKey: string) {
-    if (!this.ews) {
-      throw new Error('EWS has not been inited!');
-    }
-
-    const ewsArgs = {
-      ItemShape : {
-        BaseShape : 'IdOnly',
-        AdditionalProperties : [
-          {
-            FieldURI : {
-              attributes : {
-                FieldURI : 'calendar:OptionalAttendees'
-              }
-            }
-          }
-        ]
-      },
-      ItemIds : [
-        {
-          ItemId : {
-            attributes : {
-              Id : itemId,
-              ChangeKey : itemChangeKey
-            }
-          }
-        }
-      ]
-    };
-
-    const result = await this.ews.run('GetItem', ewsArgs, this.soapHeader);
-    const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.OptionalAttendees.Attendee');
-    return attendees;
-  }
-
-  private async getRequiredAttendees(itemId: string, itemChangeKey: string) {
-    if (!this.ews) {
-      throw new Error('EWS has not been inited!');
-    }
-
-    const ewsArgs = {
-      ItemShape : {
-        BaseShape : 'IdOnly',
-        AdditionalProperties : [
-          {
-            FieldURI : {
-              attributes : {
-                FieldURI : 'calendar:RequiredAttendees'
-              }
-            }
-          }
-        ]
-      },
-      ItemIds : [
-        {
-          ItemId : {
-            attributes : {
-              Id : itemId,
-              ChangeKey : itemChangeKey
-            }
-          }
-        }
-      ]
-    };
-
-    const result = await this.ews.run('GetItem', ewsArgs, this.soapHeader);
-    const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.RequiredAttendees.Attendee');
-    return attendees;
-  }
-
-  private async findItem(startDate: string, endDate: string) {
-    if (!this.ews) {
-      throw new Error('EWS has not been inited!');
-    }
-
-    const ewsArgs = {
-      attributes: {
-        Traversal : 'Shallow'
-      },
-      ItemShape : {
-        BaseShape : 'AllProperties'
-      },
-      CalendarView : {
-        attributes : {
-          StartDate : startDate,
-          EndDate : endDate
-        }
-      },
-      ParentFolderIds : {
-        DistinguishedFolderId : {
-          attributes : {
-            Id : 'calendar'
-          }
-        }
-      }
-    };
-
-    return this.ews.run('FindItem', ewsArgs, this.soapHeader);
-  }
-
   async runConnectionTest() {
     try {
+      await this.init();
+
       // Just call a the method to expand a distribution list to get a response
-      const result = await this.ews.run('ExpandDL', {
+      const result = await this._service.ews.run('ExpandDL', {
         'Mailbox': {
           EmailAddress: 'all@company.com'
         }

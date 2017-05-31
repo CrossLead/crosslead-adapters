@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
-require("moment-recur");
 const _ = require("lodash");
 const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
-const EWS = require("node-ews");
+const Service_1 = require("../base/Service");
+const errors_1 = require("../errors");
 const credentialMappings = {
     username: 'username',
     password: 'password',
@@ -79,14 +79,8 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 }
             });
             this._config = new ExchangeServiceCalendarAdapter.Configuration(credentials);
-            this._service = new ExchangeServiceCalendarAdapter.Service(this._config);
+            this._service = new Service_1.default(this._config);
             yield this._service.init();
-            const ewsConfig = {
-                username: credentials.username,
-                password: credentials.password,
-                host: credentials.connectUrl
-            };
-            this.ews = new EWS(ewsConfig);
             console.log(`Successfully initialized active sync calendar adapter for username: ${credentials.username}`);
             return this;
         });
@@ -112,13 +106,14 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 const results = yield Promise.all(userProfiles.map((userProfile) => __awaiter(this, void 0, void 0, function* () {
                     const individualRunStats = Object.assign({ filterStartDate,
                         filterEndDate }, userProfile, { success: true, runDate: moment().utc().toDate(), errorMessage: null });
-                    this.setImpersonationUser(userProfile.emailAfterMapping);
+                    this._service.setImpersonationUser(userProfile.emailAfterMapping);
                     try {
-                        const result = yield this.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
+                        const result = yield this._service.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
                         const items = _.get(result, 'ResponseMessages.FindItemResponseMessage.RootFolder.Items.CalendarItem');
                         const data = [];
                         if (items && items.length) {
                             for (const item of items) {
+                                console.log(item);
                                 const out = {};
                                 _.each(fieldNameMap, (have, want) => {
                                     let modified = _.get(item, have);
@@ -148,16 +143,10 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                     catch (error) {
                         let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
                         if (/primary SMTP address must be specified/.test(errorMessage.message.toString())) {
-                            errorMessage = {
-                                type: 'InvalidPrimaryAddress',
-                                error: new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
-                            };
+                            errorMessage = errors_1.createExchangeServiceError('NotPrimaryEmail', new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`));
                         }
                         else if (/SMTP address has no mailbox associated/.test(errorMessage.message.toString())) {
-                            errorMessage = {
-                                type: 'InvalidAddress',
-                                error: new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
-                            };
+                            errorMessage = errors_1.createExchangeServiceError('NoMailbox', new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`));
                         }
                         else if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
                             // Service account is unauthorized-- throw error to exit all
@@ -176,28 +165,23 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 return Object.assign(groupRunStats, { results });
             }
             catch (error) {
+                let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
+                if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
+                    errorMessage = errors_1.createExchangeServiceError('UnauthorizedClient', new Error('Crendentials are not valid for ExchangeService.'));
+                }
                 return Object.assign(groupRunStats, {
-                    errorMessage: error,
+                    errorMessage,
                     success: false
                 });
             }
         });
-    }
-    setImpersonationUser(emailAddress) {
-        this.soapHeader = {
-            't:ExchangeImpersonation': {
-                't:ConnectingSID': {
-                    't:PrimarySmtpAddress': emailAddress
-                }
-            }
-        };
     }
     attachAttendees(out, item) {
         return __awaiter(this, void 0, void 0, function* () {
             const attributes = _.get(item, 'ItemId.attributes');
             const itemId = _.get(attributes, 'Id');
             const itemChangeKey = _.get(attributes, 'ChangeKey');
-            let attendees = yield this.getRequiredAttendees(itemId, itemChangeKey);
+            let attendees = yield this._service.getRequiredAttendees(itemId, itemChangeKey);
             // If an object is returned
             if (attendees) {
                 if (attendees.length) {
@@ -210,7 +194,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             if (!out.attendees) {
                 out.attendees = [];
             }
-            attendees = yield this.getOptionalAttendees(itemId, itemChangeKey);
+            attendees = yield this._service.getOptionalAttendees(itemId, itemChangeKey);
             if (attendees) {
                 if (attendees.length) {
                     out.attendees.push(...attendees);
@@ -221,108 +205,12 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             }
         });
     }
-    getOptionalAttendees(itemId, itemChangeKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.ews) {
-                throw new Error('EWS has not been inited!');
-            }
-            const ewsArgs = {
-                ItemShape: {
-                    BaseShape: 'IdOnly',
-                    AdditionalProperties: [
-                        {
-                            FieldURI: {
-                                attributes: {
-                                    FieldURI: 'calendar:OptionalAttendees'
-                                }
-                            }
-                        }
-                    ]
-                },
-                ItemIds: [
-                    {
-                        ItemId: {
-                            attributes: {
-                                Id: itemId,
-                                ChangeKey: itemChangeKey
-                            }
-                        }
-                    }
-                ]
-            };
-            const result = yield this.ews.run('GetItem', ewsArgs, this.soapHeader);
-            const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.OptionalAttendees.Attendee');
-            return attendees;
-        });
-    }
-    getRequiredAttendees(itemId, itemChangeKey) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.ews) {
-                throw new Error('EWS has not been inited!');
-            }
-            const ewsArgs = {
-                ItemShape: {
-                    BaseShape: 'IdOnly',
-                    AdditionalProperties: [
-                        {
-                            FieldURI: {
-                                attributes: {
-                                    FieldURI: 'calendar:RequiredAttendees'
-                                }
-                            }
-                        }
-                    ]
-                },
-                ItemIds: [
-                    {
-                        ItemId: {
-                            attributes: {
-                                Id: itemId,
-                                ChangeKey: itemChangeKey
-                            }
-                        }
-                    }
-                ]
-            };
-            const result = yield this.ews.run('GetItem', ewsArgs, this.soapHeader);
-            const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.RequiredAttendees.Attendee');
-            return attendees;
-        });
-    }
-    findItem(startDate, endDate) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.ews) {
-                throw new Error('EWS has not been inited!');
-            }
-            const ewsArgs = {
-                attributes: {
-                    Traversal: 'Shallow'
-                },
-                ItemShape: {
-                    BaseShape: 'AllProperties'
-                },
-                CalendarView: {
-                    attributes: {
-                        StartDate: startDate,
-                        EndDate: endDate
-                    }
-                },
-                ParentFolderIds: {
-                    DistinguishedFolderId: {
-                        attributes: {
-                            Id: 'calendar'
-                        }
-                    }
-                }
-            };
-            return this.ews.run('FindItem', ewsArgs, this.soapHeader);
-        });
-    }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                yield this.init();
                 // Just call a the method to expand a distribution list to get a response
-                const result = yield this.ews.run('ExpandDL', {
+                const result = yield this._service.ews.run('ExpandDL', {
                     'Mailbox': {
                         EmailAddress: 'all@company.com'
                     }
@@ -343,7 +231,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
     }
 }
 ExchangeServiceCalendarAdapter.Configuration = index_1.Configuration;
-ExchangeServiceCalendarAdapter.Service = index_1.Service;
+ExchangeServiceCalendarAdapter.Service = Service_1.default;
 // convert the names of the api response data
 ExchangeServiceCalendarAdapter.fieldNameMap = exports.fieldNameMap;
 exports.default = ExchangeServiceCalendarAdapter;

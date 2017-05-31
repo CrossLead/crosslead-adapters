@@ -14,7 +14,7 @@ const ACTIVE_SYNC_VALID_URL: string = 'https://outlook.office365.com/Microsoft-S
 const EXCHANGE_SERVICE_USERNAME: string = 'username';
 const EXCHANGE_SERVICE_PASSWORD: string = 'password';
 const EXCHANGE_SERVICE_USER_EMAIL: string = 'mark.bradley@crosslead.com';
-const EXCHANGE_SERVICE_CONNECT_URL: string = 'https://eas.comcast.com'; // /EWS/Exchange.asmx
+const EXCHANGE_SERVICE_CONNECT_URL: string = 'https://test.company.com'; // /EWS/Exchange.asmx
 
 test('should exist in the proper namespace', t => {
   t.truthy(CLAdapters.AdapterTypes);
@@ -98,7 +98,6 @@ test('should connect to exchange service account', async t => {
     connectUrl: EXCHANGE_SERVICE_CONNECT_URL
   };
 
-  await adapter.init();
   const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
                      { success: true } :
                      await adapter.runConnectionTest();

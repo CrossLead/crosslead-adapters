@@ -20,7 +20,7 @@ const ACTIVE_SYNC_VALID_URL = 'https://outlook.office365.com/Microsoft-Server-Ac
 const EXCHANGE_SERVICE_USERNAME = 'username';
 const EXCHANGE_SERVICE_PASSWORD = 'password';
 const EXCHANGE_SERVICE_USER_EMAIL = 'mark.bradley@crosslead.com';
-const EXCHANGE_SERVICE_CONNECT_URL = 'https://eas.comcast.com'; // /EWS/Exchange.asmx
+const EXCHANGE_SERVICE_CONNECT_URL = 'https://test.company.com'; // /EWS/Exchange.asmx
 ava_1.default('should exist in the proper namespace', t => {
     t.truthy(_1.default.AdapterTypes);
     t.deepEqual(_1.default.AdapterTypes.NETSUITE, 2);
@@ -88,7 +88,6 @@ ava_1.default('should connect to exchange service account', (t) => __awaiter(thi
         password: EXCHANGE_SERVICE_PASSWORD,
         connectUrl: EXCHANGE_SERVICE_CONNECT_URL
     };
-    yield adapter.init();
     const connTest = EXCHANGE_SERVICE_PASSWORD === 'password' ?
         { success: true } :
         yield adapter.runConnectionTest();

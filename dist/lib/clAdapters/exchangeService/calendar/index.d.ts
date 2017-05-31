@@ -1,6 +1,6 @@
-import 'moment-recur';
-import { Configuration, Service } from '../../base/index';
+import { Configuration } from '../../base/index';
 import ExchangeServiceBaseAdapter from '../base/Adapter';
+import ExchangeServiceService from '../base/Service';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
@@ -32,7 +32,7 @@ export interface UserProfile {
 }
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
     static Configuration: typeof Configuration;
-    static Service: typeof Service;
+    static Service: typeof ExchangeServiceService;
     static fieldNameMap: {
         'eventId': string;
         'attendees': string;
@@ -59,9 +59,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         'privacy': string;
     };
     _config: Configuration;
-    _service: Service;
-    ews: any;
-    soapHeader: any;
+    _service: any;
     constructor();
     reset(): this;
     init(): Promise<this>;
@@ -87,11 +85,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             }[];
         })[];
     }>;
-    private setImpersonationUser(emailAddress);
     private attachAttendees(out, item);
-    private getOptionalAttendees(itemId, itemChangeKey);
-    private getRequiredAttendees(itemId, itemChangeKey);
-    private findItem(startDate, endDate);
     runConnectionTest(): Promise<{
         success: boolean;
         data: any;
