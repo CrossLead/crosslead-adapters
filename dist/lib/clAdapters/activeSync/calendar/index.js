@@ -238,6 +238,11 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         }
         return false;
     }
+    setIfExists(fieldName, event, exEvent) {
+        if (exEvent[fieldName]) {
+            event[fieldName] = exEvent[fieldName];
+        }
+    }
     getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate) {
         const exceptions = _.get(exceptionsObj, 'Exception') || [];
         const exceptionEvents = [];
@@ -257,10 +262,11 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                     instanceEvent.StartTime = [startTime.utc().format().replace(/[-:]/g, '')];
                     instanceEvent.EndTime = [endTime.utc().format().replace(/[-:]/g, '')];
                     if (!adapter.isDeleted(exceptionsObj, instanceEvent)) {
-                        // Set the new subject if it is specified
-                        if (exception.Subject) {
-                            instanceEvent.Subject = exception.Subject;
-                        }
+                        adapter.setIfExists('Subject', instanceEvent, exception);
+                        adapter.setIfExists('Location', instanceEvent, exception);
+                        adapter.setIfExists('BusyStatus', instanceEvent, exception);
+                        adapter.setIfExists('ResponseType', instanceEvent, exception);
+                        adapter.setIfExists('MeetingStatus', instanceEvent, exception);
                         exceptionEvents.push(instanceEvent);
                     }
                 }

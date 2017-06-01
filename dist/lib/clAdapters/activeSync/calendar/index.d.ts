@@ -61,6 +61,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     private getRecurrence(startTime, filterEndDate, recurrenceObj);
     private checkOccurences(recurrence, occurrences, filterEndDate);
     private isDeleted(exceptionsObj, event);
+    private setIfExists(fieldName, event, exEvent);
     private getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate);
     private addToEvents(events, folder, filterStartDate, filterEndDate);
     private eventExists(events, event);
