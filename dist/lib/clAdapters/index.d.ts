@@ -1,4 +1,4 @@
-export { default as Adapter } from './base/Adapter';
+export { default as Adapter, AdapterCredentials } from './base/Adapter';
 export { default as CLMockAdapter } from './clMockAdapter';
 export { default as NetSuiteAdapter } from './netsuite/';
 export { default as Office365MailAdapter } from './office365/mail/';
