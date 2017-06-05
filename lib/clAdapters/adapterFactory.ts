@@ -1,4 +1,5 @@
 import {
+  Adapter,
   NetSuiteAdapter,
   CLMockAdapter,
   Office365MailAdapter,
@@ -37,7 +38,8 @@ export default class AdapterFactory {
   static createAdapter(type: Types.SLACK): SlackAdapter;
   static createAdapter(type: Types.ACTIVE_SYNC_CALENDAR): ActiveSyncCalendarAdapter;
   static createAdapter(type: Types.EXCHANGE_SERVICE_CALENDAR): ExchangeServiceCalendarAdapter;
-  static createAdapter(type: Types) {
+  static createAdapter(type: Types): Adapter;
+  static createAdapter(type: Types): Adapter {
     switch (type) {
       case Types.CUSTOM:
         throw new Error('Custom adapters provide their own approach');
