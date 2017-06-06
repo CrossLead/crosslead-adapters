@@ -34,7 +34,9 @@ class JiraAdapter extends Adapter_1.default {
         this.apiVersion = 2;
     }
     init() {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("JiraAdapter.INIT");
+        });
     }
     getFieldData() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,6 +64,7 @@ class JiraAdapter extends Adapter_1.default {
         if (query) {
             options.qs = query;
         }
+        console.log('ASD: JIRA query: ' + path + '/' + (query ? JSON.stringify(query) : ''));
         return new Promise((resolve) => {
             request(options, (error, response, body) => {
                 let errorMessage = null;
@@ -150,6 +153,11 @@ class JiraAdapter extends Adapter_1.default {
             jql: `"Epic Link" IN (${epicKeys.join(',')}) AND
         issuetype IN (${issueTypes.join(',')}) AND
         updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+        });
+    }
+    getUnlinkedProjectIssues(projectIds, issueTypes, formattedStartDate, formattedEndDate) {
+        return this.getAllIssues({
+            jql: `"Epic Link" is EMPTY AND project IN (${projectIds.join(',')}) AND issuetype IN (${issueTypes.join(',')}) AND resolution = Unresolved and updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
         });
     }
     getIssue(issueId) {

@@ -184,6 +184,12 @@ export default class JiraAdapter extends Adapter {
     });
   }
 
+  getUnlinkedProjectIssues(projectIds: string[], issueTypes: string[], formattedStartDate: string, formattedEndDate: string) {
+    return this.getAllIssues({
+      jql: `"Epic Link" is EMPTY AND project IN (${projectIds.join(',')}) AND issuetype IN (${issueTypes.join(',')}) AND resolution = Unresolved and updatedDate >= "${formattedStartDate}" AND updatedDate <= "${formattedEndDate}"`
+    });
+  }
+
   getIssue(issueId: string) {
     return this.makeRequest(`issue/${issueId}`);
   }
