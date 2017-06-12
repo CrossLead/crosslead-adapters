@@ -48,6 +48,7 @@ export const fieldNameMap = {
   'dateTimeEnd':                         'EndTime',
   'subject':                             'Subject',
   'url':                                 'WebLink',
+  'allDay':                              'AllDayEvent',
   // 'hangoutLink':                         'hangoutLink',  // Does not appear to be available
   'privacy':                             'Sensitivity'
 };
@@ -526,6 +527,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
         // Make it the same as the eventId for now, since it does not look like this value is available
         mappedEvent.iCalUId = originalEvent.iCalUId || mappedEvent.eventId;
+        mappedEvent.allDay = adapter.parseBoolean(mappedEvent.allDay);
 
         const recurrence = mappedEvent['recurrence'];
 
