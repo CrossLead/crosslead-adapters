@@ -34,9 +34,7 @@ class JiraAdapter extends Adapter_1.default {
         this.apiVersion = 2;
     }
     init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log("JiraAdapter.INIT");
-        });
+        return __awaiter(this, void 0, void 0, function* () { });
     }
     getFieldData() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -64,7 +62,6 @@ class JiraAdapter extends Adapter_1.default {
         if (query) {
             options.qs = query;
         }
-        console.log('ASD: JIRA query: ' + path + '/' + (query ? JSON.stringify(query) : ''));
         return new Promise((resolve) => {
             request(options, (error, response, body) => {
                 let errorMessage = null;

@@ -26,7 +26,7 @@ class Adapter {
      */
     reset() { }
     parseBoolean(str) {
-        return !str || str === 'true' || str === 'TRUE';
+        return !str || str === 'true' || str === 'TRUE' || str === '1';
     }
 }
 exports.default = Adapter;
