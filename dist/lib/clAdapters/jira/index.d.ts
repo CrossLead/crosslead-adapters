@@ -37,6 +37,7 @@ export default class JiraAdapter extends Adapter {
     getEpicsForProjects(projectIds: string[], epicTypeId: string, formattedStartDate: string, formattedEndDate: string): Promise<any[]>;
     getIssuesForEpic(epicKey: string, issueTypes: string[], formattedStartDate: string, formattedEndDate: string): Promise<any[]>;
     getIssuesForEpics(epicKeys: string[], issueTypes: string[], formattedStartDate: string, formattedEndDate: string): Promise<any[]>;
+    getUnlinkedProjectIssues(projectIds: string[], issueTypes: string[], formattedStartDate: string, formattedEndDate: string): Promise<any[]>;
     getIssue(issueId: string): Promise<JiraAdapterRequestResult>;
     getComments(issueId: string): Promise<JiraAdapterRequestResult>;
     getUser(username: string): Promise<JiraAdapterRequestResult>;
