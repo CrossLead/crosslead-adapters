@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Adapter_1 = require("./base/Adapter");
 exports.Adapter = Adapter_1.default;
 var clMockAdapter_1 = require("./clMockAdapter");
@@ -14,12 +13,14 @@ var _4 = require("./google/mail/");
 exports.GoogleAdapter = _4.default;
 var _5 = require("./google/calendar/");
 exports.GoogleCalendarAdapter = _5.default;
-var _6 = require("./jira/");
-exports.JiraAdapter = _6.default;
-var _7 = require("./slack/");
-exports.SlackAdapter = _7.default;
-var _8 = require("./activeSync/calendar/");
-exports.ActiveSyncCalendarAdapter = _8.default;
-var _9 = require("./exchangeService/calendar/");
-exports.ExchangeServiceCalendarAdapter = _9.default;
+var _6 = require("./google/oauthCalendar/");
+exports.GoogleOauthCalendarAdapter = _6.default;
+var _7 = require("./jira/");
+exports.JiraAdapter = _7.default;
+var _8 = require("./slack/");
+exports.SlackAdapter = _8.default;
+var _9 = require("./activeSync/calendar/");
+exports.ActiveSyncCalendarAdapter = _9.default;
+var _10 = require("./exchangeService/calendar/");
+exports.ExchangeServiceCalendarAdapter = _10.default;
 //# sourceMappingURL=index.js.map

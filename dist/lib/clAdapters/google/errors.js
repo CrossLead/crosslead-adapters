@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 function createGoogleError(kind, err) {
     if (!err) {
         err = new Error();

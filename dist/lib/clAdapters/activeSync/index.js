@@ -1,6 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const calendar_1 = require("./calendar");
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     ActiveSyncCalendarAdapter: calendar_1.default
 };

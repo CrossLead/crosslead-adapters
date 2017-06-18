@@ -7,7 +7,8 @@ var adapterTypes_1 = require("./adapterTypes");
  * @array
  */
 var AdapterLinkedAccountTypes = [
-    adapterTypes_1.default.ACTIVE_SYNC_CALENDAR
+    adapterTypes_1.default.ACTIVE_SYNC_CALENDAR,
+    adapterTypes_1.default.GOOGLE_OAUTH_CALENDAR
 ];
 exports.default = AdapterLinkedAccountTypes;
 //# sourceMappingURL=adapterLinkedAccountTypes.js.map

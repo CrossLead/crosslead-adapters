@@ -34,7 +34,7 @@ export interface GoogleCalendarApiResult {
     items: GoogleCalendarApiEvent[];
     nextPageToken?: string;
 }
-export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
+export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
     static Configuration: typeof Configuration;
     static Service: typeof Service;
     static fieldNameMap: {
@@ -65,32 +65,17 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     constructor();
     reset(): this;
     init(): Promise<this>;
-    getBatchData(userProfiles: UserProfile[], filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<{
-        success: boolean;
-        runDate: any;
-        filterStartDate: Date;
-        filterEndDate: Date;
-        emails: UserProfile[];
-        results: never[];
-    } & {
-        results: ({
-            success: boolean;
-            runDate: any;
-            errorMessage: null;
-            email: string;
-            emailAfterMapping: string;
-            filterStartDate: Date;
-            filterEndDate: Date;
-        } & {
-            data: any;
-        })[];
-    }>;
-    runConnectionTest(): Promise<{
-        success: boolean;
-    }>;
-    runMessageTest(): Promise<{
-        success: boolean;
-    }>;
-    authorize(email: string): Promise<{}>;
-    getEvents(requestOpts: any): Promise<GoogleCalendarApiResult>;
+    getBatchData(userProfiles: UserProfile[], filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<void>;
+    getData(filterStartDate: Date, filterEndDate: Date, properties: {
+        GOOGLE_OAUTH_CLIENT_ID: string;
+        GOOGLE_OAUTH_CLIENT_SECRET: string;
+        GOOGLE_OAUTH_REDIRECT_URL: string;
+        access_token: string;
+        refresh_token: string;
+        expiry_date: string;
+        userId: string;
+        email: string;
+    }): Promise<any>;
+    runConnectionTest(): Promise<void>;
+    runMessageTest(): Promise<void>;
 }
