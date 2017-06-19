@@ -4,9 +4,7 @@ import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
 import { GoogleError, GoogleErrorType, createGoogleError } from '../errors';
-import rateLimit from '../../../utils/rate-limit';
 
-// google calendar api
 const calendar = googleapis.calendar('v3');
 
 function handleGoogleError(res: Function, rej: Function, returnVal?: any) {
@@ -137,7 +135,6 @@ export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
   }
 
 
-  // currently doing nothing with fields here, but keeping as placeholder
   async getBatchData(
     userProfiles: UserProfile[] = [],
     filterStartDate: Date,
@@ -145,7 +142,7 @@ export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
     fields?: string
   ) {
 
-    console.warn('getBatchData is currently unimplemented');
+    console.warn('getBatchData is currently unimplemented in google oauth calendar adapter');
 
   }
 
@@ -284,13 +281,12 @@ export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
 
 
   async runConnectionTest() {
-    console.warn('runConnectionTest is currently unimplemented');
+    console.warn('runConnectionTest is currently unimplemented in google oauth calendar adapter');
   }
 
 
   async runMessageTest() {
-    // TODO: does this need to be different?
-    console.warn('runMessageTest is currently unimplemented');
+    console.warn('runMessageTest is currently unimplemented in google oauth calendar adapter');
   }
 
 }

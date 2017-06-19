@@ -21,7 +21,6 @@ const _ = require("lodash");
 const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
 const errors_1 = require("../errors");
-// google calendar api
 const calendar = googleapis.calendar('v3');
 function handleGoogleError(res, rej, returnVal) {
     return (err, result) => {
@@ -99,10 +98,9 @@ class GoogleOauthCalendarAdapter extends Adapter_1.default {
             return this;
         });
     }
-    // currently doing nothing with fields here, but keeping as placeholder
     getBatchData(userProfiles = [], filterStartDate, filterEndDate, fields) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.warn('getBatchData is currently unimplemented');
+            console.warn('getBatchData is currently unimplemented in google oauth calendar adapter');
         });
     }
     getData(filterStartDate, filterEndDate, properties) {
@@ -198,13 +196,12 @@ class GoogleOauthCalendarAdapter extends Adapter_1.default {
     }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.warn('runConnectionTest is currently unimplemented');
+            console.warn('runConnectionTest is currently unimplemented in google oauth calendar adapter');
         });
     }
     runMessageTest() {
         return __awaiter(this, void 0, void 0, function* () {
-            // TODO: does this need to be different?
-            console.warn('runMessageTest is currently unimplemented');
+            console.warn('runMessageTest is currently unimplemented in google oauth calendar adapter');
         });
     }
 }
