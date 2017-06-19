@@ -1,5 +1,6 @@
 import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
+import { InvalidGrant } from '../errors';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
@@ -75,7 +76,32 @@ export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
         expiry_date: string;
         userId: string;
         email: string;
-    }): Promise<any>;
+    }): Promise<({
+        filterStartDate: Date;
+        filterEndDate: Date;
+        success: boolean;
+        runDate: any;
+        errorMessage: null;
+    } & {
+        results: {
+            filterStartDate: Date;
+            filterEndDate: Date;
+            success: boolean;
+            userId: string;
+            email: string;
+            data: any;
+        }[];
+    }) | ({
+        filterStartDate: Date;
+        filterEndDate: Date;
+        success: boolean;
+        runDate: any;
+        errorMessage: null;
+    } & {
+        errorMessage: Error | InvalidGrant;
+        success: boolean;
+        data: never[];
+    })>;
     runConnectionTest(): Promise<void>;
     runMessageTest(): Promise<void>;
 }

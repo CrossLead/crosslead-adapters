@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
-import { GoogleError, GoogleErrorType, createGoogleError } from '../errors';
+import { GoogleError, GoogleErrorType, createGoogleError, InvalidGrant } from '../errors';
 
 const calendar = googleapis.calendar('v3');
 
