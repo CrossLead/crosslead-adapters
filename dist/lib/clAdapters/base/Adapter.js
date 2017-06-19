@@ -25,7 +25,7 @@ class Adapter {
      */
     reset() { }
     parseBoolean(str) {
-        return !str || str === 'true' || str === 'TRUE';
+        return !str || str === 'true' || str === 'TRUE' || str === '1';
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

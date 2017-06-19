@@ -29,6 +29,7 @@ export declare const fieldNameMap: {
     'dateTimeEnd': string;
     'subject': string;
     'url': string;
+    'allDay': string;
     'privacy': string;
 };
 export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
@@ -50,6 +51,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         'dateTimeEnd': string;
         'subject': string;
         'url': string;
+        'allDay': string;
         'privacy': string;
     };
     _config: Configuration;

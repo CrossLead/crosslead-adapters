@@ -48,6 +48,7 @@ export const fieldNameMap = {
   'dateTimeEnd':                         'EndTime',
   'subject':                             'Subject',
   'url':                                 'WebLink',
+  'allDay':                              'AllDayEvent',
   // 'hangoutLink':                         'hangoutLink',  // Does not appear to be available
   'privacy':                             'Sensitivity'
 };
@@ -380,23 +381,25 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
             instanceEvent.StartTime = [ startTime.utc().format().replace(/[-:]/g, '') ];
             instanceEvent.EndTime = [ endTime.utc().format().replace(/[-:]/g, '') ];
 
-            if (!adapter.isDeleted(exceptions, instanceEvent) && !this.eventExists(events, instanceEvent)) {
+            if (!adapter.isDeleted(exceptions, instanceEvent) && !adapter.eventExists(events, instanceEvent)) {
               events.push(instanceEvent);
             }
           }
         }
       }
-    } else if (!adapter.isDeleted(exceptions, event) && !this.eventExists(events, event)) {
+    } else if (!adapter.isDeleted(exceptions, event) && !adapter.eventExists(events, event)) {
       events.push(event);
     }
   }
 
   private eventExists(events: any[], event: any) {
     const startTime = event.StartTime[0];
-    const subject = event.Subject[0];
+    const subject = event.Subject ? event.Subject[0] : null;
 
     return !!_.find(events, (ev: any) => {
-      return ev.StartTime[0] === startTime && ev.Subject[0] === subject;
+      const evStartTime = event.StartTime[0];
+      const evSubject = ev.Subject ? event.Subject[0] : null;
+      return evStartTime === startTime && evSubject === subject;
     });
   }
 
@@ -526,6 +529,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
         // Make it the same as the eventId for now, since it does not look like this value is available
         mappedEvent.iCalUId = originalEvent.iCalUId || mappedEvent.eventId;
+        mappedEvent.allDay = adapter.parseBoolean(mappedEvent.allDay);
 
         const recurrence = mappedEvent['recurrence'];
 
