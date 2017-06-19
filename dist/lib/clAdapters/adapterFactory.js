@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
 const adapterTypes_1 = require("./adapterTypes");
 /**
@@ -33,10 +32,13 @@ class AdapterFactory {
                 return new _1.ActiveSyncCalendarAdapter();
             case adapterTypes_1.default.EXCHANGE_SERVICE_CALENDAR:
                 return new _1.ExchangeServiceCalendarAdapter();
+            case adapterTypes_1.default.GOOGLE_OAUTH_CALENDAR:
+                return new _1.GoogleOauthCalendarAdapter();
             default:
                 throw new Error(`Unknown type ${type}`);
         }
     }
 }
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = AdapterFactory;
 //# sourceMappingURL=adapterFactory.js.map

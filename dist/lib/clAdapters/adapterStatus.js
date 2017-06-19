@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Enumeration for adapter status. This is really only for
  * application-specific serialization but both `crosslead-platform`
@@ -13,5 +12,6 @@ var AdapterStatus;
     AdapterStatus[AdapterStatus["ACTIVE"] = 1] = "ACTIVE";
     AdapterStatus[AdapterStatus["DELETED"] = 2] = "DELETED";
 })(AdapterStatus || (AdapterStatus = {}));
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = AdapterStatus;
 //# sourceMappingURL=adapterStatus.js.map

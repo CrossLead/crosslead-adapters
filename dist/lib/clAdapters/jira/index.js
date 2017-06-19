@@ -13,7 +13,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const Adapter_1 = require("../base/Adapter");
 const url = require("url");
 const request = require("request");
@@ -170,5 +169,6 @@ class JiraAdapter extends Adapter_1.default {
 __decorate([
     rate_limit_1.default(200)
 ], JiraAdapter.prototype, "makeRequest", null);
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = JiraAdapter;
 //# sourceMappingURL=index.js.map

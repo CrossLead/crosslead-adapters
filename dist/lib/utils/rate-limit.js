@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 function rateLimitDecorator(rate = 1000, count = 1) {
     return (target, propertyKey, descriptor) => {
         const fn = descriptor.value;
@@ -7,6 +6,7 @@ function rateLimitDecorator(rate = 1000, count = 1) {
         return descriptor;
     };
 }
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = rateLimitDecorator;
 /**
  * Limit calls of this function to at most 1/rate,

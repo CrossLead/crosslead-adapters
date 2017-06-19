@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 ;
 /**
  * Abstract base class for all adapters
@@ -29,5 +28,6 @@ class Adapter {
         return !str || str === 'true' || str === 'TRUE' || str === '1';
     }
 }
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Adapter;
 //# sourceMappingURL=Adapter.js.map

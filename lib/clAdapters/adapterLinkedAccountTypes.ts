@@ -7,7 +7,8 @@ import AdapterTypes from './adapterTypes';
  * @array
  */
 const AdapterLinkedAccountTypes = [
-  AdapterTypes.ACTIVE_SYNC_CALENDAR
+  AdapterTypes.ACTIVE_SYNC_CALENDAR,
+  AdapterTypes.GOOGLE_OAUTH_CALENDAR
 ];
 
 

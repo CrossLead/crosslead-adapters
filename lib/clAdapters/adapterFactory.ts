@@ -6,6 +6,7 @@ import {
   Office365CalendarAdapter,
   GoogleAdapter,
   GoogleCalendarAdapter,
+  GoogleOauthCalendarAdapter,
   JiraAdapter,
   SlackAdapter,
   ActiveSyncCalendarAdapter,
@@ -38,6 +39,7 @@ export default class AdapterFactory {
   static createAdapter(type: Types.SLACK): SlackAdapter;
   static createAdapter(type: Types.ACTIVE_SYNC_CALENDAR): ActiveSyncCalendarAdapter;
   static createAdapter(type: Types.EXCHANGE_SERVICE_CALENDAR): ExchangeServiceCalendarAdapter;
+  static createAdapter( type: Types.GOOGLE_OAUTH_CALENDAR): GoogleOauthCalendarAdapter;
   static createAdapter(type: Types): Adapter;
   static createAdapter(type: Types): Adapter {
     switch (type) {
@@ -63,6 +65,8 @@ export default class AdapterFactory {
         return new ActiveSyncCalendarAdapter();
       case Types.EXCHANGE_SERVICE_CALENDAR:
         return new ExchangeServiceCalendarAdapter();
+      case Types.GOOGLE_OAUTH_CALENDAR:
+        return new GoogleOauthCalendarAdapter();
       default:
         throw new Error(`Unknown type ${type}`);
     }

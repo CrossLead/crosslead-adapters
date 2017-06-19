@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,7 +15,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
 const _ = require("lodash");
 const Adapter_1 = require("../base/Adapter");
@@ -42,7 +49,7 @@ class Office365MailAdapter extends Adapter_1.default {
                 // replace data keys with desired mappings...
                 const results = _.map(emailData, (user) => {
                     const emailArray = (user.success && user.data) || [];
-                    return Object.assign({}, user.userProfile, { filterStartDate: user.filterStartDate, filterEndDate: user.filterEndDate, success: user.success, errorMessage: user.errorMessage, 
+                    return __assign({}, user.userProfile, { filterStartDate: user.filterStartDate, filterEndDate: user.filterEndDate, success: user.success, errorMessage: user.errorMessage, 
                         // map data with desired key names...
                         data: _.map(emailArray, (originalEmailMessage) => {
                             const mappedEmailMessage = {};
@@ -69,12 +76,12 @@ class Office365MailAdapter extends Adapter_1.default {
                         }) });
                 });
                 // return results and success!
-                return Object.assign({}, dataAdapterRunStats, { results, success: true });
+                return __assign({}, dataAdapterRunStats, { results, success: true });
             }
             catch (errorMessage) {
                 console.log(errorMessage.stack);
                 console.log('Office365 GetBatchData Error: ' + JSON.stringify(errorMessage));
-                return Object.assign({}, dataAdapterRunStats, { errorMessage });
+                return __assign({}, dataAdapterRunStats, { errorMessage });
             }
         });
     }
@@ -134,5 +141,6 @@ Office365MailAdapter.fieldNameMap = {
     'isRead': 'IsRead',
     'attachments': 'attachments',
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Office365MailAdapter;
 //# sourceMappingURL=index.js.map

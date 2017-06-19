@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * crosslead-adapters
  * https://github.com/CrossLead/crosslead-adapters
@@ -22,6 +21,7 @@ const adapters = require("./clAdapters/");
 exports.adapters = adapters;
 const ClAdaptersClient = require("./client/");
 exports.ClAdaptersClient = ClAdaptersClient;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     Fields,
     AdapterFactory: adapterFactory_1.default,

@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 class Service {
     constructor(config) {
         this.config = config;
@@ -18,5 +17,6 @@ class Service {
         });
     }
 }
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Service;
 //# sourceMappingURL=Service.js.map

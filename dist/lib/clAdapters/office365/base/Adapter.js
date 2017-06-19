@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const uuid = require("node-uuid");
 const crypto = require("crypto");
 const request = require("request-promise");
@@ -209,5 +208,6 @@ class Office365BaseAdapter extends Adapter_1.default {
     }
 }
 Office365BaseAdapter.baseFields = {};
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Office365BaseAdapter;
 //# sourceMappingURL=Adapter.js.map
