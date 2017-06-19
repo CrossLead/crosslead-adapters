@@ -1,8 +1,7 @@
 import * as googleapis from 'googleapis';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Configuration, Service } from '../../base/index';
-import GoogleBaseAdapter from '../base/Adapter';
+import { Configuration, Service, Adapter } from '../../base/index';
 import { GoogleError, GoogleErrorType, createGoogleError, InvalidGrant } from '../errors';
 
 const calendar = googleapis.calendar('v3');
@@ -66,7 +65,11 @@ export interface UserProfile {
   emailAfterMapping: string;
 }
 
-
+export type GoogleOauthCredentials = {
+  access_token: string;
+  refresh_token: string;
+  email: string;
+};
 
 
 export type GoogleCalendarApiEvent = {
@@ -80,7 +83,16 @@ export interface GoogleCalendarApiResult {
 
 
 
-export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
+export default class GoogleOauthCalendarAdapter extends Adapter {
+  credentials: GoogleOauthCredentials = {
+    access_token: '',
+    refresh_token: '',
+    email: ''
+  };
+
+  async getFieldData() {
+    throw new Error('Google adapters currently do not support `getFieldData()`');
+  }
 
   static Configuration = Configuration;
   static Service = Service;
@@ -88,7 +100,7 @@ export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
   // convert the names of the api response data
   static fieldNameMap = fieldNameMap;
 
-
+  sensitiveCredentialsFields: (keyof GoogleOauthCredentials)[] = ['refresh_token', 'access_token'];
 
   _config: Configuration;
   _service: Service;

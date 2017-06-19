@@ -19,7 +19,6 @@ const googleapis = require("googleapis");
 const moment = require("moment");
 const _ = require("lodash");
 const index_1 = require("../../base/index");
-const Adapter_1 = require("../base/Adapter");
 const errors_1 = require("../errors");
 const calendar = googleapis.calendar('v3');
 function handleGoogleError(res, rej, returnVal) {
@@ -68,10 +67,21 @@ exports.fieldNameMap = {
     'hangoutLink': 'hangoutLink',
     'privacy': 'visibility'
 };
-class GoogleOauthCalendarAdapter extends Adapter_1.default {
+class GoogleOauthCalendarAdapter extends index_1.Adapter {
     // constructor needs to call super
     constructor() {
         super();
+        this.credentials = {
+            access_token: '',
+            refresh_token: '',
+            email: ''
+        };
+        this.sensitiveCredentialsFields = ['refresh_token', 'access_token'];
+    }
+    getFieldData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('Google adapters currently do not support `getFieldData()`');
+        });
     }
     reset() {
         delete this._config;

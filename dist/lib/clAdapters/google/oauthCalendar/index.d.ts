@@ -1,5 +1,4 @@
-import { Configuration, Service } from '../../base/index';
-import GoogleBaseAdapter from '../base/Adapter';
+import { Configuration, Service, Adapter } from '../../base/index';
 import { InvalidGrant } from '../errors';
 export declare const fieldNameMap: {
     'eventId': string;
@@ -28,6 +27,11 @@ export interface UserProfile {
     email: string;
     emailAfterMapping: string;
 }
+export declare type GoogleOauthCredentials = {
+    access_token: string;
+    refresh_token: string;
+    email: string;
+};
 export declare type GoogleCalendarApiEvent = {
     [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
 };
@@ -35,7 +39,9 @@ export interface GoogleCalendarApiResult {
     items: GoogleCalendarApiEvent[];
     nextPageToken?: string;
 }
-export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
+export default class GoogleOauthCalendarAdapter extends Adapter {
+    credentials: GoogleOauthCredentials;
+    getFieldData(): Promise<void>;
     static Configuration: typeof Configuration;
     static Service: typeof Service;
     static fieldNameMap: {
@@ -61,6 +67,7 @@ export default class GoogleOauthCalendarAdapter extends GoogleBaseAdapter {
         'hangoutLink': string;
         'privacy': string;
     };
+    sensitiveCredentialsFields: (keyof GoogleOauthCredentials)[];
     _config: Configuration;
     _service: Service;
     constructor();
