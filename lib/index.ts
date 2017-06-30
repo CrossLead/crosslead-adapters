@@ -12,9 +12,11 @@ import AdapterStatus from './clAdapters/adapterStatus';
 import AdapterTypes from './clAdapters/adapterTypes';
 import AdapterLinkedAccountTypes from './clAdapters/adapterLinkedAccountTypes';
 import * as adapters from './clAdapters/';
+import { Adapter, AdapterCredentials, ActiveSyncCalendarAdapter } from './clAdapters/';
 import * as ClAdaptersClient from './client/';
 
 export { Fields };
+export { Adapter };
 export { AdapterFactory };
 export { AdapterStatus };
 export { AdapterTypes };
@@ -24,6 +26,7 @@ export { ClAdaptersClient };
 
 export default {
   Fields,
+  Adapter,
   AdapterFactory,
   AdapterTypes,
   AdapterLinkedAccountTypes,
