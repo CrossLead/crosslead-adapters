@@ -65,7 +65,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     constructor();
     reset(): this;
     init(): Promise<this>;
-    getBatchData(userProfiles: UserProfile[], filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<{
+    getBatchData(userProfiles: UserProfile[] | undefined, filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<{
         success: boolean;
         runDate: any;
         filterStartDate: Date;

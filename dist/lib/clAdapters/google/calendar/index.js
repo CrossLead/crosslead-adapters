@@ -1,12 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -21,6 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const googleapis = require("googleapis");
 const moment = require("moment");
 const _ = require("lodash");
@@ -44,6 +37,7 @@ function handleGoogleError(res, rej, returnVal) {
                 if (/unauthorized_client/.test(err.message.toString())) {
                     mapped = errors_1.createGoogleError('UnauthorizedClient', err);
                 }
+                // TODO: other types
             }
             else if (!err.kind) {
                 // Not a GoogleError
@@ -146,7 +140,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
             try {
                 // collect events for this group of emails
                 const results = yield Promise.all(userProfiles.map((userProfile) => __awaiter(this, void 0, void 0, function* () {
-                    const individualRunStats = __assign({ filterStartDate,
+                    const individualRunStats = Object.assign({ filterStartDate,
                         filterEndDate }, userProfile, { success: true, runDate: moment().utc().toDate(), errorMessage: null });
                     try {
                         // add auth tokens to request
@@ -186,7 +180,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                          * all calendar ids in the users calendar
                          */
                         const calendarIds = _.chain(yield new Promise((res, rej) => {
-                            calendar.calendarList.list(__assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d && d.items));
+                            calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d && d.items));
                         }))
                             .filter((item) => includedCalendarIds.has(item.id.toLowerCase()))
                             .map('id')
@@ -195,7 +189,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                          * get all items from all calendars in the date
                          * range, and flatten
                          */
-                        const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => getEvents(__assign({}, opts, { auth, calendarId })).then(r => r && r.items))));
+                        const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => getEvents(Object.assign({}, opts, { auth, calendarId })).then(r => r && r.items))));
                         const data = _.map(items, (item) => {
                             const out = {};
                             _.each(fieldNameMap, (have, want) => {
@@ -333,6 +327,5 @@ GoogleCalendarAdapter.fieldNameMap = exports.fieldNameMap;
 __decorate([
     rate_limit_1.default()
 ], GoogleCalendarAdapter.prototype, "getEvents", null);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = GoogleCalendarAdapter;
 //# sourceMappingURL=index.js.map

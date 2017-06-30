@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const Adapter_1 = require("./base/Adapter");
 const Fields = require("./fields/");
 /**
@@ -94,6 +95,5 @@ class CLMockAdapter extends Adapter_1.default {
     }
 }
 ;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = CLMockAdapter;
 //# sourceMappingURL=clMockAdapter.js.map

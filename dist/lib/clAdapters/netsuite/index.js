@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const Fields = require("../fields");
 const NetSuite = require("netsuite-js");
@@ -205,7 +206,6 @@ class NetSuiteAdapter extends index_1.Adapter {
     }
     ;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = NetSuiteAdapter;
 ;
 //# sourceMappingURL=index.js.map

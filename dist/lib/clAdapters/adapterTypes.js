@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Enumeration for different adapter types
  *
@@ -20,6 +21,5 @@ var AdapterTypes;
     AdapterTypes[AdapterTypes["GOOGLE_OAUTH_CALENDAR"] = 12] = "GOOGLE_OAUTH_CALENDAR";
 })(AdapterTypes || (AdapterTypes = {}));
 ;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = AdapterTypes;
 //# sourceMappingURL=adapterTypes.js.map

@@ -13,6 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const Adapter_1 = require("../base/Adapter");
 const url = require("url");
 const request = require("request");
@@ -61,28 +62,21 @@ class JiraAdapter extends Adapter_1.default {
         if (query) {
             options.qs = query;
         }
-        return new Promise((resolve) => {
-            request(options, (error, response, body) => {
+        return new Promise(resolve => {
+            request(options, (error, response, data) => {
                 let errorMessage = null;
-                let success = (response &&
-                    (typeof response.statusCode !== 'undefined') &&
-                    response.statusCode < 400);
-                if (error) {
-                    success = false;
-                    if (error.code === 'ECONNREFUSED') {
-                        errorMessage = 'Failed to connect to JIRA adapter.';
-                    }
+                const success = !error &&
+                    (response &&
+                        (typeof response.statusCode !== 'undefined') &&
+                        response.statusCode < 400);
+                if (error && error.code === 'ECONNREFUSED') {
+                    errorMessage = 'Failed to connect to JIRA';
                 }
                 if (response && response.statusCode === 401) {
-                    success = false;
-                    errorMessage = 'Failed to authorize JIRA adapter.';
+                    errorMessage = 'Failed to authorize JIRA adapter';
                 }
-                resolve({
-                    code: success ? 200 : 500,
-                    message: (errorMessage && new Error(errorMessage)) || error,
-                    data: body,
-                    success: success
-                });
+                const err = errorMessage ? new Error(errorMessage) : error;
+                resolve({ success, err, data });
             });
         });
     }
@@ -169,6 +163,5 @@ class JiraAdapter extends Adapter_1.default {
 __decorate([
     rate_limit_1.default(200)
 ], JiraAdapter.prototype, "makeRequest", null);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = JiraAdapter;
 //# sourceMappingURL=index.js.map

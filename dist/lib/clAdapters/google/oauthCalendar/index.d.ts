@@ -73,7 +73,7 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
     constructor();
     reset(): this;
     init(): Promise<this>;
-    getBatchData(userProfiles: UserProfile[], filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<void>;
+    getBatchData(userProfiles: UserProfile[] | undefined, filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<void>;
     getData(filterStartDate: Date, filterEndDate: Date, properties: {
         GOOGLE_OAUTH_CLIENT_ID: string;
         GOOGLE_OAUTH_CLIENT_SECRET: string;

@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
 require("moment-recur");
 const _ = require("lodash");
@@ -509,6 +510,5 @@ ActiveSyncCalendarAdapter.Configuration = index_1.Configuration;
 ActiveSyncCalendarAdapter.Service = index_1.Service;
 // convert the names of the api response data
 ActiveSyncCalendarAdapter.fieldNameMap = exports.fieldNameMap;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ActiveSyncCalendarAdapter;
 //# sourceMappingURL=index.js.map

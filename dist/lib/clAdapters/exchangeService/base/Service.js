@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const index_1 = require("../../base/index");
 const EWS = require("node-ews");
@@ -134,7 +135,6 @@ class ExchangeServiceService extends index_1.Service {
         });
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ExchangeServiceService;
 ;
 //# sourceMappingURL=Service.js.map

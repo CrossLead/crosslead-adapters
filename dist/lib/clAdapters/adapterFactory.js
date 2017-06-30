@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
 const adapterTypes_1 = require("./adapterTypes");
 /**
@@ -39,6 +40,5 @@ class AdapterFactory {
         }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = AdapterFactory;
 //# sourceMappingURL=adapterFactory.js.map

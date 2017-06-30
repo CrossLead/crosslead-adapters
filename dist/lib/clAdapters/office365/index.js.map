@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../lib/clAdapters/office365/index.ts"],"names":[],"mappings":";AAAA,8BAA+C;AAC/C,kCAAmD;;AAEnD,kBAAe;IACb,oBAAoB,EAApB,UAAoB;IACpB,wBAAwB,EAAxB,UAAwB;CACzB,CAAC"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../lib/clAdapters/office365/index.ts"],"names":[],"mappings":";;AAAA,8BAA+C;AAC/C,kCAAmD;AAEnD,kBAAe;IACb,oBAAoB,EAApB,UAAoB;IACpB,wBAAwB,EAAxB,UAAwB;CACzB,CAAC"}

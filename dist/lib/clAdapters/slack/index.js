@@ -13,6 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const Adapter_1 = require("../base/Adapter");
 const request = require("request");
 const rate_limit_1 = require("../../utils/rate-limit");
@@ -61,6 +62,5 @@ SlackAdapter.baseApiUrl = 'https://slack.com/api';
 __decorate([
     rate_limit_1.default(1000)
 ], SlackAdapter, "callSlackApiMethod", null);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SlackAdapter;
 //# sourceMappingURL=index.js.map

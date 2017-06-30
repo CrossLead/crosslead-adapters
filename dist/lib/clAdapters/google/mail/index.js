@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
 const requestPromise = require("request-promise");
 const moment = require("moment");
@@ -26,7 +27,6 @@ class GoogleMailAdapter extends Adapter_1.default {
         });
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = GoogleMailAdapter;
 GoogleMailAdapter.prototype.reset = function () {
     delete this._config;

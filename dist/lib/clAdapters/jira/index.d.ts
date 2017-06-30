@@ -12,8 +12,7 @@ export interface JiraRequestOpts extends request.CoreOptions {
     uri: string;
 }
 export interface JiraAdapterRequestResult {
-    code: 200 | 500;
-    message: string;
+    err: string;
     data: any;
     success: boolean;
 }

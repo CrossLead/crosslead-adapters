@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../base/index");
 class ExchangeServiceBaseAdapter extends index_1.Adapter {
     constructor() {
@@ -24,6 +25,5 @@ class ExchangeServiceBaseAdapter extends index_1.Adapter {
         });
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ExchangeServiceBaseAdapter;
 //# sourceMappingURL=Adapter.js.map
