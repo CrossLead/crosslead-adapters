@@ -304,12 +304,15 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
 
         } catch (error) {
           let errorMessage: GoogleError | Error = error instanceof Error ? error : new Error(JSON.stringify(error));
-
           if (/invalid_grant/.test(errorMessage.message.toString())) {
             errorMessage = createGoogleError(
               'InvalidGrant',
               new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`)
             );
+          } else if (errorMessage.message.toString() === 'The user must be signed up for Google Calendar.') {
+            errorMessage = createGoogleError(
+              'NotACalendarUser',
+              new Error(`User ${userProfile.emailAfterMapping} must be signed up for Google Calendar (aka, the user account is probably suspended)`));
           }
 
           return Object.assign(individualRunStats, {
