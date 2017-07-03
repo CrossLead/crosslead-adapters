@@ -1,7 +1,8 @@
 // Type union instead of enum so calling code can get name without type details
 export type GoogleErrorType =
   'InvalidGrant' |
-  'UnauthorizedClient'
+  'UnauthorizedClient' |
+  'NotACalendarUser' // this is an artifact of a user being suspended.
 ;
 
 export interface InvalidGrant {
@@ -14,19 +15,21 @@ export interface UnauthorizedClient {
   err: Error;
 }
 
-export type GoogleError = InvalidGrant | UnauthorizedClient;
+export interface NotACalendarUser {
+  kind: 'NotACalendarUser'
+  err: Error;
+}
+
+export type GoogleError = InvalidGrant | UnauthorizedClient | NotACalendarUser;
 
 export function createGoogleError<T extends GoogleErrorType>(
   kind: T,
   err?: Error
 ) {
+
   if (!err) {
     err = new Error();
     Error.captureStackTrace(err, createGoogleError);
   }
-
-  return {
-      kind,
-      err
-  };
+  return { kind, err };
 }
