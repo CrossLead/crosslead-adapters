@@ -218,14 +218,10 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
             );
           });
         } catch (err) {
-          if (/invalid_request/.test(err.message)) {
-            throw new Error(
-                `getEvents failed with
-                    message = ${err.message} request
-                    options = ${JSON.stringify(requestOpts)}`
-            );
-          }
-          throw err;
+          const context = JSON.stringify({requestOpts});
+          throw (/invalid_request/.test(err.message) ?
+                 new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
+                 new Error(`Caught exception getting events: ${err.message}, ${context}`));
         }
       };
 

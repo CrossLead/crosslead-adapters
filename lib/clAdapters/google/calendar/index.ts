@@ -396,15 +396,10 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     try {
       return await new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
     } catch (err) {
-      if (/invalid_request/.test(err.message)) {
-        throw new Error(
-          `Authorization failure, message = ${err.message} options = ${JSON.stringify({
-            serviceEmail,
-            email
-          })}`
-        );
-      }
-      throw err;
+      const context = JSON.stringify({serviceEmail, email});
+      throw (/invalid_request/.test(err.message) ?
+             new Error(`Caught invalid_request performing authorization: ${err.message}, ${context}`) :
+             new Error(`Caught exception performing authorization: ${err.message}: ${context}`));
     }
   }
 
@@ -417,14 +412,10 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
         );
       });
     } catch (err) {
-      if (/invalid_request/.test(err.message)) {
-        throw new Error(
-            `getEvents failed with
-                message = ${err.message} request
-                options = ${JSON.stringify(requestOpts)}`
-        );
-      }
-      throw err;
+      const context = JSON.stringify({requestOpts});
+      throw (/invalid_request/.test(err.message) ?
+             new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
+             new Error(`Caught exception getting events: ${err.message}, ${context}`));
     }
   }
 
