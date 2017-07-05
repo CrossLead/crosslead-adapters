@@ -221,6 +221,9 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                         if (/invalid_grant/.test(errorMessage.message.toString())) {
                             errorMessage = errors_1.createGoogleError('InvalidGrant', new Error(`Email address: ${userProfile.emailAfterMapping} not found in this Google Calendar account.`));
                         }
+                        else if (errorMessage.message.toString() === 'The user must be signed up for Google Calendar.') {
+                            errorMessage = errors_1.createGoogleError('NotACalendarUser', new Error(`User ${userProfile.emailAfterMapping} must be signed up for Google Calendar (aka, the user account is probably suspended)`));
+                        }
                         return Object.assign(individualRunStats, {
                             errorMessage,
                             success: false,

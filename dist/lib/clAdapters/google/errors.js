@@ -5,10 +5,7 @@ function createGoogleError(kind, err) {
         err = new Error();
         Error.captureStackTrace(err, createGoogleError);
     }
-    return {
-        kind,
-        err
-    };
+    return { kind, err };
 }
 exports.createGoogleError = createGoogleError;
 //# sourceMappingURL=errors.js.map
