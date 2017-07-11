@@ -129,6 +129,7 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
                 runDate: moment().utc().toDate(),
                 errorMessage: null
             };
+            console.log('GOOGLE OAUTH SYNCING CAL');
             try {
                 const auth = new googleapis.auth.OAuth2(properties.GOOGLE_OAUTH_CLIENT_ID, properties.GOOGLE_OAUTH_CLIENT_SECRET, properties.GOOGLE_OAUTH_REDIRECT_URL);
                 auth.setCredentials({
@@ -172,6 +173,7 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
                     });
                     return out;
                 });
+                console.log('RESULTS: ' + JSON.stringify(data, null, 2));
                 return Object.assign(individualRunStats, { results: [{
                             filterStartDate,
                             filterEndDate,
