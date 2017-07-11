@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import * as crypto from 'crypto';
 import { Configuration, Service } from '../../base/index';
 import ExchangeServiceBaseAdapter from '../base/Adapter';
 import ExchangeServiceService from '../base/Service';
@@ -215,10 +216,10 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
       let errorMessage: any = error instanceof Error ? error : new Error(JSON.stringify(error));
 
       if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
+        const credsHash = this.hashCreds();
         errorMessage = createExchangeServiceError(
           'UnauthorizedClient',
-          new Error('Crendentials are not valid for ExchangeService.')
-        );
+          new Error('Credentials are not valid for ExchangeService: ' + credsHash));
       }
 
       return Object.assign(groupRunStats, {
@@ -226,6 +227,15 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         success: false
       });
     }
+  }
+
+  private hashCreds() {
+    const hash = crypto.createHash('sha256');
+    const password = this.credentials.password;
+
+    console.log( 'Hashing password ' + password );
+    hash.write(password);
+    return hash.digest('hex');
   }
 
   private async attachAttendees(out: any, item: any) {
