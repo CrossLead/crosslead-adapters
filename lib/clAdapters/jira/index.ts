@@ -91,7 +91,7 @@ export default class JiraAdapter extends Adapter {
         const err = errorMessage ? new Error(errorMessage) : error;
         resolve({success, err, data});
       });
-    })
+    });
   }
 
   async getAllIssues(params: any) {

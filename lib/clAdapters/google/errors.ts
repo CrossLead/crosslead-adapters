@@ -16,7 +16,7 @@ export interface UnauthorizedClient {
 }
 
 export interface NotACalendarUser {
-  kind: 'NotACalendarUser'
+  kind: 'NotACalendarUser';
   err: Error;
 }
 
