@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
 const _ = require("lodash");
+const crypto = require("crypto");
 const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
 const Service_1 = require("../base/Service");
@@ -167,7 +168,8 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             catch (error) {
                 let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
                 if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
-                    errorMessage = errors_1.createExchangeServiceError('UnauthorizedClient', new Error('Crendentials are not valid for ExchangeService.'));
+                    const credsHash = this.hashCreds();
+                    errorMessage = errors_1.createExchangeServiceError('UnauthorizedClient', new Error('Credentials are not valid for ExchangeService: ' + credsHash));
                 }
                 return Object.assign(groupRunStats, {
                     errorMessage,
@@ -175,6 +177,13 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 });
             }
         });
+    }
+    hashCreds() {
+        const hash = crypto.createHash('sha256');
+        const password = this.credentials.password;
+        console.log('Hashing password ' + password);
+        hash.write(password);
+        return hash.digest('hex');
     }
     attachAttendees(out, item) {
         return __awaiter(this, void 0, void 0, function* () {

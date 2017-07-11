@@ -1,1 +1,1 @@
-{"version":3,"file":"adapterStatus.js","sourceRoot":"","sources":["../../lib/clAdapters/adapterStatus.ts"],"names":[],"mappings":";;AAAA;;;;;;;GAOG;AACH,IAAK,aAGJ;AAHD,WAAK,aAAa;IAChB,qDAAU,CAAA;IACV,uDAAW,CAAA;AACb,CAAC,EAHI,aAAa,KAAb,aAAa,QAGjB;AAGD,kBAAe,aAAa,CAAC"}
+{"version":3,"file":"adapterStatus.js","sourceRoot":"","sources":["../../lib/clAdapters/adapterStatus.ts"],"names":[],"mappings":";;AAAA;;;;;;;GAOG;AACH,IAAK,aAIJ;AAJD,WAAK,aAAa;IAChB,qDAAU,CAAA;IACV,uDAAW,CAAA;IACX,yDAAY,CAAA;AACd,CAAC,EAJI,aAAa,KAAb,aAAa,QAIjB;AAGD,kBAAe,aAAa,CAAC"}

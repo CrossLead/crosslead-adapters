@@ -85,6 +85,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             }[];
         })[];
     }>;
+    private hashCreds();
     private attachAttendees(out, item);
     runConnectionTest(): Promise<{
         success: boolean;

@@ -12,6 +12,7 @@ var AdapterStatus;
 (function (AdapterStatus) {
     AdapterStatus[AdapterStatus["ACTIVE"] = 1] = "ACTIVE";
     AdapterStatus[AdapterStatus["DELETED"] = 2] = "DELETED";
+    AdapterStatus[AdapterStatus["DISABLED"] = 3] = "DISABLED";
 })(AdapterStatus || (AdapterStatus = {}));
 exports.default = AdapterStatus;
 //# sourceMappingURL=adapterStatus.js.map
