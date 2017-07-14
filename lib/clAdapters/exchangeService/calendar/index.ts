@@ -151,7 +151,6 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
 
           if (items && items.length) {
             for (const item of items) {
-              console.log(item);
               const out: { [key: string]: any } = {};
 
               _.each(fieldNameMap, (have: string, want: string) => {
