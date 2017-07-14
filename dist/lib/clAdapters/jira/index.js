@@ -64,6 +64,7 @@ class JiraAdapter extends Adapter_1.default {
         }
         return new Promise(resolve => {
             request(options, (error, response, data) => {
+                console.log('OPTS: ' + JSON.stringify(options, null, 2));
                 let errorMessage = null;
                 const success = !error &&
                     (response &&

@@ -114,7 +114,6 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                         const data = [];
                         if (items && items.length) {
                             for (const item of items) {
-                                console.log(item);
                                 const out = {};
                                 _.each(fieldNameMap, (have, want) => {
                                     let modified = _.get(item, have);

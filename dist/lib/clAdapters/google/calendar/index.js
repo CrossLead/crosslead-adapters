@@ -21,6 +21,7 @@ const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
 const errors_1 = require("../errors");
 const rate_limit_1 = require("../../../utils/rate-limit");
+const utils_1 = require("../../../utils/utils");
 // google calendar api
 const calendar = googleapis.calendar('v3');
 const credentialMappings = {
@@ -142,9 +143,10 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                 const results = yield Promise.all(userProfiles.map((userProfile) => __awaiter(this, void 0, void 0, function* () {
                     const individualRunStats = Object.assign({ filterStartDate,
                         filterEndDate }, userProfile, { success: true, runDate: moment().utc().toDate(), errorMessage: null });
+                    const email = utils_1.default(userProfile.emailAfterMapping);
                     try {
                         // add auth tokens to request
-                        const auth = yield this.authorize(userProfile.emailAfterMapping);
+                        const auth = yield this.authorize(email);
                         // function to recurse through pageTokens
                         const getEvents = (requestOpts, data) => __awaiter(this, void 0, void 0, function* () {
                             // add page token if given
