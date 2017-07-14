@@ -397,8 +397,8 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     const subject = event.Subject ? event.Subject[0] : null;
 
     return !!_.find(events, (ev: any) => {
-      const evStartTime = event.StartTime[0];
-      const evSubject = ev.Subject ? event.Subject[0] : null;
+      const evStartTime = ev.StartTime[0];
+      const evSubject = ev.Subject ? ev.Subject[0] : null;
       return evStartTime === startTime && evSubject === subject;
     });
   }
