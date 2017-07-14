@@ -5,6 +5,7 @@ import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
 import { GoogleError, GoogleErrorType, createGoogleError } from '../errors';
 import rateLimit from '../../../utils/rate-limit';
+import sanitizeLocalPart from '../../../utils/utils';
 
 // google calendar api
 const calendar = googleapis.calendar('v3');
@@ -203,9 +204,11 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           errorMessage: null
         };
 
+        const email = sanitizeLocalPart(userProfile.emailAfterMapping);
+
         try {
           // add auth tokens to request
-          const auth = await this.authorize(userProfile.emailAfterMapping);
+          const auth = await this.authorize(email);
 
           // function to recurse through pageTokens
           const getEvents = async (requestOpts: any, data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
