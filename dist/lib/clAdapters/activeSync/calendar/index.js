@@ -320,8 +320,8 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
         const startTime = event.StartTime[0];
         const subject = event.Subject ? event.Subject[0] : null;
         return !!_.find(events, (ev) => {
-            const evStartTime = event.StartTime[0];
-            const evSubject = ev.Subject ? event.Subject[0] : null;
+            const evStartTime = ev.StartTime[0];
+            const evSubject = ev.Subject ? ev.Subject[0] : null;
             return evStartTime === startTime && evSubject === subject;
         });
     }
@@ -357,7 +357,6 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 const folderSync = (yield myCalClient.folderSync()).body.FolderSync;
                 // const folderSyncKey = folderSync.SyncKey;
                 // console.log('syncKey', folderSyncKey );
-                console.log('ACTIVE SYNCING CAL');
                 const calFolder = _.find(options.folders, (folder) => {
                     return folder.Type[0] === '8'; // Calendar type
                 });
@@ -375,7 +374,6 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 _.each(folders, (folder) => {
                     adapter.addToEvents(rawEvents, folder, startDate, endDate);
                 });
-                console.log('FOUND: ' + JSON.stringify(rawEvents, null, 2));
                 const events = _.compact(_.map(rawEvents, (event) => {
                     const startTime = moment(event.StartTime[0]);
                     const endTime = moment(event.EndTime[0]);
