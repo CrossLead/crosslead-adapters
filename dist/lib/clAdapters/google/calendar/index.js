@@ -312,7 +312,8 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                 });
             }
             catch (err) {
-                const context = JSON.stringify({ requestOpts });
+                const subject = requestOpts && requestOpts.auth ? requestOpts.auth.subject : '';
+                const context = `subject = ${subject}`;
                 throw (/invalid_request/.test(err.message) ?
                     new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
                     new Error(`Caught exception getting events: ${err.message}, ${context}`));
