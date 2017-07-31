@@ -98,7 +98,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     await this._service.init();
 
     console.log(
-      `Successfully initialized active sync calendar adapter for username: ${credentials.username}`
+      `Successfully initialized exchange service calendar adapter for username: ${credentials.username}`
     );
 
     return this;
