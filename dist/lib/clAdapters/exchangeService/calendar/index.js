@@ -82,7 +82,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             this._config = new ExchangeServiceCalendarAdapter.Configuration(credentials);
             this._service = new Service_1.default(this._config);
             yield this._service.init();
-            console.log(`Successfully initialized active sync calendar adapter for username: ${credentials.username}`);
+            console.log(`Successfully initialized exchange service calendar adapter for username: ${credentials.username}`);
             return this;
         });
     }
