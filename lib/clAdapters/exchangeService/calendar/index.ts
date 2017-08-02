@@ -141,10 +141,10 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
           errorMessage: null
         };
 
-        this._service.setImpersonationUser(userProfile.emailAfterMapping);
+        const addr = userProfile.emailAfterMapping;
 
         try {
-          const result = await this._service.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
+          const result = await this._service.findItem(filterStartDate.toISOString(), filterEndDate.toISOString(), addr);
           const items = _.get(result, 'ResponseMessages.FindItemResponseMessage.RootFolder.Items.CalendarItem');
 
           const data = [];
@@ -163,7 +163,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
                 }
               });
 
-              await this.attachAttendees(out, item);
+              await this.attachAttendees(out, item, addr);
 
               out.attendees = _.map(out.attendees, (attendee: any) => {
                 const { Mailbox : email, ResponseType : response } = attendee;
@@ -237,11 +237,11 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
     return hash.digest('hex');
   }
 
-  private async attachAttendees(out: any, item: any) {
+  private async attachAttendees(out: any, item: any, addr: string) {
     const attributes = _.get(item, 'ItemId.attributes');
     const itemId = _.get(attributes, 'Id');
     const itemChangeKey = _.get(attributes, 'ChangeKey');
-    let attendees = await this._service.getRequiredAttendees(itemId, itemChangeKey);
+    let attendees = await this._service.getRequiredAttendees(itemId, itemChangeKey, addr);
 
     // If an object is returned
     if (attendees) {
@@ -256,7 +256,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
       out.attendees = [];
     }
 
-    attendees = await this._service.getOptionalAttendees(itemId, itemChangeKey);
+    attendees = await this._service.getOptionalAttendees(itemId, itemChangeKey, addr);
 
     if (attendees) {
       if (attendees.length) {

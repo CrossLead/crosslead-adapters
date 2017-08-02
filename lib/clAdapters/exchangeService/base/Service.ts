@@ -4,7 +4,6 @@ import * as EWS from 'node-ews';
 
 export default class ExchangeServiceService extends Service {
   ews: any;
-  soapHeader: any;
 
   constructor(public config: Configuration)  {
     super(config);
@@ -24,8 +23,8 @@ export default class ExchangeServiceService extends Service {
     return true;
   }
 
-  public setImpersonationUser(emailAddress: string) {
-    this.soapHeader = {
+  private buildSoapHeader(emailAddress: string) {
+    return {
       't:ExchangeImpersonation' : {
         't:ConnectingSID' : {
           't:PrimarySmtpAddress' : emailAddress
@@ -34,7 +33,7 @@ export default class ExchangeServiceService extends Service {
     };
   }
 
-  public async getOptionalAttendees(itemId: string, itemChangeKey: string) {
+  public async getOptionalAttendees(itemId: string, itemChangeKey: string, addr: string ) {
     if (!this.ews) {
       throw new Error('EWS has not been inited!');
     }
@@ -63,13 +62,13 @@ export default class ExchangeServiceService extends Service {
         }
       ]
     };
-
-    const result = await this.ews.run('GetItem', ewsArgs, this.soapHeader);
+    const soapHeader = this.buildSoapHeader(addr);
+    const result = await this.ews.run('GetItem', ewsArgs, soapHeader);
     const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.OptionalAttendees.Attendee');
     return attendees;
   }
 
-  public async getRequiredAttendees(itemId: string, itemChangeKey: string) {
+  public async getRequiredAttendees(itemId: string, itemChangeKey: string, addr: string) {
     if (!this.ews) {
       throw new Error('EWS has not been inited!');
     }
@@ -99,12 +98,13 @@ export default class ExchangeServiceService extends Service {
       ]
     };
 
-    const result = await this.ews.run('GetItem', ewsArgs, this.soapHeader);
+    const soapHeader = this.buildSoapHeader(addr);
+    const result = await this.ews.run('GetItem', ewsArgs, soapHeader);
     const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.RequiredAttendees.Attendee');
     return attendees;
   }
 
-  public async findItem(startDate: string, endDate: string) {
+  public async findItem(startDate: string, endDate: string, addr: string) {
     if (!this.ews) {
       throw new Error('EWS has not been inited!');
     }
@@ -131,6 +131,7 @@ export default class ExchangeServiceService extends Service {
       }
     };
 
-    return this.ews.run('FindItem', ewsArgs, this.soapHeader);
+    const soapHeader = this.buildSoapHeader(addr);
+    return this.ews.run('FindItem', ewsArgs, soapHeader);
   }
 };
