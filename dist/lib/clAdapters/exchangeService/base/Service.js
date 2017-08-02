@@ -28,8 +28,8 @@ class ExchangeServiceService extends index_1.Service {
             return true;
         });
     }
-    setImpersonationUser(emailAddress) {
-        this.soapHeader = {
+    buildSoapHeader(emailAddress) {
+        return {
             't:ExchangeImpersonation': {
                 't:ConnectingSID': {
                     't:PrimarySmtpAddress': emailAddress
@@ -37,7 +37,7 @@ class ExchangeServiceService extends index_1.Service {
             }
         };
     }
-    getOptionalAttendees(itemId, itemChangeKey) {
+    getOptionalAttendees(itemId, itemChangeKey, addr) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.ews) {
                 throw new Error('EWS has not been inited!');
@@ -66,12 +66,13 @@ class ExchangeServiceService extends index_1.Service {
                     }
                 ]
             };
-            const result = yield this.ews.run('GetItem', ewsArgs, this.soapHeader);
+            const soapHeader = this.buildSoapHeader(addr);
+            const result = yield this.ews.run('GetItem', ewsArgs, soapHeader);
             const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.OptionalAttendees.Attendee');
             return attendees;
         });
     }
-    getRequiredAttendees(itemId, itemChangeKey) {
+    getRequiredAttendees(itemId, itemChangeKey, addr) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.ews) {
                 throw new Error('EWS has not been inited!');
@@ -100,12 +101,13 @@ class ExchangeServiceService extends index_1.Service {
                     }
                 ]
             };
-            const result = yield this.ews.run('GetItem', ewsArgs, this.soapHeader);
+            const soapHeader = this.buildSoapHeader(addr);
+            const result = yield this.ews.run('GetItem', ewsArgs, soapHeader);
             const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.RequiredAttendees.Attendee');
             return attendees;
         });
     }
-    findItem(startDate, endDate) {
+    findItem(startDate, endDate, addr) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.ews) {
                 throw new Error('EWS has not been inited!');
@@ -131,7 +133,8 @@ class ExchangeServiceService extends index_1.Service {
                     }
                 }
             };
-            return this.ews.run('FindItem', ewsArgs, this.soapHeader);
+            const soapHeader = this.buildSoapHeader(addr);
+            return this.ews.run('FindItem', ewsArgs, soapHeader);
         });
     }
 }

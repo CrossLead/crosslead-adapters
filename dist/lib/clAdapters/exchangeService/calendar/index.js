@@ -107,9 +107,9 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                 const results = yield Promise.all(userProfiles.map((userProfile) => __awaiter(this, void 0, void 0, function* () {
                     const individualRunStats = Object.assign({ filterStartDate,
                         filterEndDate }, userProfile, { success: true, runDate: moment().utc().toDate(), errorMessage: null });
-                    this._service.setImpersonationUser(userProfile.emailAfterMapping);
+                    const addr = userProfile.emailAfterMapping;
                     try {
-                        const result = yield this._service.findItem(filterStartDate.toISOString(), filterEndDate.toISOString());
+                        const result = yield this._service.findItem(filterStartDate.toISOString(), filterEndDate.toISOString(), addr);
                         const items = _.get(result, 'ResponseMessages.FindItemResponseMessage.RootFolder.Items.CalendarItem');
                         const data = [];
                         if (items && items.length) {
@@ -124,7 +124,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                                         out[want] = modified;
                                     }
                                 });
-                                yield this.attachAttendees(out, item);
+                                yield this.attachAttendees(out, item, addr);
                                 out.attendees = _.map(out.attendees, (attendee) => {
                                     const { Mailbox: email, ResponseType: response } = attendee;
                                     return { address: email.EmailAddress, response };
@@ -184,12 +184,12 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
         hash.write(password);
         return hash.digest('hex');
     }
-    attachAttendees(out, item) {
+    attachAttendees(out, item, addr) {
         return __awaiter(this, void 0, void 0, function* () {
             const attributes = _.get(item, 'ItemId.attributes');
             const itemId = _.get(attributes, 'Id');
             const itemChangeKey = _.get(attributes, 'ChangeKey');
-            let attendees = yield this._service.getRequiredAttendees(itemId, itemChangeKey);
+            let attendees = yield this._service.getRequiredAttendees(itemId, itemChangeKey, addr);
             // If an object is returned
             if (attendees) {
                 if (attendees.length) {
@@ -202,7 +202,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             if (!out.attendees) {
                 out.attendees = [];
             }
-            attendees = yield this._service.getOptionalAttendees(itemId, itemChangeKey);
+            attendees = yield this._service.getOptionalAttendees(itemId, itemChangeKey, addr);
             if (attendees) {
                 if (attendees.length) {
                     out.attendees.push(...attendees);
