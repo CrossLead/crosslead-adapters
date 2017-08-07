@@ -154,6 +154,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                         }
                         else {
                             console.log('unknown error', error);
+                            throw error;
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,

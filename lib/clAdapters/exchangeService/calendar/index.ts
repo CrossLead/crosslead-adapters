@@ -200,6 +200,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             throw error;
           } else {
             console.log('unknown error', error);
+            throw error;
           }
 
           return Object.assign(individualRunStats, {
