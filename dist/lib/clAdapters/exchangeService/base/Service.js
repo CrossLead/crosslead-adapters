@@ -19,14 +19,10 @@ class ExchangeServiceService extends index_1.Service {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             const credentials = this.config.credentials;
-            const handler = (err) => {
-                throw new Error(`Soap error detected: ${err.toString()}`);
-            };
             const ewsConfig = {
                 username: credentials.username,
                 password: credentials.password,
-                host: credentials.connectUrl,
-                handlers: [{ name: 'soapError', handler }]
+                host: credentials.connectUrl
             };
             this.ews = new EWS(ewsConfig);
             return true;
