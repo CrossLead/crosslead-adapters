@@ -19,12 +19,13 @@ class ExchangeServiceService extends index_1.Service {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             const credentials = this.config.credentials;
-            const ewsConfig = {
+            const config = {
                 username: credentials.username,
                 password: credentials.password,
-                host: credentials.connectUrl
+                host: credentials.connectUrl,
             };
-            this.ews = new EWS(ewsConfig);
+            const options = { valueKey: 'value', xmlKey: 'xml' };
+            this.ews = new EWS(config, options);
             return true;
         });
     }

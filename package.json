@@ -34,7 +34,7 @@
     "moment": "2.15.0",
     "moment-recur": "git://github.com/CrossLead/moment-recur#66ca3f74b57b0e8438f79c98df3443fbfcef7309",
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
-    "node-ews": "git://github.com/CrossLead/node-ews#0f9b2b637b9cf24622666ccda153d671cfcaee43",
+    "node-ews": "git://github.com/CrossLead/node-ews#6be50b9aa5a5d8e4da3289e8ed631738bfb2e2c9",
     "node-uuid": "1.4.3",
     "request-promise": "0.4.2",
     "typescript": "2.2.1"
