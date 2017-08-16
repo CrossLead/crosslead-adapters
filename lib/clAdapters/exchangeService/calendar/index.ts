@@ -185,21 +185,23 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         } catch (error) {
           let errorMessage: any = error instanceof Error ? error : new Error(JSON.stringify(error));
 
-          if (/primary SMTP address must be specified/.test(errorMessage.message.toString())) {
+          const msg = errorMessage.message.toString();
+          if (/primary SMTP address must be specified/.test(msg)) {
             errorMessage = createExchangeServiceError(
               'NotPrimaryEmail',
               new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
             );
-          } else if (/SMTP address has no mailbox associated/.test(errorMessage.message.toString())) {
+          } else if (/SMTP address has no mailbox associated/.test(msg) ||
+                     /ErrorNonExistentMailbox/.test(msg)) {
             errorMessage = createExchangeServiceError(
               'NoMailbox',
               new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
             );
-          } else if (/NTLM StatusCode 401/.test(errorMessage.message.toString())) {
+          } else if (/NTLM StatusCode 401/.test(msg)) {
             // Service account is unauthorized-- throw error to exit all
             throw error;
           } else {
-            console.log('unknown error', error);
+            // Unknown error, let's fail the batch for this as well.
             throw error;
           }
 
