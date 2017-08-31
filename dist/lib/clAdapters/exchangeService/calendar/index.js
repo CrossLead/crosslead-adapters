@@ -143,7 +143,8 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                     catch (error) {
                         let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
                         const msg = errorMessage.message.toString();
-                        if (/primary SMTP address must be specified/.test(msg)) {
+                        if (/primary SMTP address must be specified/.test(msg) ||
+                            /ErrorNonPrimarySmtpAddress/.test(msg)) {
                             errorMessage = errors_1.createExchangeServiceError('NotPrimaryEmail', new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`));
                         }
                         else if (/SMTP address has no mailbox associated/.test(msg) ||
@@ -155,8 +156,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                             throw error;
                         }
                         else {
-                            // Unknown error, let's fail the batch for this as well.
-                            throw error;
+                            errorMessage = 'unknown';
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,

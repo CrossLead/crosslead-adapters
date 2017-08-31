@@ -186,7 +186,8 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
           let errorMessage: any = error instanceof Error ? error : new Error(JSON.stringify(error));
 
           const msg = errorMessage.message.toString();
-          if (/primary SMTP address must be specified/.test(msg)) {
+          if (/primary SMTP address must be specified/.test(msg) ||
+              /ErrorNonPrimarySmtpAddress/.test(msg)) {
             errorMessage = createExchangeServiceError(
               'NotPrimaryEmail',
               new Error(`Email address: must use primary SMTP address for ${userProfile.emailAfterMapping}.`)
@@ -201,8 +202,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             // Service account is unauthorized-- throw error to exit all
             throw error;
           } else {
-            // Unknown error, let's fail the batch for this as well.
-            throw error;
+            errorMessage = 'unknown';
           }
 
           return Object.assign(individualRunStats, {
