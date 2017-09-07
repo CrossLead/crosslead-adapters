@@ -1,4 +1,4 @@
-export declare type ExchangeServiceErrorType = 'NotPrimaryEmail' | 'NoMailbox' | 'UnauthorizedClient';
+export declare type ExchangeServiceErrorType = 'NotPrimaryEmail' | 'NoMailbox' | 'UnauthorizedClient' | 'UnclassifiedError';
 export interface NotPrimaryEmail {
     kind: 'NotPrimaryEmail';
     err: Error;
@@ -11,7 +11,11 @@ export interface UnauthorizedClient {
     kind: 'UnauthorizedClient';
     err: Error;
 }
-export declare type ExchangeServiceError = NotPrimaryEmail | NoMailbox | UnauthorizedClient;
+export interface UnclassifiedError {
+    kind: 'UnclassifiedError';
+    err: Error;
+}
+export declare type ExchangeServiceError = NotPrimaryEmail | NoMailbox | UnauthorizedClient | UnclassifiedError;
 export declare function createExchangeServiceError<T extends ExchangeServiceErrorType>(kind: T, err?: Error): {
     kind: T;
     err: Error;

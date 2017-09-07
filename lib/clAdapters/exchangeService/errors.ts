@@ -2,7 +2,8 @@
 export type ExchangeServiceErrorType =
   'NotPrimaryEmail' |
   'NoMailbox' |
-  'UnauthorizedClient'
+  'UnauthorizedClient' |
+  'UnclassifiedError'
 ;
 
 export interface NotPrimaryEmail {
@@ -20,7 +21,12 @@ export interface UnauthorizedClient {
   err: Error;
 }
 
-export type ExchangeServiceError = NotPrimaryEmail | NoMailbox | UnauthorizedClient;
+export interface UnclassifiedError {
+  kind: 'UnclassifiedError';
+  err: Error;
+}
+
+export type ExchangeServiceError = NotPrimaryEmail | NoMailbox | UnauthorizedClient | UnclassifiedError;
 
 export function createExchangeServiceError<T extends ExchangeServiceErrorType>(
   kind: T,

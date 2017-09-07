@@ -156,7 +156,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                             throw error;
                         }
                         else {
-                            errorMessage = 'unknown';
+                            errorMessage = errors_1.createExchangeServiceError('UnclassifiedError', new Error(msg));
                         }
                         return Object.assign(individualRunStats, {
                             errorMessage,

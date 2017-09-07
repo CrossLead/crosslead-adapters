@@ -202,7 +202,9 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
             // Service account is unauthorized-- throw error to exit all
             throw error;
           } else {
-            errorMessage = 'unknown';
+            errorMessage = createExchangeServiceError(
+              'UnclassifiedError',
+              new Error(msg));
           }
 
           return Object.assign(individualRunStats, {
