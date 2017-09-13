@@ -198,6 +198,10 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
               'NoMailbox',
               new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
             );
+          } else if (/ErrorInternalServerError/.test(msg)) {
+            errorMessage = createExchangeServiceError(
+              'InternalServerError', new Error(msg)
+            );
           } else if (/NTLM StatusCode 401/.test(msg)) {
             // Service account is unauthorized-- throw error to exit all
             throw error;
