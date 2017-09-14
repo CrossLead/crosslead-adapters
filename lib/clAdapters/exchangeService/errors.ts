@@ -3,6 +3,7 @@ export type ExchangeServiceErrorType =
   'NotPrimaryEmail' |
   'NoMailbox' |
   'UnauthorizedClient' |
+  'ServerBusy' |
   'InternalServerError' |
   'UnclassifiedError'
 ;
@@ -22,6 +23,11 @@ export interface UnauthorizedClient {
   err: Error;
 }
 
+export interface ServerBusy {
+  kind: 'ServerBusy';
+  err: Error;
+}
+
 export interface InternalServerError {
   kind: 'InternalServerError';
   err: Error;
@@ -36,6 +42,7 @@ export type ExchangeServiceError
   = NotPrimaryEmail
   | NoMailbox
   | UnauthorizedClient
+  | ServerBusy
   | InternalServerError
   | UnclassifiedError;
 

@@ -198,6 +198,10 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
               'NoMailbox',
               new Error(`Email address: ${userProfile.emailAfterMapping} has no mailbox.`)
             );
+          } else if (/ServerBusy/.test(msg)) {
+            errorMessage = createExchangeServiceError(
+              'ServerBusy', new Error(msg)
+            );
           } else if (/ErrorInternalServerError/.test(msg)) {
             errorMessage = createExchangeServiceError(
               'InternalServerError', new Error(msg)
