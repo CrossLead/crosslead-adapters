@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
 const _ = require("lodash");
-const crypto = require("crypto");
+const utils_1 = require("../../../utils/utils");
 const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
 const Service_1 = require("../base/Service");
@@ -187,11 +187,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
         });
     }
     hashCreds() {
-        const hash = crypto.createHash('sha256');
-        const password = this.credentials.password;
-        console.log('Hashing password ' + password);
-        hash.write(password);
-        return hash.digest('hex');
+        return utils_1.default(this.credentials.password);
     }
     attachAttendees(out, item, addr) {
         return __awaiter(this, void 0, void 0, function* () {

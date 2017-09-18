@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const index_1 = require("../../base/index");
 const EWS = require("node-ews");
+const utils_1 = require("../../../utils/utils");
 class ExchangeServiceService extends index_1.Service {
     constructor(config) {
         super(config);
@@ -24,7 +25,11 @@ class ExchangeServiceService extends index_1.Service {
                 password: credentials.password,
                 host: credentials.connectUrl,
             };
-            const options = { valueKey: 'value', xmlKey: 'xml' };
+            const options = {
+                valueKey: 'value',
+                xmlKey: 'xml',
+                hashedPassword: utils_1.hashString(credentials.password)
+            };
             this.ews = new EWS(config, options);
             return true;
         });

@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as crypto from 'crypto';
+import hashString from '../../../utils/utils';
 import { Configuration, Service } from '../../base/index';
 import ExchangeServiceBaseAdapter from '../base/Adapter';
 import ExchangeServiceService from '../base/Service';
@@ -242,12 +243,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
   }
 
   private hashCreds() {
-    const hash = crypto.createHash('sha256');
-    const password = this.credentials.password;
-
-    console.log( 'Hashing password ' + password );
-    hash.write(password);
-    return hash.digest('hex');
+    return hashString(this.credentials.password);
   }
 
   private async attachAttendees(out: any, item: any, addr: string) {

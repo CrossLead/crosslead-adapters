@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 
 /**
  * Per RFC 2822, if the local part of an email address contains a dot
@@ -11,3 +12,11 @@ export default function sanitizeLocalPart(addr: string) {
   return (/^\./.test(localPart) || /\.\./.test(localPart) || /\.$/.test(localPart)) ? `"${localPart}"@${domain}` : addr;
 }
 
+/**
+ * Compute and return the SHA-256 hash of the given string.
+ */
+export function hashString(str: string) {
+  const hash = crypto.createHash('sha256');
+  hash.write(str);
+  return hash.digest('hex');
+}

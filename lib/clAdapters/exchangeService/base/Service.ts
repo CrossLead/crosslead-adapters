@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { Service, Configuration } from '../../base/index';
 import * as EWS from 'node-ews';
+import { hashString } from '../../../utils/utils';
 
 export default class ExchangeServiceService extends Service {
   ews: any;
@@ -18,7 +19,11 @@ export default class ExchangeServiceService extends Service {
       host: credentials.connectUrl,
     };
 
-    const options = {valueKey: 'value', xmlKey: 'xml'};
+    const options = {
+      valueKey: 'value',
+      xmlKey: 'xml',
+      hashedPassword: hashString(credentials.password)
+    };
 
     this.ews = new EWS(config, options);
 

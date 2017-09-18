@@ -6,3 +6,7 @@
  * pull data for via a service account might not.
  */
 export default function sanitizeLocalPart(addr: string): string;
+/**
+ * Compute and return the SHA-256 hash of the given string.
+ */
+export declare function hashString(str: string): string;
