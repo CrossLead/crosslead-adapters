@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as crypto from 'crypto';
-import hashString from '../../../utils/utils';
+import { hashString } from '../../../utils/utils';
 import { Configuration, Service } from '../../base/index';
 import ExchangeServiceBaseAdapter from '../base/Adapter';
 import ExchangeServiceService from '../base/Service';
