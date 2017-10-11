@@ -56,7 +56,7 @@ exports.fieldNameMap = {
     // Desired...                          // Given...
     'eventId': 'id',
     'attendees': 'attendees',
-    'dateTimeCreated': 'created',
+    'createTime': 'created',
     'dateTimeLastModified': 'updated',
     'attendeeAddress': 'EmailAddress.Address',
     'attendeeName': 'EmailAddress.Name',
@@ -67,11 +67,11 @@ exports.fieldNameMap = {
     'isOrganizer': 'organizer.self',
     'organizerEmail': 'organizer.email',
     'recurrence': 'recurrence',
-    'responseStatus': 'responseStatus',
+    'response': 'responseStatus',
     'seriesMasterId': 'recurringEventId',
-    'dateTimeStart': 'start.dateTime',
-    'dateTimeEnd': 'end.dateTime',
-    'subject': 'summary',
+    'startTime': 'start.dateTime',
+    'endTime': 'end.dateTime',
+    'name': 'summary',
     'url': 'htmlLink',
     'hangoutLink': 'hangoutLink',
     'privacy': 'visibility'
@@ -196,7 +196,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                             const out = {};
                             _.each(fieldNameMap, (have, want) => {
                                 let modified = _.get(item, have);
-                                if (/^dateTime/.test(want)) {
+                                if (/^(start|end|create)Time/.test(want)) {
                                     modified = new Date(modified);
                                 }
                                 if (modified !== undefined) {
@@ -207,11 +207,11 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                                 return attendee.self;
                             });
                             if (attendeeSelf) {
-                                out['responseStatus'] = attendeeSelf.responseStatus;
+                                out['response'] = attendeeSelf.responseStatus;
                             }
                             out['attendees'] = _.map(out['attendees'], (attendee) => {
                                 const { email, responseStatus } = attendee;
-                                return { address: email, response: responseStatus };
+                                return { email, response: responseStatus };
                             });
                             return out;
                         });

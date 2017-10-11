@@ -33,7 +33,7 @@ export const fieldNameMap = {
   // ? :                                 'TimeZone', // Do we need this?  I don't think so...
   'eventId':                             'UID',
   'attendees':                           'Attendees',
-  'dateTimeCreated':                     'DtStamp',
+  'createTime':                          'DtStamp',
   'attendeeAddress':                     'Email',
   'attendeeName':                        'Name',
   // 'iCalUId':                             'iCalUID', // Does not appear to be available
@@ -42,14 +42,13 @@ export const fieldNameMap = {
   'organizerEmail':                      'OrganizerEmail',
   'recurrence':                          'Recurrence',
   'responseRequested':                   'ResponseRequested',
-  'responseStatus':                      'ResponseType',
+  'response':                            'ResponseType',
   // 'seriesMasterId':                      'recurringEventId', // Does not appear to be available
-  'dateTimeStart':                       'StartTime',
-  'dateTimeEnd':                         'EndTime',
-  'subject':                             'Subject',
+  'startTime':                           'StartTime',
+  'endTime':                             'EndTime',
+  'name':                                'Subject',
   'url':                                 'WebLink',
   'allDay':                              'AllDayEvent',
-  // 'hangoutLink':                         'hangoutLink',  // Does not appear to be available
   'privacy':                             'Sensitivity'
 };
 
@@ -494,14 +493,14 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
           const mapped = val && val.length ? val[0] : val;
 
           if (mapped !== undefined) {
-            mappedEvent[want] = /^dateTime/.test(want) ? moment(mapped).toDate() : mapped;
+            mappedEvent[want] = /^(start|end|create)Time/.test(want) ? moment(mapped).toDate() : mapped;
           }
         });
 
         const responseStatus = _.get(mappedEvent, 'responseStatus');
 
         if (mappedEvent.responseStatus === ACCEPTED_STATUS || mappedEvent.responseStatus === ORGANIZER_STATUS) {
-          mappedEvent.responseStatus = 'Accepted';
+          mappedEvent.response = 'Accepted';
         }
 
         const attendees = originalEvent[fieldNameMap['attendees']];
@@ -518,7 +517,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
               }
 
               return {
-                address:  _.get(attendee, 'Email[0]'),
+                email:  _.get(attendee, 'Email[0]'),
                 name:     _.get(attendee, 'Name[0]'),
                 response: acceptedStatus
               };

@@ -26,7 +26,7 @@ exports.fieldNameMap = {
     'eventId': 'ItemId.attributes.Id',
     'attendees': 'Attendees',
     'categories': 'Categories.String',
-    'dateTimeCreated': 'DateTimeCreated',
+    'createTime': 'DateTimeCreated',
     'attendeeAddress': 'Mailbox.EmailAddress',
     'attendeeName': 'Mailbox.EmailAddress.Name',
     'hasAttachments': 'HasAttachments',
@@ -35,16 +35,16 @@ exports.fieldNameMap = {
     'allDay': 'IsAllDayEvent',
     'canceled': 'IsCancelled',
     // 'isOrganizer':                         'IsOrganizer',
-    'locationName': 'Location',
+    'location': 'Location',
     'organizerName': 'Organizer.Mailbox.Name',
     'organizerEmail': 'Organizer.Mailbox.EmailAddress.Address',
     'responseRequested': 'ResponseRequested',
-    'responseStatus': 'MyResponseType',
+    'response': 'MyResponseType',
     // 'seriesMasterId':                      'SeriesMasterId',
     'showAs': 'ShowAs',
-    'dateTimeStart': 'Start',
-    'dateTimeEnd': 'End',
-    'subject': 'Subject',
+    'startTime': 'Start',
+    'endTime': 'End',
+    'name': 'Subject',
     'type': 'CalendarItemType',
     'url': 'NetShowUrl',
     'privacy': 'Sensitivity'
@@ -127,10 +127,10 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                                 yield this.attachAttendees(out, item, addr);
                                 out.attendees = _.map(out.attendees, (attendee) => {
                                     const { Mailbox: email, ResponseType: response } = attendee;
-                                    return { address: email.EmailAddress, response };
+                                    return { email: email.EmailAddress, response };
                                 });
                                 _.remove(out.attendees, (attendee) => {
-                                    return !attendee.address;
+                                    return !attendee.email;
                                 });
                                 out.canceled = adapter.parseBoolean(out.canceled);
                                 out.allDay = adapter.parseBoolean(out.allDay);
@@ -187,7 +187,7 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
         });
     }
     hashCreds() {
-        return utils_1.default(this.credentials.password);
+        return utils_1.hashString(this.credentials.password);
     }
     attachAttendees(out, item, addr) {
         return __awaiter(this, void 0, void 0, function* () {

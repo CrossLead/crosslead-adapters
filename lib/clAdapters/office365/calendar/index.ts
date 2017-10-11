@@ -46,7 +46,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
     'attendees':                           'Attendees',
     'calendarName':                        'Calendar',
     'categories':                          'Categories',
-    'dateTimeCreated':                     'DateTimeCreated',
+    'createTime':                          'DateTimeCreated',
     'dateTimeLastModified':                'DateTimeLastModified',
     'attendeeAddress':                     'EmailAddress.Address',
     'attendeeName':                        'EmailAddress.Name',
@@ -56,7 +56,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
     'allDay':                              'IsAllDay',
     'canceled':                            'IsCancelled',
     'isOrganizer':                         'IsOrganizer',
-    'locationName':                        'Location.DisplayName',
+    'location':                            'Location.DisplayName',
     'locationAddressStreet':               'Location.Address.Street',
     'locationAddressCity':                 'Location.Address.City',
     'locationAddressState':                'Location.Address.State',
@@ -70,14 +70,14 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
     'organizerEmail':                      'Organizer.EmailAddress.Address',
     'recurrence':                          'Recurrence',
     'responseRequested':                   'ResponseRequested',
-    'responseStatus':                      'ResponseStatus',
+    'response':                            'ResponseStatus',
     'seriesMasterId':                      'SeriesMasterId',
     'showAs':                              'ShowAs',
-    'dateTimeStart':                       'Start',
+    'startTime':                           'Start',
     'startTimeZone':                       'StartTimeZone',
-    'dateTimeEnd':                         'End',
+    'endTime':                             'End',
     'endTimeZone':                         'EndTimeZone',
-    'subject':                             'Subject',
+    'name':                                'Subject',
     'type':                                'Type',
     'url':                                 'WebLink',
     'privacy':                             'Sensitivity'
@@ -131,7 +131,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
             mappedEvent[`attendees`] = originalEvent[fieldNameMap[`attendees`]]
               .map((attendee: any) => {
                 return {
-                  address:  _.get(attendee, fieldNameMap[`attendeeAddress`]),
+                  email:    _.get(attendee, fieldNameMap[`attendeeAddress`]),
                   name:     _.get(attendee, fieldNameMap[`attendeeName`]),
                   response: _.get(attendee, 'Status')
                 };

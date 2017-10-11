@@ -20,7 +20,7 @@ export const fieldNameMap = {
   'eventId':                             'ItemId.attributes.Id',
   'attendees':                           'Attendees',
   'categories':                          'Categories.String',
-  'dateTimeCreated':                     'DateTimeCreated',
+  'createTime':                          'DateTimeCreated',
   'attendeeAddress':                     'Mailbox.EmailAddress',
   'attendeeName':                        'Mailbox.EmailAddress.Name',
   'hasAttachments':                      'HasAttachments',
@@ -29,16 +29,16 @@ export const fieldNameMap = {
   'allDay':                              'IsAllDayEvent',
   'canceled':                            'IsCancelled',
   // 'isOrganizer':                         'IsOrganizer',
-  'locationName':                        'Location',
+  'location':                            'Location',
   'organizerName':                       'Organizer.Mailbox.Name',
   'organizerEmail':                      'Organizer.Mailbox.EmailAddress.Address',
   'responseRequested':                   'ResponseRequested',
-  'responseStatus':                      'MyResponseType',
+  'response':                            'MyResponseType',
   // 'seriesMasterId':                      'SeriesMasterId',
   'showAs':                              'ShowAs',
-  'dateTimeStart':                       'Start',
-  'dateTimeEnd':                         'End',
-  'subject':                             'Subject',
+  'startTime':                           'Start',
+  'endTime':                             'End',
+  'name':                                'Subject',
   'type':                                'CalendarItemType',
   'url':                                 'NetShowUrl',
   'privacy':                             'Sensitivity'
@@ -168,11 +168,11 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
 
               out.attendees = _.map(out.attendees, (attendee: any) => {
                 const { Mailbox : email, ResponseType : response } = attendee;
-                return { address: email.EmailAddress, response };
+                return { email: email.EmailAddress, response };
               });
 
               _.remove(out.attendees, (attendee: any) => {
-                return !attendee.address;
+                return !attendee.email;
               });
 
               out.canceled = adapter.parseBoolean(out.canceled);

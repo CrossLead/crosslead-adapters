@@ -16,7 +16,7 @@ import ActiveSyncBaseAdapter from '../base/Adapter';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
-    'dateTimeCreated': string;
+    'createTime': string;
     'attendeeAddress': string;
     'attendeeName': string;
     'location': string;
@@ -24,10 +24,10 @@ export declare const fieldNameMap: {
     'organizerEmail': string;
     'recurrence': string;
     'responseRequested': string;
-    'responseStatus': string;
-    'dateTimeStart': string;
-    'dateTimeEnd': string;
-    'subject': string;
+    'response': string;
+    'startTime': string;
+    'endTime': string;
+    'name': string;
     'url': string;
     'allDay': string;
     'privacy': string;
@@ -38,7 +38,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     static fieldNameMap: {
         'eventId': string;
         'attendees': string;
-        'dateTimeCreated': string;
+        'createTime': string;
         'attendeeAddress': string;
         'attendeeName': string;
         'location': string;
@@ -46,10 +46,10 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         'organizerEmail': string;
         'recurrence': string;
         'responseRequested': string;
-        'responseStatus': string;
-        'dateTimeStart': string;
-        'dateTimeEnd': string;
-        'subject': string;
+        'response': string;
+        'startTime': string;
+        'endTime': string;
+        'name': string;
         'url': string;
         'allDay': string;
         'privacy': string;

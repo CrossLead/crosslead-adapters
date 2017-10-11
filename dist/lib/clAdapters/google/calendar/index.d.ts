@@ -3,7 +3,7 @@ import GoogleBaseAdapter from '../base/Adapter';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
-    'dateTimeCreated': string;
+    'createTime': string;
     'dateTimeLastModified': string;
     'attendeeAddress': string;
     'attendeeName': string;
@@ -14,11 +14,11 @@ export declare const fieldNameMap: {
     'isOrganizer': string;
     'organizerEmail': string;
     'recurrence': string;
-    'responseStatus': string;
+    'response': string;
     'seriesMasterId': string;
-    'dateTimeStart': string;
-    'dateTimeEnd': string;
-    'subject': string;
+    'startTime': string;
+    'endTime': string;
+    'name': string;
     'url': string;
     'hangoutLink': string;
     'privacy': string;
@@ -40,7 +40,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     static fieldNameMap: {
         'eventId': string;
         'attendees': string;
-        'dateTimeCreated': string;
+        'createTime': string;
         'dateTimeLastModified': string;
         'attendeeAddress': string;
         'attendeeName': string;
@@ -51,11 +51,11 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
         'isOrganizer': string;
         'organizerEmail': string;
         'recurrence': string;
-        'responseStatus': string;
+        'response': string;
         'seriesMasterId': string;
-        'dateTimeStart': string;
-        'dateTimeEnd': string;
-        'subject': string;
+        'startTime': string;
+        'endTime': string;
+        'name': string;
         'url': string;
         'hangoutLink': string;
         'privacy': string;

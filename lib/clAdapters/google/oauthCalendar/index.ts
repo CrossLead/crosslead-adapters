@@ -37,7 +37,7 @@ export const fieldNameMap = {
   // Desired...                          // Given...
   'eventId':                             'id',
   'attendees':                           'attendees',
-  'dateTimeCreated':                     'created',
+  'createTime':                          'created',
   'dateTimeLastModified':                'updated',
   'attendeeAddress':                     'EmailAddress.Address',
   'attendeeName':                        'EmailAddress.Name',
@@ -48,11 +48,11 @@ export const fieldNameMap = {
   'isOrganizer':                         'organizer.self',
   'organizerEmail':                      'organizer.email',
   'recurrence':                          'recurrence',
-  'responseStatus':                      'responseStatus',
+  'response':                            'responseStatus',
   'seriesMasterId':                      'recurringEventId',
-  'dateTimeStart':                       'start.dateTime',
-  'dateTimeEnd':                         'end.dateTime',
-  'subject':                             'summary',
+  'startTime':                           'start.dateTime',
+  'endTime':                             'end.dateTime',
+  'name':                                'summary',
   'url':                                 'htmlLink',
   'hangoutLink':                         'hangoutLink',
   'privacy':                             'visibility'
@@ -233,7 +233,7 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
 
         _.each(fieldNameMap, (have: string, want: string) => {
           let modified = _.get(item, have);
-          if (/^dateTime/.test(want)) {
+          if (/^(start|end|create)Time/.test(want)) {
             modified = new Date(modified);
           }
           if (modified !== undefined) {
@@ -247,12 +247,12 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
         });
 
         if (attendeeSelf) {
-          out['responseStatus'] = attendeeSelf.responseStatus;
+          out['response'] = attendeeSelf.responseStatus;
         }
 
         out['attendees'] = _.map(out['attendees'], (attendee: any) => {
           const { email, responseStatus } = attendee;
-          return { address: email, response: responseStatus };
+          return { email: email, response: responseStatus };
         });
 
         return out;
