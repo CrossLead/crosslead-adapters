@@ -45,8 +45,8 @@ class Office365CalendarAdapter extends Adapter_1.default {
                                     mappedEvent[want] = /^(start|end|create)Time/.test(want) ? new Date(mapped) : mapped;
                                 }
                             });
-                            if (mappedEvent.responseStatus && mappedEvent.responseStatus.Response) {
-                                mappedEvent.responseStatus = mappedEvent.responseStatus.Response;
+                            if (mappedEvent.response && mappedEvent.response.Response) {
+                                mappedEvent.response = mappedEvent.response.Response;
                             }
                             mappedEvent[`attendees`] = originalEvent[fieldNameMap[`attendees`]]
                                 .map((attendee) => {
