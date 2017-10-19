@@ -120,7 +120,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
             _.each(fieldNameMap, (have: string, want: string) => {
               const mapped = _.get(originalEvent, have);
               if (mapped !== undefined) {
-                mappedEvent[want] = /^dateTime/.test(want) ? new Date(mapped) : mapped;
+                mappedEvent[want] = /^(start|end|create)Time/.test(want) ? new Date(mapped) : mapped;
               }
             });
 
