@@ -124,8 +124,8 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
               }
             });
 
-            if (mappedEvent.responseStatus && mappedEvent.responseStatus.Response) {
-              mappedEvent.responseStatus = mappedEvent.responseStatus.Response;
+            if (mappedEvent.response && mappedEvent.response.Response) {
+              mappedEvent.response = mappedEvent.response.Response;
             }
 
             mappedEvent[`attendees`] = originalEvent[fieldNameMap[`attendees`]]
