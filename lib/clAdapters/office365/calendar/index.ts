@@ -133,7 +133,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
                 return {
                   email:    _.get(attendee, fieldNameMap[`attendeeAddress`]),
                   name:     _.get(attendee, fieldNameMap[`attendeeName`]),
-                  response: _.get(attendee, 'Status')
+                  response: _.get(attendee, 'Status.Response', 'None')
                 };
               });
 
