@@ -156,7 +156,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
 
               _.each(fieldNameMap, (have: string, want: string) => {
                 let modified = _.get(item, have);
-                if (/^dateTime/.test(want)) {
+                if (/^(create|start|end)Time/.test(want)) {
                   modified = new Date(modified);
                 }
                 if (modified !== undefined) {

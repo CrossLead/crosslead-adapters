@@ -42,7 +42,7 @@ class Office365CalendarAdapter extends Adapter_1.default {
                             _.each(fieldNameMap, (have, want) => {
                                 const mapped = _.get(originalEvent, have);
                                 if (mapped !== undefined) {
-                                    mappedEvent[want] = /^dateTime/.test(want) ? new Date(mapped) : mapped;
+                                    mappedEvent[want] = /^(start|end|create)Time/.test(want) ? new Date(mapped) : mapped;
                                 }
                             });
                             if (mappedEvent.responseStatus && mappedEvent.responseStatus.Response) {
@@ -53,7 +53,7 @@ class Office365CalendarAdapter extends Adapter_1.default {
                                 return {
                                     email: _.get(attendee, fieldNameMap[`attendeeAddress`]),
                                     name: _.get(attendee, fieldNameMap[`attendeeName`]),
-                                    response: _.get(attendee, 'Status')
+                                    response: _.get(attendee, 'Status.Response', 'None')
                                 };
                             });
                             return mappedEvent;
