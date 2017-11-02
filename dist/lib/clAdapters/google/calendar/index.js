@@ -22,6 +22,7 @@ const Adapter_1 = require("../base/Adapter");
 const errors_1 = require("../errors");
 const rate_limit_1 = require("../../../utils/rate-limit");
 const utils_1 = require("../../../utils/utils");
+const util_1 = require("../../util/google/util");
 // google calendar api
 const calendar = googleapis.calendar('v3');
 const credentialMappings = {
@@ -29,29 +30,6 @@ const credentialMappings = {
     'serviceEmail': 'client_email',
     'email': 'adminEmail'
 };
-function handleGoogleError(res, rej, returnVal) {
-    return (err, result) => {
-        if (err) {
-            let mapped = err;
-            if (err instanceof Error) {
-                // Map to custom errors
-                if (/unauthorized_client/.test(err.message.toString())) {
-                    mapped = errors_1.createGoogleError('UnauthorizedClient', err);
-                }
-                // TODO: other types
-            }
-            else if (!err.kind) {
-                // Not a GoogleError
-                mapped = new Error(JSON.stringify(err));
-            }
-            // Leave GoogleErrors
-            rej(mapped);
-        }
-        else {
-            res(typeof returnVal !== 'undefined' ? returnVal : result);
-        }
-    };
-}
 exports.fieldNameMap = {
     // Desired...                          // Given...
     'eventId': 'id',
@@ -143,10 +121,9 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                 const results = yield Promise.all(userProfiles.map((userProfile) => __awaiter(this, void 0, void 0, function* () {
                     const individualRunStats = Object.assign({ filterStartDate,
                         filterEndDate }, userProfile, { success: true, runDate: moment().utc().toDate(), errorMessage: null });
-                    const email = utils_1.default(userProfile.emailAfterMapping);
                     try {
                         // add auth tokens to request
-                        const auth = yield this.authorize(email);
+                        const auth = yield this.authorize(userProfile.emailAfterMapping);
                         // function to recurse through pageTokens
                         const getEvents = (requestOpts, data) => __awaiter(this, void 0, void 0, function* () {
                             // add page token if given
@@ -169,24 +146,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                             }
                             return data;
                         });
-                        /**
-                         * calendar ids we want to
-                         * retrieve events from
-                         */
-                        const includedCalendarIds = new Set([
-                            'primary',
-                            userProfile.email.toLowerCase(),
-                            userProfile.emailAfterMapping.toLowerCase()
-                        ]);
-                        /**
-                         * all calendar ids in the users calendar
-                         */
-                        const calendarIds = _.chain(yield new Promise((res, rej) => {
-                            calendar.calendarList.list(Object.assign({}, opts, { auth }), (err, d) => handleGoogleError(res, rej)(err, d && d.items));
-                        }))
-                            .filter((item) => includedCalendarIds.has(item.id.toLowerCase()))
-                            .map('id')
-                            .value();
+                        const calendarIds = yield util_1.calendarIdsFor(userProfile, auth);
                         /**
                          * get all items from all calendars in the date
                          * range, and flatten
@@ -280,6 +240,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
     // create authenticated token for api requests for given user
     authorize(email) {
         return __awaiter(this, void 0, void 0, function* () {
+            email = utils_1.default(email);
             const { credentials: { serviceEmail, certificate } } = this;
             const auth = new googleapis.auth.JWT(
             // email of google app admin...
@@ -294,7 +255,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
             // ('sub' property of the json web token)
             email);
             try {
-                return yield new Promise((res, rej) => auth.authorize(handleGoogleError(res, rej, auth)));
+                return yield new Promise((res, rej) => auth.authorize(util_1.handleGoogleError(res, rej, auth)));
             }
             catch (err) {
                 const context = JSON.stringify({ serviceEmail, email });
@@ -308,7 +269,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 return yield new Promise((res, rej) => {
-                    calendar.events.list(requestOpts, handleGoogleError(res, rej));
+                    calendar.events.list(requestOpts, util_1.handleGoogleError(res, rej));
                 });
             }
             catch (err) {
@@ -318,6 +279,27 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                     new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
                     new Error(`Caught exception getting events: ${err.message}, ${context}`));
             }
+        });
+    }
+    getDatesOf(eventId, userProfile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const auth = yield this.authorize(userProfile.emailAfterMapping);
+            let ret = null;
+            try {
+                const calendarIds = yield util_1.calendarIdsFor(userProfile, auth);
+                const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => new Promise((res, rej) => calendar.events.get({ calendarId, eventId, auth }, util_1.handleGoogleError(res, rej))))));
+                if (items) {
+                    ret = { start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime) };
+                }
+            }
+            catch (err) {
+                const subject = auth.subject;
+                const context = `subject = ${subject}`;
+                throw (/invalid_request/.test(err.message) ?
+                    new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
+                    new Error(`Caught exception getting events: ${err.message}, ${context}`));
+            }
+            return ret;
         });
     }
 }

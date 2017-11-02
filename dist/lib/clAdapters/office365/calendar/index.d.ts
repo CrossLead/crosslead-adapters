@@ -1,4 +1,5 @@
 import Office365BaseAdapter from '../base/Adapter';
+import { DateRange, UserProfile } from '../../../common/types';
 /**
  * Office 365 Calendar adapter
  */
@@ -22,4 +23,5 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
         success: boolean;
         runDate: any;
     }>;
+    getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange | null>;
 }

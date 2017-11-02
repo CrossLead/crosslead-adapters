@@ -6,6 +6,7 @@ import { Configuration, Service } from '../../base/index';
 import ExchangeServiceBaseAdapter from '../base/Adapter';
 import ExchangeServiceService from '../base/Service';
 import { createExchangeServiceError } from '../errors';
+import { DateRange, UserProfile } from '../../../common/types';
 
 const credentialMappings: { [key: string]: string } = {
   username : 'username',
@@ -43,11 +44,6 @@ export const fieldNameMap = {
   'url':                                 'NetShowUrl',
   'privacy':                             'Sensitivity'
 };
-
-export interface UserProfile {
-  email: string;
-  emailAfterMapping: string;
-}
 
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
   static Configuration = Configuration;
@@ -274,6 +270,17 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         out.attendees.push(attendees);
       }
     }
+  }
+
+  async getDatesOf(eventid: string, userProfile: UserProfile): Promise<DateRange|null> {
+    const addr = userProfile.emailAfterMapping;
+    let ret = null;
+    try {
+      ret = await this._service.getDatesOf(eventid, addr);
+    } catch (err) {
+      console.log( `Caught error getting date of event ${eventid}: ${err.toString()}`);
+    }
+    return ret;
   }
 
   async runConnectionTest() {

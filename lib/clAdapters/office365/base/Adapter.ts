@@ -172,7 +172,6 @@ export default class Office365BaseAdapter extends Adapter {
     }
   }
 
-
   async getUserData(
     options: Office365AdapterGetUserInfoOptions,
     userData?: any,

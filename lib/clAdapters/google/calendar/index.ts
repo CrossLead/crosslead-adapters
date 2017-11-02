@@ -6,6 +6,8 @@ import GoogleBaseAdapter from '../base/Adapter';
 import { GoogleError, GoogleErrorType, createGoogleError } from '../errors';
 import rateLimit from '../../../utils/rate-limit';
 import sanitizeLocalPart from '../../../utils/utils';
+import { DateRange, UserProfile } from '../../../common/types';
+import { handleGoogleError, calendarIdsFor } from '../../util/google/util';
 
 // google calendar api
 const calendar = googleapis.calendar('v3');
@@ -15,34 +17,6 @@ const credentialMappings: { [key: string]: string } = {
   'serviceEmail': 'client_email',
   'email'       : 'adminEmail'
 };
-
-
-
-function handleGoogleError(res: Function, rej: Function, returnVal?: any) {
-  return (err: any, result: any) => {
-    if (err) {
-      let mapped = err;
-      if (err instanceof Error) {
-        // Map to custom errors
-        if (/unauthorized_client/.test(err.message.toString())) {
-          mapped = createGoogleError(
-            'UnauthorizedClient',
-            err
-          );
-        }
-        // TODO: other types
-      } else if (!err.kind) {
-        // Not a GoogleError
-        mapped = new Error(JSON.stringify(err));
-      }
-      // Leave GoogleErrors
-      rej(mapped);
-    } else {
-      res(typeof returnVal !== 'undefined' ?  returnVal : result);
-    }
-  };
-}
-
 
 
 export const fieldNameMap = {
@@ -69,14 +43,6 @@ export const fieldNameMap = {
   'hangoutLink':                         'hangoutLink',
   'privacy':                             'visibility'
 };
-
-
-
-export interface UserProfile {
-  email: string;
-  emailAfterMapping: string;
-}
-
 
 export type GoogleCalendarApiEvent = {
   [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
@@ -204,11 +170,9 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           errorMessage: null
         };
 
-        const email = sanitizeLocalPart(userProfile.emailAfterMapping);
-
         try {
           // add auth tokens to request
-          const auth = await this.authorize(email);
+          const auth = await this.authorize(userProfile.emailAfterMapping);
 
           // function to recurse through pageTokens
           const getEvents = async (requestOpts: any, data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
@@ -237,28 +201,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
             return data;
           };
 
-          /**
-           * calendar ids we want to
-           * retrieve events from
-           */
-          const includedCalendarIds = new Set([
-            'primary',
-            userProfile.email.toLowerCase(),
-            userProfile.emailAfterMapping.toLowerCase()
-          ]);
-
-          /**
-           * all calendar ids in the users calendar
-           */
-          const calendarIds = _.chain(await new Promise((res, rej) => {
-            calendar.calendarList.list(
-              { ...opts, auth },
-              (err: any, d: any) => handleGoogleError(res, rej)(err, d && d.items)
-            );
-          }))
-          .filter((item: any) => includedCalendarIds.has(item.id.toLowerCase()))
-          .map('id')
-          .value();
+          const calendarIds = await calendarIdsFor(userProfile, auth);
 
           /**
            * get all items from all calendars in the date
@@ -266,7 +209,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
            */
           const items = _.flatten(await Promise.all(
             _.map(<any> calendarIds, (calendarId: string) =>
-              getEvents({ ...opts, auth, calendarId }).then(r => r && r.items)
+                  getEvents({ ...opts, auth, calendarId }).then(r => r && r.items)
             )
           ));
 
@@ -378,7 +321,8 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
 
 
   // create authenticated token for api requests for given user
-  async authorize(email: string) {
+  async authorize(email: string): Promise<any> {
+    email = sanitizeLocalPart(email);
 
     const { credentials: { serviceEmail, certificate } } = this;
 
@@ -421,6 +365,34 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
              new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
              new Error(`Caught exception getting events: ${err.message}, ${context}`));
     }
+  }
+
+  async getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange|null> {
+    const auth = await this.authorize(userProfile.emailAfterMapping);
+    let ret = null;
+    try {
+
+      const calendarIds: string[] = await calendarIdsFor(userProfile, auth);
+      const items = _.flatten(await Promise.all(
+        _.map(<any> calendarIds, (calendarId: string) =>
+              new Promise((res, rej) =>
+                          calendar.events.get({calendarId, eventId, auth},
+                                              handleGoogleError(res, rej))
+                         )
+             )
+      ));
+      if (items) {
+        ret = {start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime)};
+      }
+    } catch (err) {
+      const subject = auth.subject;
+      const context = `subject = ${subject}`;
+      throw (/invalid_request/.test(err.message) ?
+             new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
+             new Error(`Caught exception getting events: ${err.message}, ${context}`));
+    }
+
+    return ret;
   }
 
 }

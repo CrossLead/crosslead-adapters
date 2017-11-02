@@ -460,6 +460,12 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
             }
         });
     }
+    getDatesOf(eventId, userProfile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.error('The getDatesOf function is not supported by the ActiveSync adapter');
+            return null;
+        });
+    }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
             const { credentials } = this;

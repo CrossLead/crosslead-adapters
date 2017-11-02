@@ -113,6 +113,33 @@ class ExchangeServiceService extends index_1.Service {
             return attendees;
         });
     }
+    getDatesOf(itemId, addr) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.ews) {
+                throw new Error('EWS has not been inited!');
+            }
+            const ewsArgs = {
+                ItemShape: {
+                    BaseShape: 'AllProperties',
+                },
+                ItemIds: [
+                    {
+                        ItemId: {
+                            attributes: {
+                                Id: itemId,
+                            }
+                        }
+                    }
+                ]
+            };
+            const soapHeader = this.buildSoapHeader(addr);
+            const result = yield this.ews.run('GetItem', ewsArgs, soapHeader);
+            const start = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.Start');
+            const end = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.End');
+            const ret = { start, end };
+            return ret;
+        });
+    }
     findItem(startDate, endDate, addr) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.ews) {

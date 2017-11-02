@@ -218,6 +218,19 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
             }
         });
     }
+    getDatesOf(eventid, userProfile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const addr = userProfile.emailAfterMapping;
+            let ret = null;
+            try {
+                ret = yield this._service.getDatesOf(eventid, addr);
+            }
+            catch (err) {
+                console.log(`Caught error getting date of event ${eventid}: ${err.toString()}`);
+            }
+            return ret;
+        });
+    }
     runConnectionTest() {
         return __awaiter(this, void 0, void 0, function* () {
             try {

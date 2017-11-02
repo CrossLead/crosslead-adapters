@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { Service, Configuration } from '../../base/index';
 import * as EWS from 'node-ews';
 import { hashString } from '../../../utils/utils';
+import { DateRange } from '../../../common/types';
 
 export default class ExchangeServiceService extends Service {
   ews: any;
@@ -109,6 +110,34 @@ export default class ExchangeServiceService extends Service {
     const result = await this.ews.run('GetItem', ewsArgs, soapHeader);
     const attendees = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.RequiredAttendees.Attendee');
     return attendees;
+  }
+
+  public async getDatesOf(itemId: string, addr: string): Promise<DateRange | null> {
+    if (!this.ews) {
+      throw new Error('EWS has not been inited!');
+    }
+
+    const ewsArgs = {
+      ItemShape : {
+        BaseShape : 'AllProperties',
+      },
+      ItemIds : [
+        {
+          ItemId : {
+            attributes : {
+              Id : itemId,
+            }
+          }
+        }
+      ]
+    };
+
+    const soapHeader = this.buildSoapHeader(addr);
+    const result = await this.ews.run('GetItem', ewsArgs, soapHeader);
+    const start = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.Start');
+    const end = _.get(result, 'ResponseMessages.GetItemResponseMessage.Items.CalendarItem.End');
+    const ret = {start, end};
+    return ret;
   }
 
   public async findItem(startDate: string, endDate: string, addr: string) {

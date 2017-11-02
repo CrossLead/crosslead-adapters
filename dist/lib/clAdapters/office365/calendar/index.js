@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
 const _ = require("lodash");
 const Adapter_1 = require("../base/Adapter");
+const request = require("request-promise");
 /**
  * Office 365 Calendar adapter
  */
@@ -67,6 +68,32 @@ class Office365CalendarAdapter extends Adapter_1.default {
                 console.log('Office365 GetBatchData Error: ' + JSON.stringify(errorMessage));
                 return Object.assign({}, dataAdapterRunStats, { errorMessage });
             }
+        });
+    }
+    getDatesOf(eventId, userProfile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const accessToken = yield this.getAccessToken(), { apiVersion } = this._config.options;
+            const emailAddr = userProfile.emailAfterMapping;
+            const uri = `https://outlook.office365.com/api/v${apiVersion}/users('${emailAddr}')/events/${eventId}?$select=Start,End`;
+            const requestOptions = {
+                method: 'GET',
+                uri,
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    Accept: 'application/json;odata.metadata=none'
+                }
+            };
+            let ret = null;
+            try {
+                const value = JSON.parse(yield request(requestOptions)) || {};
+                const start = value && value.Start ? value.Start : null;
+                const end = value && value.End ? value.End : null;
+                ret = { start, end };
+            }
+            catch (err) {
+                console.error(`Caught error getting start time of event ${eventId} for ${emailAddr}: ${err.toString()}`);
+            }
+            return ret;
         });
     }
 }

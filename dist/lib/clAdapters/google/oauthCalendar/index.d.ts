@@ -1,5 +1,6 @@
 import { Configuration, Service, Adapter } from '../../base/index';
 import { InvalidGrant } from '../errors';
+import { DateRange, UserProfile } from '../../../common/types';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
@@ -23,14 +24,13 @@ export declare const fieldNameMap: {
     'hangoutLink': string;
     'privacy': string;
 };
-export interface UserProfile {
-    email: string;
-    emailAfterMapping: string;
-}
 export declare type GoogleOauthCredentials = {
     access_token: string;
     refresh_token: string;
     email: string;
+    clientId: string;
+    clientSecret: string;
+    redirectUrl: string;
 };
 export declare type GoogleCalendarApiEvent = {
     [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
@@ -41,6 +41,7 @@ export interface GoogleCalendarApiResult {
 }
 export default class GoogleOauthCalendarAdapter extends Adapter {
     credentials: GoogleOauthCredentials;
+    private auth;
     getFieldData(): Promise<void>;
     static Configuration: typeof Configuration;
     static Service: typeof Service;
@@ -73,14 +74,8 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
     constructor();
     reset(): this;
     init(): Promise<this>;
-    getBatchData(userProfiles: UserProfile[] | undefined, filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<void>;
+    getBatchData(userProfiles: UserProfile[] | undefined, filterStartDate: Date, filterEndDate: Date, fields?: string): Promise<never[]>;
     getData(filterStartDate: Date, filterEndDate: Date, properties: {
-        GOOGLE_OAUTH_CLIENT_ID: string;
-        GOOGLE_OAUTH_CLIENT_SECRET: string;
-        GOOGLE_OAUTH_REDIRECT_URL: string;
-        access_token: string;
-        refresh_token: string;
-        expiry_date: string;
         userId: string;
         email: string;
     }): Promise<({
@@ -109,6 +104,7 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
         success: boolean;
         data: never[];
     })>;
+    getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange | null>;
     runConnectionTest(): Promise<void>;
     runMessageTest(): Promise<void>;
 }

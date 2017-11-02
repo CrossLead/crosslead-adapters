@@ -5,6 +5,7 @@ import { Configuration, Service } from '../../base/index';
 import * as asclient from 'asclient';
 import ActiveSyncBaseAdapter from '../base/Adapter';
 import autodiscover from 'autodiscover-activesync';
+import { DateRange, UserProfile } from '../../../common/types';
 
 const credentialMappings: { [key: string]: string } = {
   'username' : 'username',
@@ -571,6 +572,11 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         success: false
       });
     }
+  }
+
+  async getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange|null> {
+    console.error( 'The getDatesOf function is not supported by the ActiveSync adapter' );
+    return null;
   }
 
   async runConnectionTest() {

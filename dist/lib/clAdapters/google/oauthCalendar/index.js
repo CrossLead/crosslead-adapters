@@ -13,30 +13,8 @@ const moment = require("moment");
 const _ = require("lodash");
 const index_1 = require("../../base/index");
 const errors_1 = require("../errors");
+const util_1 = require("../../util/google/util");
 const calendar = googleapis.calendar('v3');
-function handleGoogleError(res, rej, returnVal) {
-    return (err, result) => {
-        if (err) {
-            let mapped = err;
-            if (err instanceof Error) {
-                // Map to custom errors
-                if (/unauthorized_client/.test(err.message.toString())) {
-                    mapped = errors_1.createGoogleError('UnauthorizedClient', err);
-                }
-                // TODO: other types
-            }
-            else if (!err.kind) {
-                // Not a GoogleError
-                mapped = new Error(JSON.stringify(err));
-            }
-            // Leave GoogleErrors
-            rej(mapped);
-        }
-        else {
-            res(typeof returnVal !== 'undefined' ? returnVal : result);
-        }
-    };
-}
 exports.fieldNameMap = {
     // Desired...                          // Given...
     'eventId': 'id',
@@ -68,7 +46,10 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
         this.credentials = {
             access_token: '',
             refresh_token: '',
-            email: ''
+            email: '',
+            clientId: '',
+            clientSecret: '',
+            redirectUrl: ''
         };
         this.sensitiveCredentialsFields = ['refresh_token', 'access_token'];
     }
@@ -86,8 +67,16 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
         return __awaiter(this, void 0, void 0, function* () {
             const { credentials } = this;
             if (!credentials) {
-                throw new Error('credentials required for adapter.');
+                throw new Error('Credentials required for adapter.');
             }
+            if (!(credentials.clientId && credentials.clientSecret && credentials.redirectUrl)) {
+                throw new Error('OAuth params needed by this adapter are missing');
+            }
+            this.auth = new googleapis.auth.OAuth2(credentials.clientId, credentials.clientSecret, credentials.redirectUrl);
+            this.auth.setCredentials({
+                access_token: credentials.access_token,
+                refresh_token: credentials.refresh_token
+            });
             // validate required credential properties
             ['access_token', 'refresh_token', 'email'].forEach(prop => {
                 if (!credentials[prop]) {
@@ -105,6 +94,7 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
     getBatchData(userProfiles = [], filterStartDate, filterEndDate, fields) {
         return __awaiter(this, void 0, void 0, function* () {
             console.warn('getBatchData is currently unimplemented in google oauth calendar adapter');
+            return [];
         });
     }
     getData(filterStartDate, filterEndDate, properties) {
@@ -130,15 +120,11 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
                 errorMessage: null
             };
             try {
-                const auth = new googleapis.auth.OAuth2(properties.GOOGLE_OAUTH_CLIENT_ID, properties.GOOGLE_OAUTH_CLIENT_SECRET, properties.GOOGLE_OAUTH_REDIRECT_URL);
-                auth.setCredentials({
-                    access_token: properties.access_token,
-                    refresh_token: properties.refresh_token
-                });
+                const auth = this.auth;
                 const getEvents = (requestOpts) => __awaiter(this, void 0, void 0, function* () {
                     try {
                         return yield new Promise((res, rej) => {
-                            calendar.events.list(requestOpts, handleGoogleError(res, rej));
+                            calendar.events.list(requestOpts, util_1.handleGoogleError(res, rej));
                         });
                     }
                     catch (err) {
@@ -186,7 +172,7 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
                 console.log(error);
                 let errorMessage = error instanceof Error ? error : new Error(JSON.stringify(error));
                 if (/invalid_grant/.test(errorMessage.message.toString())) {
-                    errorMessage = errors_1.createGoogleError('InvalidGrant', new Error(`Email address: ${properties.email} hasn't authorized crosslead to access their calendar.`));
+                    errorMessage = errors_1.createGoogleError('InvalidGrant', new Error(`Email address: ${properties.email} has not authorized crosslead to access their calendar.`));
                 }
                 return Object.assign(individualRunStats, {
                     errorMessage,
@@ -194,6 +180,27 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
                     data: []
                 });
             }
+        });
+    }
+    getDatesOf(eventId, userProfile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const auth = this.auth;
+            let ret = null;
+            try {
+                const calendarIds = yield util_1.calendarIdsFor(userProfile, auth);
+                const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => new Promise((res, rej) => calendar.events.get({ calendarId, eventId, auth }, util_1.handleGoogleError(res, rej))))));
+                if (items && items.length > 0) {
+                    ret = { start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime) };
+                }
+            }
+            catch (err) {
+                const subject = auth.subject;
+                const context = `subject = ${subject}`;
+                throw (/invalid_request/.test(err.message) ?
+                    new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
+                    new Error(`Caught exception getting events: ${err.message}, ${context}`));
+            }
+            return ret;
         });
     }
     runConnectionTest() {

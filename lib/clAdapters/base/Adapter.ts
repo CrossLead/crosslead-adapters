@@ -1,4 +1,11 @@
 import { Field } from '../fields/';
+import { DateRange, UserProfile } from '../../common/types';
+
+export interface OAuthParams {
+  clientId: string;
+  clientSecret: string;
+  redirectUrl: string;
+};
 
 /**
  *
@@ -77,6 +84,17 @@ abstract class Adapter {
 
   public parseBoolean(str?: string) {
     return !str || str === 'true' || str === 'TRUE' || str === '1';
+  }
+
+  /**
+   * Queries the underlying service for the start and end date of
+   * the given eventId, accessed via the user specified by the
+   * given user profile object.
+   * Current supported by all calendar adapters EXCEPT for ActiveSync.
+   */
+  public async getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange|null> {
+    console.error( 'Detected invocation of unimplemented getDatesOf function' );
+    return null;
   }
 }
 

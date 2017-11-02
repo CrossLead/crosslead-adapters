@@ -1,7 +1,8 @@
 import * as moment                     from 'moment';
 import * as _                          from 'lodash';
-import Office365BaseAdapter       from '../base/Adapter';
-
+import Office365BaseAdapter            from '../base/Adapter';
+import * as request                    from 'request-promise';
+import { DateRange, UserProfile }      from '../../../common/types';
 
 /**
  * Office 365 Calendar adapter
@@ -157,5 +158,32 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
 
   }
 
+  async getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange|null> {
+
+    const accessToken = await this.getAccessToken(),
+          { apiVersion } = this._config.options;
+    const emailAddr = userProfile.emailAfterMapping;
+    const uri = `https://outlook.office365.com/api/v${apiVersion}/users('${emailAddr}')/events/${eventId}?$select=Start,End`;
+    const requestOptions = {
+      method: 'GET',
+      uri,
+      headers : {
+        Authorization: `Bearer ${accessToken}`,
+        Accept:        'application/json;odata.metadata=none'
+      }
+    };
+
+    let ret = null;
+    try {
+      const value: any = JSON.parse(await request(requestOptions)) || {};
+      const start = value && value.Start ? value.Start : null;
+      const end = value && value.End ? value.End : null;
+      ret = {start, end};
+    } catch (err) {
+      console.error( `Caught error getting start time of event ${eventId} for ${emailAddr}: ${err.toString()}` );
+    }
+
+    return ret;
+  }
 
 }

@@ -1,5 +1,6 @@
 import { Configuration, Service } from '../../base/index';
 import GoogleBaseAdapter from '../base/Adapter';
+import { DateRange, UserProfile } from '../../../common/types';
 export declare const fieldNameMap: {
     'eventId': string;
     'attendees': string;
@@ -23,10 +24,6 @@ export declare const fieldNameMap: {
     'hangoutLink': string;
     'privacy': string;
 };
-export interface UserProfile {
-    email: string;
-    emailAfterMapping: string;
-}
 export declare type GoogleCalendarApiEvent = {
     [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
 };
@@ -77,8 +74,8 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
             success: boolean;
             runDate: any;
             errorMessage: null;
-            email: string;
-            emailAfterMapping: string;
+            readonly email: string;
+            readonly emailAfterMapping: string;
             filterStartDate: Date;
             filterEndDate: Date;
         } & {
@@ -91,6 +88,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
     runMessageTest(): Promise<{
         success: boolean;
     }>;
-    authorize(email: string): Promise<{}>;
+    authorize(email: string): Promise<any>;
     getEvents(requestOpts: any): Promise<GoogleCalendarApiResult>;
+    getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange | null>;
 }

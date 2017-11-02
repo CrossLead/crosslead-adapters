@@ -3,35 +3,10 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Configuration, Service, Adapter } from '../../base/index';
 import { GoogleError, GoogleErrorType, createGoogleError, InvalidGrant } from '../errors';
+import { DateRange, UserProfile } from '../../../common/types';
+import { handleGoogleError, calendarIdsFor } from '../../util/google/util';
 
 const calendar = googleapis.calendar('v3');
-
-function handleGoogleError(res: Function, rej: Function, returnVal?: any) {
-  return (err: any, result: any) => {
-    if (err) {
-      let mapped = err;
-      if (err instanceof Error) {
-        // Map to custom errors
-        if (/unauthorized_client/.test(err.message.toString())) {
-          mapped = createGoogleError(
-            'UnauthorizedClient',
-            err
-          );
-        }
-        // TODO: other types
-      } else if (!err.kind) {
-        // Not a GoogleError
-        mapped = new Error(JSON.stringify(err));
-      }
-      // Leave GoogleErrors
-      rej(mapped);
-    } else {
-      res(typeof returnVal !== 'undefined' ?  returnVal : result);
-    }
-  };
-}
-
-
 
 export const fieldNameMap = {
   // Desired...                          // Given...
@@ -58,17 +33,13 @@ export const fieldNameMap = {
   'privacy':                             'visibility'
 };
 
-
-
-export interface UserProfile {
-  email: string;
-  emailAfterMapping: string;
-}
-
 export type GoogleOauthCredentials = {
   access_token: string;
   refresh_token: string;
   email: string;
+  clientId: string,
+  clientSecret: string,
+  redirectUrl: string
 };
 
 
@@ -87,8 +58,13 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
   credentials: GoogleOauthCredentials = {
     access_token: '',
     refresh_token: '',
-    email: ''
+    email: '',
+    clientId: '',
+    clientSecret: '',
+    redirectUrl: ''
   };
+
+  private auth: any;
 
   async getFieldData() {
     throw new Error('Google adapters currently do not support `getFieldData()`');
@@ -122,9 +98,23 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
     const { credentials }: { credentials: {[k: string]: string} } = this;
 
     if (!credentials) {
-      throw new Error('credentials required for adapter.');
+      throw new Error('Credentials required for adapter.');
     }
 
+    if (!(credentials.clientId && credentials.clientSecret && credentials.redirectUrl)) {
+      throw new Error('OAuth params needed by this adapter are missing');
+    }
+
+    this.auth = new googleapis.auth.OAuth2(
+      credentials.clientId,
+      credentials.clientSecret,
+      credentials.redirectUrl
+    );
+
+    this.auth.setCredentials({
+      access_token: credentials.access_token,
+      refresh_token: credentials.refresh_token
+    });
 
     // validate required credential properties
     ['access_token', 'refresh_token', 'email'].forEach(prop => {
@@ -140,12 +130,10 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
 
     const { email: email } = credentials;
 
-    console.log(
-      `Successfully initialized google oauth calendar adapter for email: ${email}`
+    console.log(`Successfully initialized google oauth calendar adapter for email: ${email}`
     );
     return this;
   }
-
 
   async getBatchData(
     userProfiles: UserProfile[] = [],
@@ -153,21 +141,14 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
     filterEndDate: Date,
     fields?: string
   ) {
-
     console.warn('getBatchData is currently unimplemented in google oauth calendar adapter');
-
+    return [];
   }
 
   async getData (
     filterStartDate: Date,
     filterEndDate: Date,
     properties: {
-      GOOGLE_OAUTH_CLIENT_ID: string;
-      GOOGLE_OAUTH_CLIENT_SECRET: string;
-      GOOGLE_OAUTH_REDIRECT_URL: string;
-      access_token: string;
-      refresh_token: string;
-      expiry_date: string;
       userId: string;
       email: string;
     }
@@ -199,16 +180,7 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
     };
 
     try {
-      const auth = new googleapis.auth.OAuth2(
-        properties.GOOGLE_OAUTH_CLIENT_ID,
-        properties.GOOGLE_OAUTH_CLIENT_SECRET,
-        properties.GOOGLE_OAUTH_REDIRECT_URL
-      );
-
-      auth.setCredentials({
-        access_token: properties.access_token,
-        refresh_token: properties.refresh_token
-      });
+      const auth = this.auth;
 
       const getEvents = async (requestOpts: any) => {
         try {
@@ -275,7 +247,7 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
       if (/invalid_grant/.test(errorMessage.message.toString())) {
         errorMessage = createGoogleError(
           'InvalidGrant',
-          new Error(`Email address: ${properties.email} hasn't authorized crosslead to access their calendar.`)
+          new Error(`Email address: ${properties.email} has not authorized crosslead to access their calendar.`)
         );
       }
       return Object.assign(individualRunStats, {
@@ -287,6 +259,32 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
 
   }
 
+  async getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange|null> {
+    const auth = this.auth;
+    let ret = null;
+    try {
+
+      const calendarIds: string[] = await calendarIdsFor(userProfile, auth);
+      const items = _.flatten(await Promise.all(
+        _.map(<any> calendarIds, (calendarId: string) =>
+              new Promise((res, rej) =>
+                          calendar.events.get({calendarId, eventId, auth},
+                                              handleGoogleError(res, rej))
+                         )
+             )
+      ));
+      if (items && items.length > 0) {
+        ret = {start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime)};
+      }
+    } catch (err) {
+      const subject = auth.subject;
+      const context = `subject = ${subject}`;
+      throw (/invalid_request/.test(err.message) ?
+             new Error(`Caught invalid_request getting events: ${err.message}, ${context}`) :
+             new Error(`Caught exception getting events: ${err.message}, ${context}`));
+    }
+    return ret;
+  }
 
   async runConnectionTest() {
     console.warn('runConnectionTest is currently unimplemented in google oauth calendar adapter');

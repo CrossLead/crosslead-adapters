@@ -1,4 +1,10 @@
 import { Field } from '../fields/';
+import { DateRange, UserProfile } from '../../common/types';
+export interface OAuthParams {
+    clientId: string;
+    clientSecret: string;
+    redirectUrl: string;
+}
 /**
  *
  * adapter credential object
@@ -56,5 +62,12 @@ declare abstract class Adapter {
      */
     abstract getFieldData(field?: Field, query?: any): any;
     parseBoolean(str?: string): boolean;
+    /**
+     * Queries the underlying service for the start and end date of
+     * the given eventId, accessed via the user specified by the
+     * given user profile object.
+     * Current supported by all calendar adapters EXCEPT for ActiveSync.
+     */
+    getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange | null>;
 }
 export default Adapter;
