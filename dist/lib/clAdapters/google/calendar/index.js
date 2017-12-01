@@ -288,7 +288,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
             try {
                 const calendarIds = yield util_1.calendarIdsFor(userProfile, auth);
                 const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => new Promise((res, rej) => calendar.events.get({ calendarId, eventId, auth }, util_1.handleGoogleError(res, rej))))));
-                if (items) {
+                if (items && items.length) {
                     ret = { start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime) };
                 }
             }
