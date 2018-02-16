@@ -324,12 +324,32 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
             return evStartTime === startTime && evSubject === subject;
         });
     }
+    mkProvisionedClient() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email: username, password, connectUrl: endpoint } = this.credentials;
+            const options = {
+                username,
+                password,
+                endpoint,
+                folders: [],
+                folderSyncKey: '0',
+                device: {
+                    id: '0000000',
+                    type: 'iPhone',
+                    model: 'iPhone Simulator',
+                    operatingSystem: 'iPhone OS8.1'
+                }
+            };
+            const client = asclient(options);
+            const res = yield client.provision();
+            return { options, client, provisioningResult: res };
+        });
+    }
     getData(filterStartDate, filterEndDate, properties) {
         return __awaiter(this, void 0, void 0, function* () {
             if (filterStartDate.getTime() > filterEndDate.getTime()) {
                 throw new Error(`filterStartDate must be less than or equal to filterEndDate`);
             }
-            const { email: username, password, connectUrl: endpoint } = this.credentials;
             const individualRunStats = {
                 filterStartDate,
                 filterEndDate,
@@ -338,32 +358,21 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 errorMessage: null
             };
             try {
-                const options = {
-                    username,
-                    password,
-                    endpoint,
-                    folders: [],
-                    folderSyncKey: '0',
-                    device: {
-                        id: '0000000',
-                        type: 'iPhone',
-                        model: 'iPhone Simulator',
-                        operatingSystem: 'iPhone OS8.1'
-                    }
-                };
-                const myCalClient = asclient(options);
-                yield myCalClient.provision();
-                const folderSync = (yield myCalClient.folderSync()).body.FolderSync;
-                // const folderSyncKey = folderSync.SyncKey;
+                const { client, provisioningResult, options } = yield this.mkProvisionedClient();
+                if (provisioningResult !== 0) {
+                    throw new Error(`Provisioning failed with ${provisionResultToString(provisioningResult)}`);
+                }
+                const folderSync = (yield client.folderSync()).body.FolderSync;
+                const folderSyncKey = folderSync.SyncKey;
                 // console.log('syncKey', folderSyncKey );
                 const calFolder = _.find(options.folders, (folder) => {
                     return folder.Type[0] === '8'; // Calendar type
                 });
                 const serverId = calFolder.ServerId[0];
                 // options.folderSyncKey = '1010372622';
-                yield myCalClient.enableCalendarSync();
-                yield myCalClient.sync();
-                const contents = myCalClient.contents;
+                yield client.enableCalendarSync();
+                yield client.sync();
+                const contents = client.contents;
                 const folders = contents[serverId];
                 const startDate = moment(filterStartDate);
                 const endDate = moment(filterEndDate);
@@ -494,15 +503,23 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 });
                 this.credentials.connectUrl = connectUrl || '';
                 if (connectUrl) {
-                    console.log(`Successfully connected to: ${connectUrl}`);
+                    const { provisioningResult } = yield this.mkProvisionedClient();
+                    return provisioningResult === 0 ?
+                        {
+                            success: true,
+                            connectUrl,
+                        } :
+                        {
+                            success: false,
+                            connectUrl,
+                            message: `ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`,
+                        };
                 }
                 return {
-                    success: !!connectUrl,
-                    connectUrl
+                    success: false,
                 };
             }
             catch (error) {
-                console.log(error.stack || error);
                 return {
                     message: error.message,
                     success: false
@@ -516,4 +533,91 @@ ActiveSyncCalendarAdapter.Service = index_1.Service;
 // convert the names of the api response data
 ActiveSyncCalendarAdapter.fieldNameMap = exports.fieldNameMap;
 exports.default = ActiveSyncCalendarAdapter;
+/**
+ * This function converts a provisioning result integer into
+ * a human readable string.
+ */
+const provisionResultToString = (res) => {
+    switch (+res) {
+        case 101: return 'InvalidContent';
+        case 102: return 'InvalidWBXML';
+        case 103: return 'InvalidXML';
+        case 104: return 'InvalidDateTime';
+        case 105: return 'InvalidCombinationOfIDs';
+        case 106: return 'InvalidIDs';
+        case 107: return 'InvalidMIME';
+        case 108: return 'DeviceIdMissingOrInvalid';
+        case 109: return 'DeviceTypeMissingOrInvalid';
+        case 110: return 'ServerError';
+        case 111: return 'ServerErrorRetryLater';
+        case 112: return 'ActiveDirectoryAccessDenied';
+        case 113: return 'MailboxQuotaExceeded';
+        case 114: return 'MailboxServerOffline';
+        case 115: return 'SendQuotaExceeded';
+        case 116: return 'MessageRecipientUnresolved';
+        case 117: return 'MessageReplyNotAllowed';
+        case 118: return 'MessagePreviouslySent';
+        case 119: return 'MessageHasNoRecipient';
+        case 120: return 'MailSubmissionFailed';
+        case 121: return 'MessageReplyFailed';
+        case 122: return 'AttachmentIsTooLarge';
+        case 123: return 'UserHasNoMailbox';
+        case 124: return 'UserCannotBeAnonymous';
+        case 125: return 'UserPrincipalCouldNotBeFound';
+        case 126: return 'UserDisabledForSync';
+        case 127: return 'UserOnNewMailboxCannotSync';
+        case 128: return 'UserOnLegacyMailboxCannotSync';
+        case 129: return 'DeviceIsBlockedForThisUser';
+        case 130: return 'AccessDenied';
+        case 131: return 'AccountDisabled';
+        case 132: return 'SyncStateNotFound';
+        case 133: return 'SyncStateLocked';
+        case 134: return 'SyncStateCorrupt';
+        case 135: return 'SyncStateAlreadyExists';
+        case 136: return 'SyncStateVersionInvalid';
+        case 137: return 'CommandNotSupported';
+        case 138: return 'VersionNotSupported';
+        case 139: return 'DeviceNotFullyProvisionable';
+        case 140: return 'RemoteWipeRequested';
+        case 141: return 'LegacyDeviceOnStrictPolicy';
+        case 142: return 'DeviceNotProvisioned';
+        case 143: return 'PolicyRefresh';
+        case 144: return 'InvalidPolicyKey';
+        case 145: return 'ExternallyManagedDevicesNotAllowed';
+        case 146: return 'NoRecurrenceInCalendar';
+        case 147: return 'UnexpectedItemClass';
+        case 148: return 'RemoteServerHasNoSSL';
+        case 149: return 'InvalidStoredRequest';
+        case 150: return 'ItemNotFound';
+        case 151: return 'TooManyFolders';
+        case 152: return 'NoFoldersFound';
+        case 153: return 'ItemsLostAfterMove';
+        case 154: return 'FailureInMoveOperation';
+        case 155: return 'MoveCommandDisallowedForNonPersistentMoveAction';
+        case 156: return 'MoveCommandInvalidDestinationFolder';
+        case 160: return 'AvailabilityTooManyRecipients';
+        case 161: return 'AvailabilityDLLimitReached';
+        case 162: return 'AvailabilityTransientFailure';
+        case 163: return 'AvailabilityFailure';
+        case 164: return 'BodyPartPreferenceTypeNotSupported';
+        case 165: return 'DeviceInformationRequired';
+        case 166: return 'InvalidAccountId';
+        case 167: return 'AccountSendDisabled';
+        case 168: return 'IRM_FeatureDisabled';
+        case 169: return 'IRM_TransientError';
+        case 170: return 'IRM_PermanentError';
+        case 171: return 'IRM_InvalidTemplateID';
+        case 172: return 'IRM_OperationNotPermitted';
+        case 173: return 'NoPicture';
+        case 174: return 'PictureTooLarge';
+        case 175: return 'PictureLimitReached';
+        case 176: return 'BodyPart_ConversationTooLarge';
+        case 177: return 'MaximumDevicesReached';
+        case 178: return 'InvalidMimeBodyCombination';
+        case 179: return 'InvalidSmartForwardParameters';
+        case 183: return 'InvalidRecipients';
+        case 184: return 'OneOrMoreExceptionsFailed';
+        default: return `Unknown ${res}`;
+    }
+};
 //# sourceMappingURL=index.js.map

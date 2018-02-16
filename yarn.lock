@@ -135,9 +135,9 @@ arrify@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-"asclient@git://github.com/CrossLead/node-asclient.git#29a75b1302b8f589f23caf9bc778d0c5c68d8b2a":
+"asclient@git://github.com/CrossLead/node-asclient.git#6759e5a80cad2c017ad10f5a81cee307f465bc02":
   version "0.1.0"
-  resolved "git://github.com/CrossLead/node-asclient.git#29a75b1302b8f589f23caf9bc778d0c5c68d8b2a"
+  resolved "git://github.com/CrossLead/node-asclient.git#6759e5a80cad2c017ad10f5a81cee307f465bc02"
   dependencies:
     aswbxml "^0.0.4"
     merge-descriptors "^1.0.0"
@@ -172,6 +172,12 @@ aswbxml@^0.0.4:
 async-each@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
+
+async@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.5.0.tgz#843190fd6b7357a0b9e1c956edddd5ec8462b54d"
+  dependencies:
+    lodash "^4.14.0"
 
 async@~0.9.0:
   version "0.9.2"
@@ -1883,9 +1889,9 @@ httpntlm@1.7.3:
     httpreq ">=0.4.22"
     underscore "~1.7.0"
 
-httpreq@>=0.4.22:
-  version "0.4.23"
-  resolved "https://registry.yarnpkg.com/httpreq/-/httpreq-0.4.23.tgz#0f460fe0c781029bcad7f47cad08de6cc1130212"
+httpreq@0.4.24, httpreq@>=0.4.22:
+  version "0.4.24"
+  resolved "https://registry.yarnpkg.com/httpreq/-/httpreq-0.4.24.tgz#4335ffd82cd969668a39465c929ac61d6393627f"
 
 ignore-by-default@^1.0.0, ignore-by-default@^1.0.1:
   version "1.0.1"
@@ -2410,9 +2416,9 @@ minimist@~0.0.1:
   version "1.0.4"
   resolved "git://github.com/CrossLead/moment-recur#66ca3f74b57b0e8438f79c98df3443fbfcef7309"
 
-moment@2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.15.0.tgz#cc9e33958bf4a99dea7111d5e62ed3c13fc96440"
+moment@2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
 ms@0.6.2:
   version "0.6.2"
@@ -2456,12 +2462,14 @@ nan@^2.3.0:
     lodash "3.3.1"
     soap "0.8.0"
 
-"node-ews@git://github.com/CrossLead/node-ews#cba108149ebc6118f096b61909ec9b6589dda65f":
-  version "3.1.0"
-  resolved "git://github.com/CrossLead/node-ews#cba108149ebc6118f096b61909ec9b6589dda65f"
+"node-ews@git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab":
+  version "3.2.2"
+  resolved "git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab"
   dependencies:
+    async "2.5.0"
     debug "2.3.3"
     httpntlm "1.7.3"
+    httpreq "0.4.24"
     lodash "4.17.2"
     request "2.79.0"
     soap "0.19.2"
@@ -2998,7 +3006,7 @@ request-promise@0.4.2:
     lodash "3.6.x"
     request "^2.34"
 
-request@2.79.0, request@>=2.9.0, request@^2.34, request@^2.65.0, request@^2.66.0, request@^2.72.0, request@^2.74.0:
+request@2.79.0, request@>=2.9.0, request@^2.34, request@^2.72.0, request@^2.74.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
@@ -3023,7 +3031,7 @@ request@2.79.0, request@>=2.9.0, request@^2.34, request@^2.65.0, request@^2.66.0
     tunnel-agent "~0.4.1"
     uuid "^3.0.0"
 
-request@^2.81.0:
+request@^2.65.0, request@^2.66.0, request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -3537,13 +3545,9 @@ uuid@^2.0.1:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
-uuid@^3.0.0:
+uuid@^3.0.0, uuid@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
-
-uuid@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.1"

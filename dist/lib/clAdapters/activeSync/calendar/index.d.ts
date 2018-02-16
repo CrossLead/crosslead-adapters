@@ -68,6 +68,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     private getExceptionEvents(event, exceptionsObj, filterStartDate, filterEndDate);
     private addToEvents(events, folder, filterStartDate, filterEndDate);
     private eventExists(events, event);
+    private mkProvisionedClient();
     getData(filterStartDate: Date, filterEndDate: Date, properties: any): Promise<{
         filterStartDate: Date;
         filterEndDate: Date;
@@ -80,10 +81,6 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     }>;
     getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange | null>;
     runConnectionTest(): Promise<{
-        success: boolean;
-        connectUrl: string | null;
-    } | {
-        message: any;
         success: boolean;
     }>;
 }
