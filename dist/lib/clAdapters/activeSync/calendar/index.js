@@ -507,22 +507,21 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                     return provisioningResult === 0 ?
                         {
                             success: true,
-                            connectUrl,
                         } :
                         {
                             success: false,
-                            connectUrl,
                             message: `ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`,
                         };
                 }
                 return {
                     success: false,
+                    message: `Failed to validate credentials`,
                 };
             }
             catch (error) {
                 return {
+                    success: false,
                     message: error.message,
-                    success: false
                 };
             }
         });

@@ -12,7 +12,7 @@ import AdapterStatus from './clAdapters/adapterStatus';
 import AdapterTypes from './clAdapters/adapterTypes';
 import AdapterLinkedAccountTypes from './clAdapters/adapterLinkedAccountTypes';
 import * as adapters from './clAdapters/';
-import { Adapter } from './clAdapters/';
+import { Adapter, ConnectionTestResult } from './clAdapters/';
 import * as ClAdaptersClient from './client/';
 export { Fields };
 export { Adapter };
@@ -22,6 +22,7 @@ export { AdapterTypes };
 export { AdapterLinkedAccountTypes };
 export { adapters };
 export { ClAdaptersClient };
+export { ConnectionTestResult };
 declare var _default: {
     Fields: typeof Fields;
     Adapter: typeof Adapter;

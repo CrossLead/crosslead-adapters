@@ -17,6 +17,14 @@ export interface AdapterCredentials {
 };
 
 /**
+ * Result from running runConnectionTest
+ */
+export type ConnectionTestResult = {
+  success: boolean;
+  message?: string;
+};
+
+/**
  * Abstract base class for all adapters
  *
  * @class

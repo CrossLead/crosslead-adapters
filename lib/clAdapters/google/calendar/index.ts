@@ -381,7 +381,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
                          )
              )
       ));
-      if (items) {
+      if (items && items.length) {
         ret = {start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime)};
       }
     } catch (err) {

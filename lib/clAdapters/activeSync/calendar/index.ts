@@ -6,6 +6,7 @@ import * as asclient from 'asclient';
 import ActiveSyncBaseAdapter from '../base/Adapter';
 import autodiscover from 'autodiscover-activesync';
 import { DateRange, UserProfile } from '../../../common/types';
+import { ConnectionTestResult } from '../../base/Adapter';
 
 const credentialMappings: { [key: string]: string } = {
   'username' : 'username',
@@ -582,7 +583,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     return null;
   }
 
-  async runConnectionTest() {
+  async runConnectionTest(): Promise<ConnectionTestResult> {
 
     const { credentials }: { credentials: {[k: string]: string} } = this;
 
@@ -621,23 +622,22 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         return provisioningResult === 0 ?
           {
             success: true,
-            connectUrl,
           } :
           {
             success: false,
-            connectUrl,
             message: `ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`,
           };
       }
 
       return {
         success: false,
+        message: `Failed to validate credentials`,
       };
 
     } catch (error) {
       return {
+        success: false,
         message: error.message,
-        success: false
       };
     }
   }

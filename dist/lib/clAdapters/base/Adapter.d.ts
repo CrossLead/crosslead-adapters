@@ -14,6 +14,13 @@ export interface AdapterCredentials {
     [key: string]: string;
 }
 /**
+ * Result from running runConnectionTest
+ */
+export declare type ConnectionTestResult = {
+    success: boolean;
+    message?: string;
+};
+/**
  * Abstract base class for all adapters
  *
  * @class

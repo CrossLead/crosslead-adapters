@@ -72,8 +72,11 @@ class JiraAdapter extends Adapter_1.default {
                 if (error && error.code === 'ECONNREFUSED') {
                     errorMessage = 'Failed to connect to JIRA';
                 }
-                if (response && response.statusCode === 401) {
+                else if (response && response.statusCode === 401) {
                     errorMessage = 'Failed to authorize JIRA adapter';
+                }
+                else if (error === null || error === undefined) {
+                    error = new Error('Received unknown error');
                 }
                 const err = errorMessage ? new Error(errorMessage) : error;
                 resolve({ success, err, data });

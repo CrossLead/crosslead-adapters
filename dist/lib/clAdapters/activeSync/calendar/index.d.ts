@@ -2,6 +2,7 @@ import 'moment-recur';
 import { Configuration, Service } from '../../base/index';
 import ActiveSyncBaseAdapter from '../base/Adapter';
 import { DateRange, UserProfile } from '../../../common/types';
+import { ConnectionTestResult } from '../../base/Adapter';
 /**
  * ActiveSync fields
  *
@@ -80,7 +81,5 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         success: boolean;
     }>;
     getDatesOf(eventId: string, userProfile: UserProfile): Promise<DateRange | null>;
-    runConnectionTest(): Promise<{
-        success: boolean;
-    }>;
+    runConnectionTest(): Promise<ConnectionTestResult>;
 }

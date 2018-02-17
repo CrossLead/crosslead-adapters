@@ -12,7 +12,7 @@ import AdapterStatus from './clAdapters/adapterStatus';
 import AdapterTypes from './clAdapters/adapterTypes';
 import AdapterLinkedAccountTypes from './clAdapters/adapterLinkedAccountTypes';
 import * as adapters from './clAdapters/';
-import { Adapter, AdapterCredentials, ActiveSyncCalendarAdapter } from './clAdapters/';
+import { Adapter, AdapterCredentials, ActiveSyncCalendarAdapter, ConnectionTestResult } from './clAdapters/';
 import * as ClAdaptersClient from './client/';
 
 export { Fields };
@@ -23,6 +23,7 @@ export { AdapterTypes };
 export { AdapterLinkedAccountTypes };
 export { adapters };
 export { ClAdaptersClient };
+export { ConnectionTestResult };
 
 export default {
   Fields,
