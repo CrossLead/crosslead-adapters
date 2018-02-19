@@ -619,7 +619,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       if (connectUrl) {
         const {provisioningResult} = await this.mkProvisionedClient();
 
-        return provisioningResult === 0 ?
+        return provisioningResult === 1 ?
           {
             success: true,
           } :
@@ -648,7 +648,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
  * a human readable string.
  */
 const provisionResultToString = (res: number) => {
-  switch (+res) {
+  switch (res) {
   case 101: return 'InvalidContent';
   case 102: return 'InvalidWBXML';
   case 103: return 'InvalidXML';

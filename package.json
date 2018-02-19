@@ -26,7 +26,7 @@
     "@types/node-uuid": "0.0.28",
     "@types/request": "0.0.39",
     "@types/request-promise": "4.1.33",
-    "asclient": "git://github.com/CrossLead/node-asclient.git#6759e5a80cad2c017ad10f5a81cee307f465bc02",
+    "asclient": "git://github.com/CrossLead/node-asclient.git#ccf4637f91bbe0229c8edc87f9335518e43f7e8e",
     "autodiscover-activesync": "0.0.1",
     "google-auth-library": "0.9.6",
     "googleapis": "17.1.0",

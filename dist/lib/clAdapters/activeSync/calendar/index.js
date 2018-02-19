@@ -504,7 +504,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 this.credentials.connectUrl = connectUrl || '';
                 if (connectUrl) {
                     const { provisioningResult } = yield this.mkProvisionedClient();
-                    return provisioningResult === 0 ?
+                    return provisioningResult === 1 ?
                         {
                             success: true,
                         } :
@@ -537,7 +537,7 @@ exports.default = ActiveSyncCalendarAdapter;
  * a human readable string.
  */
 const provisionResultToString = (res) => {
-    switch (+res) {
+    switch (res) {
         case 101: return 'InvalidContent';
         case 102: return 'InvalidWBXML';
         case 103: return 'InvalidXML';
