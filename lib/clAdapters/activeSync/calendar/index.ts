@@ -438,7 +438,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
     try {
       const {client, provisioningResult, options} = await this.mkProvisionedClient();
-      if (provisioningResult !== 0) {
+      if (provisioningResult !== 1) {
         throw new Error( `Provisioning failed with ${provisionResultToString(provisioningResult)}` );
       }
 

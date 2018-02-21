@@ -359,7 +359,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
             };
             try {
                 const { client, provisioningResult, options } = yield this.mkProvisionedClient();
-                if (provisioningResult !== 0) {
+                if (provisioningResult !== 1) {
                     throw new Error(`Provisioning failed with ${provisionResultToString(provisioningResult)}`);
                 }
                 const folderSync = (yield client.folderSync()).body.FolderSync;
