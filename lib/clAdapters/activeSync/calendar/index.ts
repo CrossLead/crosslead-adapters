@@ -632,6 +632,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       return {
         success: false,
         message: `Failed to validate credentials`,
+        connectUrl,
       };
 
     } catch (error) {
