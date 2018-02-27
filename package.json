@@ -36,10 +36,10 @@
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
     "node-ews": "git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab",
     "node-uuid": "1.4.3",
-    "request-promise": "0.4.2",
-    "typescript": "2.2.1"
+    "request-promise": "0.4.2"
   },
   "devDependencies": {
+    "typescript": "2.2.1",
     "ava": "0.17.0",
     "tslint": "4.4.2"
   },
