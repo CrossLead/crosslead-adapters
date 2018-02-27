@@ -10,5 +10,6 @@ declare enum AdapterStatus {
     ACTIVE = 1,
     DELETED = 2,
     DISABLED = 3,
+    FAILED = 4,
 }
 export default AdapterStatus;

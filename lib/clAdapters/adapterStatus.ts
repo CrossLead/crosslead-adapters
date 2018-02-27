@@ -9,7 +9,8 @@
 enum AdapterStatus {
   ACTIVE = 1,
   DELETED = 2,
-  DISABLED = 3
+  DISABLED = 3,
+  FAILED = 4, // Used to capture failed credentials; any adapter marked FAILED can safely be deleted.
 }
 
 
