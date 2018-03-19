@@ -10,3 +10,4 @@ export { default as JiraAdapter } from './jira/';
 export { default as SlackAdapter } from './slack/';
 export { default as ActiveSyncCalendarAdapter } from './activeSync/calendar/';
 export { default as ExchangeServiceCalendarAdapter } from './exchangeService/calendar/';
+export { GlobalRelayMessageType, GlobalRelayMessage, GlobalRelayCredentials, GlobalRelayAdapter } from './globalRelay/';

@@ -16,5 +16,6 @@ declare enum AdapterTypes {
     ACTIVE_SYNC_CALENDAR = 10,
     EXCHANGE_SERVICE_CALENDAR = 11,
     GOOGLE_OAUTH_CALENDAR = 12,
+    GLOBAL_RELAY = 13,
 }
 export default AdapterTypes;

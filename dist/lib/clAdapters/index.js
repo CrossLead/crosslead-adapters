@@ -24,4 +24,7 @@ var _9 = require("./activeSync/calendar/");
 exports.ActiveSyncCalendarAdapter = _9.default;
 var _10 = require("./exchangeService/calendar/");
 exports.ExchangeServiceCalendarAdapter = _10.default;
+var _11 = require("./globalRelay/");
+exports.GlobalRelayMessageType = _11.GlobalRelayMessageType;
+exports.GlobalRelayAdapter = _11.GlobalRelayAdapter;
 //# sourceMappingURL=index.js.map

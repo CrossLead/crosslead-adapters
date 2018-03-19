@@ -10,7 +10,8 @@ import {
   JiraAdapter,
   SlackAdapter,
   ActiveSyncCalendarAdapter,
-  ExchangeServiceCalendarAdapter
+  ExchangeServiceCalendarAdapter,
+  GlobalRelayAdapter,
 } from './';
 
 import Types from './adapterTypes';
@@ -39,7 +40,8 @@ export default class AdapterFactory {
   static createAdapter(type: Types.SLACK): SlackAdapter;
   static createAdapter(type: Types.ACTIVE_SYNC_CALENDAR): ActiveSyncCalendarAdapter;
   static createAdapter(type: Types.EXCHANGE_SERVICE_CALENDAR): ExchangeServiceCalendarAdapter;
-  static createAdapter( type: Types.GOOGLE_OAUTH_CALENDAR): GoogleOauthCalendarAdapter;
+  static createAdapter(type: Types.GOOGLE_OAUTH_CALENDAR): GoogleOauthCalendarAdapter;
+  static createAdapter(type: Types.GLOBAL_RELAY): GlobalRelayAdapter;
   static createAdapter(type: Types): Adapter;
   static createAdapter(type: Types): Adapter {
     switch (type) {
@@ -67,6 +69,8 @@ export default class AdapterFactory {
         return new ExchangeServiceCalendarAdapter();
       case Types.GOOGLE_OAUTH_CALENDAR:
         return new GoogleOauthCalendarAdapter();
+      case Types.GLOBAL_RELAY:
+        return new GlobalRelayAdapter();
       default:
         throw new Error(`Unknown type ${type}`);
     }

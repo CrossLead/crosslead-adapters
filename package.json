@@ -22,10 +22,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "@types/node": "6.0.60",
-    "@types/node-uuid": "0.0.28",
-    "@types/request": "0.0.39",
-    "@types/request-promise": "4.1.33",
     "asclient": "git://github.com/CrossLead/node-asclient.git#34c1ca87f70ac64c20337c535a37b342833e5c59",
     "autodiscover-activesync": "0.0.1",
     "google-auth-library": "0.9.6",
@@ -36,12 +32,18 @@
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
     "node-ews": "git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab",
     "node-uuid": "1.4.3",
+    "nodemailer": "4.1.1",
     "request-promise": "0.4.2"
   },
   "devDependencies": {
-    "typescript": "2.2.1",
     "ava": "0.17.0",
-    "tslint": "4.4.2"
+    "tslint": "4.4.2",
+    "typescript": "2.2.1",
+    "@types/nodemailer": "^4.6.0",
+    "@types/node": "6.0.60",
+    "@types/node-uuid": "0.0.28",
+    "@types/request": "0.0.39",
+    "@types/request-promise": "4.1.33"
   },
   "scripts": {
     "test": "npm run lint && npm run tsc && ava",

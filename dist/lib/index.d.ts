@@ -12,7 +12,7 @@ import AdapterStatus from './clAdapters/adapterStatus';
 import AdapterTypes from './clAdapters/adapterTypes';
 import AdapterLinkedAccountTypes from './clAdapters/adapterLinkedAccountTypes';
 import * as adapters from './clAdapters/';
-import { Adapter, ConnectionTestResult } from './clAdapters/';
+import { Adapter, ConnectionTestResult, GlobalRelayAdapter, GlobalRelayMessageType, GlobalRelayMessage, GlobalRelayCredentials } from './clAdapters/';
 import * as ClAdaptersClient from './client/';
 export { Fields };
 export { Adapter };
@@ -23,6 +23,7 @@ export { AdapterLinkedAccountTypes };
 export { adapters };
 export { ClAdaptersClient };
 export { ConnectionTestResult };
+export { GlobalRelayAdapter, GlobalRelayMessageType, GlobalRelayMessage, GlobalRelayCredentials };
 declare var _default: {
     Fields: typeof Fields;
     Adapter: typeof Adapter;

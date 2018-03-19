@@ -35,6 +35,8 @@ class AdapterFactory {
                 return new _1.ExchangeServiceCalendarAdapter();
             case adapterTypes_1.default.GOOGLE_OAUTH_CALENDAR:
                 return new _1.GoogleOauthCalendarAdapter();
+            case adapterTypes_1.default.GLOBAL_RELAY:
+                return new _1.GlobalRelayAdapter();
             default:
                 throw new Error(`Unknown type ${type}`);
         }
