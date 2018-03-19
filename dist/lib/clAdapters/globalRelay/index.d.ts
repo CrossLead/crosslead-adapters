@@ -26,5 +26,5 @@ export declare class GlobalRelayAdapter extends Adapter {
     init(): Promise<void>;
     getFieldData(): Promise<void>;
     runConnectionTest(): void;
-    archive(msg: GlobalRelayMessage): Promise<void>;
+    archive(msg: GlobalRelayMessage): Promise<{}>;
 }

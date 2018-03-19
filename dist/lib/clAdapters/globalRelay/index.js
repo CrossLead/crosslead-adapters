@@ -56,7 +56,7 @@ class GlobalRelayAdapter extends Adapter_1.default {
     }
     archive(msg) {
         return __awaiter(this, void 0, void 0, function* () {
-            push(msg, this.credentials);
+            return push(msg, this.credentials);
         });
     }
 }

@@ -68,7 +68,7 @@ export class GlobalRelayAdapter extends Adapter {
   }
 
   async archive( msg: GlobalRelayMessage ) {
-    push(msg, this.credentials);
+    return push(msg, this.credentials);
   }
 }
 
