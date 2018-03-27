@@ -72,20 +72,6 @@ export class GlobalRelayAdapter extends Adapter {
   }
 }
 
-const prodOptions = {
-  port: 25,
-  host: 'mailarchivespool1.globalrelay.com',
-  rcptTo: 'knighthead.net+Crosslead@mailarchivespool1.globalrelay.com',
-  // host: 'van-spool1.globalrelay.com',
-  auth: {
-    user: 'knighthead.net@mailarchivespool1.globalrelay.com',
-    pass: 'lo1fXr9ljFWSAseAXFVsa'
-  },
-  secure: true,
-  logger: false,
-  debug: false
-};
-
 type Options = {
   host: string;
   port: number;
