@@ -175,7 +175,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
           const auth = await this.authorize(userProfile.emailAfterMapping);
 
           // function to recurse through pageTokens
-          const getEvents = async (requestOpts: any, data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult> => {
+          const getEvents = async (requestOpts: any, data?: GoogleCalendarApiResult): Promise<GoogleCalendarApiResult | undefined> => {
 
             // add page token if given
             if (data && data.nextPageToken) {
@@ -184,6 +184,12 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
 
             // request first results...
             const events = await this.getEvents(requestOpts);
+
+            // It turns out that once in while, null is returned
+            // from calendar.events.list .
+            if (!events) {
+              return data;
+            }
 
             // if we already have data being accumulated, add to items
             if (data) {

@@ -132,6 +132,11 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                             }
                             // request first results...
                             const events = yield this.getEvents(requestOpts);
+                            // It turns out that once in while, null is returned
+                            // from calendar.events.list .
+                            if (!events) {
+                                return data;
+                            }
                             // if we already have data being accumulated, add to items
                             if (data) {
                                 data.items.push(...events.items);
