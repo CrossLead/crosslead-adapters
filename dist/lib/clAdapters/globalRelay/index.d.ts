@@ -2,6 +2,8 @@ import Adapter from '../base/Adapter';
 export declare enum GlobalRelayMessageType {
     Chat = 0,
     Update = 1,
+    Plan = 2,
+    Team = 3,
 }
 export declare type GlobalRelayMessage = {
     type: GlobalRelayMessageType;

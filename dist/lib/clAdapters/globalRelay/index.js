@@ -21,11 +21,15 @@ var GlobalRelayMessageType;
 (function (GlobalRelayMessageType) {
     GlobalRelayMessageType[GlobalRelayMessageType["Chat"] = 0] = "Chat";
     GlobalRelayMessageType[GlobalRelayMessageType["Update"] = 1] = "Update";
+    GlobalRelayMessageType[GlobalRelayMessageType["Plan"] = 2] = "Plan";
+    GlobalRelayMessageType[GlobalRelayMessageType["Team"] = 3] = "Team";
 })(GlobalRelayMessageType = exports.GlobalRelayMessageType || (exports.GlobalRelayMessageType = {}));
 const typeToString = (type) => {
     switch (type) {
         case GlobalRelayMessageType.Chat: return 'Chat';
         case GlobalRelayMessageType.Update: return 'Update';
+        case GlobalRelayMessageType.Plan: return 'Plan';
+        case GlobalRelayMessageType.Team: return 'Team';
         default: throw new Error(`Unknown message type ${type}`);
     }
     ;

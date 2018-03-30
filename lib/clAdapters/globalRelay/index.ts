@@ -12,14 +12,18 @@ const toRFC822 = (date: Date) => {
 const envelopeFrom = 'Daemon <daemon@crosslead.com>';
 
 export enum GlobalRelayMessageType {
-  Chat,
-  Update,
+  Chat = 0,
+  Update = 1,
+  Plan = 2,
+  Team = 3,
 }
 
 const typeToString = (type: GlobalRelayMessageType) => {
   switch (type) {
   case GlobalRelayMessageType.Chat: return 'Chat';
   case GlobalRelayMessageType.Update: return 'Update';
+  case GlobalRelayMessageType.Plan: return 'Plan';
+  case GlobalRelayMessageType.Team: return 'Team';
   default: throw new Error( `Unknown message type ${type}` );
   };
 };
