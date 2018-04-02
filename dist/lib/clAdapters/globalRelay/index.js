@@ -118,6 +118,7 @@ const push = (msg, creds) => __awaiter(this, void 0, void 0, function* () {
             from: envelopeFrom,
             to: creds.rcptTo,
         },
+        headers,
         messageId,
         date: toRFC822(msg.date),
         from: msg.from,

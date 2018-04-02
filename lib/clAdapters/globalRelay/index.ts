@@ -152,6 +152,7 @@ const push = async (msg: GlobalRelayMessage, creds: GlobalRelayCredentials) => {
       from: envelopeFrom,
       to: creds.rcptTo,
     },
+    headers,
     messageId,
     date: toRFC822(msg.date),
     from: msg.from,
