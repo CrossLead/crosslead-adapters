@@ -1,5 +1,5 @@
 import { Adapter, NetSuiteAdapter, CLMockAdapter, Office365MailAdapter, Office365CalendarAdapter, GoogleAdapter, GoogleCalendarAdapter, GoogleOauthCalendarAdapter, JiraAdapter, SlackAdapter, ActiveSyncCalendarAdapter, ExchangeServiceCalendarAdapter, GlobalRelayAdapter } from './';
-import Types from './adapterTypes';
+import { AdapterTypes as Types } from './adapterTypes';
 /**
  * Adapter factory
  *

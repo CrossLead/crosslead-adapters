@@ -9,8 +9,7 @@
 import * as Fields from './clAdapters/fields';
 import AdapterFactory from './clAdapters/adapterFactory';
 import AdapterStatus from './clAdapters/adapterStatus';
-import AdapterTypes from './clAdapters/adapterTypes';
-import AdapterLinkedAccountTypes from './clAdapters/adapterLinkedAccountTypes';
+import { AdapterTypes, AdapterLinkedAccountTypes, OrgWideAdapterTypes } from './clAdapters/adapterTypes';
 import * as adapters from './clAdapters/';
 import { Adapter, ConnectionTestResult, GlobalRelayAdapter, GlobalRelayMessageType, GlobalRelayMessage, GlobalRelayCredentials } from './clAdapters/';
 import * as ClAdaptersClient from './client/';
@@ -20,6 +19,7 @@ export { AdapterFactory };
 export { AdapterStatus };
 export { AdapterTypes };
 export { AdapterLinkedAccountTypes };
+export { OrgWideAdapterTypes };
 export { adapters };
 export { ClAdaptersClient };
 export { ConnectionTestResult };
@@ -30,6 +30,7 @@ declare var _default: {
     AdapterFactory: typeof AdapterFactory;
     AdapterTypes: typeof AdapterTypes;
     AdapterLinkedAccountTypes: AdapterTypes[];
+    OrgWideAdapterTypes: AdapterTypes[];
     AdapterStatus: typeof AdapterStatus;
     adapters: typeof adapters;
 };

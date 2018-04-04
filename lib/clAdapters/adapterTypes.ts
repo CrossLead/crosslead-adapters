@@ -4,7 +4,7 @@
  *
  * @enum
  */
-enum AdapterTypes {
+export enum AdapterTypes {
   CUSTOM = 1,
   NETSUITE = 2,
   CL_MOCK = 3,
@@ -20,5 +20,39 @@ enum AdapterTypes {
   GLOBAL_RELAY = 13,
 };
 
+/**
+ * Array of enums values for different user linked adapter types
+ *
+ * @array
+ */
+export const AdapterLinkedAccountTypes = [
+  AdapterTypes.ACTIVE_SYNC_CALENDAR,
+  AdapterTypes.GOOGLE_OAUTH_CALENDAR
+];
 
-export default AdapterTypes;
+/**
+ * Array of enums values that represent org-wide adapters
+ *
+ * @array
+ */
+export const OrgWideAdapterTypes = [
+  AdapterTypes.GOOGLE_CALENDAR,
+  AdapterTypes.OFFICE365_CALENDAR,
+  AdapterTypes.EXCHANGE_SERVICE_CALENDAR,
+];
+
+
+/**
+ * Enumeration for adapter status. This is really only for
+ * application-specific serialization but both `crosslead-platform`
+ * and background workers will need this, so this as a
+ * common place is as good as any.
+ *
+ * @enum
+ */
+export enum AdapterStatus {
+  ACTIVE = 1,
+  DELETED = 2,
+  DISABLED = 3,
+  FAILED = 4, // Used to capture failed credentials; any adapter marked FAILED can safely be deleted.
+}

@@ -14,7 +14,7 @@ import {
   GlobalRelayAdapter,
 } from './';
 
-import Types from './adapterTypes';
+import { AdapterTypes as Types } from './adapterTypes';
 
 /**
  * Adapter factory

@@ -9,8 +9,11 @@
 import * as Fields from './clAdapters/fields';
 import AdapterFactory from './clAdapters/adapterFactory';
 import AdapterStatus from './clAdapters/adapterStatus';
-import AdapterTypes from './clAdapters/adapterTypes';
-import AdapterLinkedAccountTypes from './clAdapters/adapterLinkedAccountTypes';
+import { AdapterTypes,
+         AdapterLinkedAccountTypes,
+         OrgWideAdapterTypes,
+       } from './clAdapters/adapterTypes';
+
 import * as adapters from './clAdapters/';
 import { Adapter,
          AdapterCredentials,
@@ -29,6 +32,7 @@ export { AdapterFactory };
 export { AdapterStatus };
 export { AdapterTypes };
 export { AdapterLinkedAccountTypes };
+export { OrgWideAdapterTypes };
 export { adapters };
 export { ClAdaptersClient };
 export { ConnectionTestResult };
@@ -42,6 +46,7 @@ export default {
   AdapterFactory,
   AdapterTypes,
   AdapterLinkedAccountTypes,
+  OrgWideAdapterTypes,
   AdapterStatus,
   adapters
 };

@@ -20,7 +20,40 @@ var AdapterTypes;
     AdapterTypes[AdapterTypes["EXCHANGE_SERVICE_CALENDAR"] = 11] = "EXCHANGE_SERVICE_CALENDAR";
     AdapterTypes[AdapterTypes["GOOGLE_OAUTH_CALENDAR"] = 12] = "GOOGLE_OAUTH_CALENDAR";
     AdapterTypes[AdapterTypes["GLOBAL_RELAY"] = 13] = "GLOBAL_RELAY";
-})(AdapterTypes || (AdapterTypes = {}));
+})(AdapterTypes = exports.AdapterTypes || (exports.AdapterTypes = {}));
 ;
-exports.default = AdapterTypes;
+/**
+ * Array of enums values for different user linked adapter types
+ *
+ * @array
+ */
+exports.AdapterLinkedAccountTypes = [
+    AdapterTypes.ACTIVE_SYNC_CALENDAR,
+    AdapterTypes.GOOGLE_OAUTH_CALENDAR
+];
+/**
+ * Array of enums values that represent org-wide adapters
+ *
+ * @array
+ */
+exports.OrgWideAdapterTypes = [
+    AdapterTypes.GOOGLE_CALENDAR,
+    AdapterTypes.OFFICE365_CALENDAR,
+    AdapterTypes.EXCHANGE_SERVICE_CALENDAR,
+];
+/**
+ * Enumeration for adapter status. This is really only for
+ * application-specific serialization but both `crosslead-platform`
+ * and background workers will need this, so this as a
+ * common place is as good as any.
+ *
+ * @enum
+ */
+var AdapterStatus;
+(function (AdapterStatus) {
+    AdapterStatus[AdapterStatus["ACTIVE"] = 1] = "ACTIVE";
+    AdapterStatus[AdapterStatus["DELETED"] = 2] = "DELETED";
+    AdapterStatus[AdapterStatus["DISABLED"] = 3] = "DISABLED";
+    AdapterStatus[AdapterStatus["FAILED"] = 4] = "FAILED";
+})(AdapterStatus = exports.AdapterStatus || (exports.AdapterStatus = {}));
 //# sourceMappingURL=adapterTypes.js.map

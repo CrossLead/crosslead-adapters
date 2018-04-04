@@ -11,31 +11,31 @@ const adapterTypes_1 = require("./adapterTypes");
 class AdapterFactory {
     static createAdapter(type) {
         switch (type) {
-            case adapterTypes_1.default.CUSTOM:
+            case adapterTypes_1.AdapterTypes.CUSTOM:
                 throw new Error('Custom adapters provide their own approach');
-            case adapterTypes_1.default.NETSUITE:
+            case adapterTypes_1.AdapterTypes.NETSUITE:
                 return new _1.NetSuiteAdapter();
-            case adapterTypes_1.default.CL_MOCK:
+            case adapterTypes_1.AdapterTypes.CL_MOCK:
                 return new _1.CLMockAdapter();
-            case adapterTypes_1.default.OFFICE365:
+            case adapterTypes_1.AdapterTypes.OFFICE365:
                 return new _1.Office365MailAdapter();
-            case adapterTypes_1.default.OFFICE365_CALENDAR:
+            case adapterTypes_1.AdapterTypes.OFFICE365_CALENDAR:
                 return new _1.Office365CalendarAdapter();
-            case adapterTypes_1.default.GOOGLE:
+            case adapterTypes_1.AdapterTypes.GOOGLE:
                 return new _1.GoogleAdapter();
-            case adapterTypes_1.default.GOOGLE_CALENDAR:
+            case adapterTypes_1.AdapterTypes.GOOGLE_CALENDAR:
                 return new _1.GoogleCalendarAdapter();
-            case adapterTypes_1.default.JIRA:
+            case adapterTypes_1.AdapterTypes.JIRA:
                 return new _1.JiraAdapter();
-            case adapterTypes_1.default.SLACK:
+            case adapterTypes_1.AdapterTypes.SLACK:
                 return new _1.SlackAdapter();
-            case adapterTypes_1.default.ACTIVE_SYNC_CALENDAR:
+            case adapterTypes_1.AdapterTypes.ACTIVE_SYNC_CALENDAR:
                 return new _1.ActiveSyncCalendarAdapter();
-            case adapterTypes_1.default.EXCHANGE_SERVICE_CALENDAR:
+            case adapterTypes_1.AdapterTypes.EXCHANGE_SERVICE_CALENDAR:
                 return new _1.ExchangeServiceCalendarAdapter();
-            case adapterTypes_1.default.GOOGLE_OAUTH_CALENDAR:
+            case adapterTypes_1.AdapterTypes.GOOGLE_OAUTH_CALENDAR:
                 return new _1.GoogleOauthCalendarAdapter();
-            case adapterTypes_1.default.GLOBAL_RELAY:
+            case adapterTypes_1.AdapterTypes.GLOBAL_RELAY:
                 return new _1.GlobalRelayAdapter();
             default:
                 throw new Error(`Unknown type ${type}`);

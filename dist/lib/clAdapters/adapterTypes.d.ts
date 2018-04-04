@@ -3,7 +3,7 @@
  *
  * @enum
  */
-declare enum AdapterTypes {
+export declare enum AdapterTypes {
     CUSTOM = 1,
     NETSUITE = 2,
     CL_MOCK = 3,
@@ -18,4 +18,29 @@ declare enum AdapterTypes {
     GOOGLE_OAUTH_CALENDAR = 12,
     GLOBAL_RELAY = 13,
 }
-export default AdapterTypes;
+/**
+ * Array of enums values for different user linked adapter types
+ *
+ * @array
+ */
+export declare const AdapterLinkedAccountTypes: AdapterTypes[];
+/**
+ * Array of enums values that represent org-wide adapters
+ *
+ * @array
+ */
+export declare const OrgWideAdapterTypes: AdapterTypes[];
+/**
+ * Enumeration for adapter status. This is really only for
+ * application-specific serialization but both `crosslead-platform`
+ * and background workers will need this, so this as a
+ * common place is as good as any.
+ *
+ * @enum
+ */
+export declare enum AdapterStatus {
+    ACTIVE = 1,
+    DELETED = 2,
+    DISABLED = 3,
+    FAILED = 4,
+}
