@@ -105,6 +105,9 @@ const push = (msg, creds) => __awaiter(this, void 0, void 0, function* () {
     if (msg.thread) {
         headers['X-CrossLead-Thread-Id'] = msg.thread;
     }
+    if (msg.objId) {
+        headers['X-CrossLead-Object-Id'] = msg.objId;
+    }
     const subject = `${typeToString(msg.type)}, ${msg.to.length} Users, 1 Message`;
     const toAttachment = (url) => {
         const encoding = 'base64';

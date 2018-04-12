@@ -12,6 +12,7 @@ export declare type GlobalRelayMessage = {
     body: string;
     date: Date;
     thread?: string;
+    objId?: string;
     attachments?: string[];
 };
 export declare type GlobalRelayCredentials = {

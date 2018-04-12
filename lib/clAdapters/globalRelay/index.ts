@@ -35,6 +35,7 @@ export type GlobalRelayMessage = {
   body: string;
   date: Date;
   thread?: string;
+  objId?: string;
   attachments?: string[];
 };
 
@@ -86,6 +87,8 @@ type Options = {
     user: string;
     pass: string;
   };
+  tls?: { ciphers: string };
+  requireTLS?: boolean;
 };
 
 const mkOptions = (creds: GlobalRelayCredentials) => {
@@ -135,6 +138,10 @@ const push = async (msg: GlobalRelayMessage, creds: GlobalRelayCredentials) => {
 
   if (msg.thread) {
     headers[ 'X-CrossLead-Thread-Id' ] = msg.thread;
+  }
+
+  if (msg.objId) {
+    headers[ 'X-CrossLead-Object-Id' ] = msg.objId;
   }
 
   const subject = `${typeToString(msg.type)}, ${msg.to.length} Users, 1 Message`;
