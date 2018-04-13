@@ -18,6 +18,7 @@ export declare enum AdapterTypes {
     GOOGLE_OAUTH_CALENDAR = 12,
     GLOBAL_RELAY = 13,
 }
+export declare const AdapterNameMap: (string | null)[];
 /**
  * Array of enums values for different user linked adapter types
  *

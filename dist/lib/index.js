@@ -16,6 +16,7 @@ const adapterStatus_1 = require("./clAdapters/adapterStatus");
 exports.AdapterStatus = adapterStatus_1.default;
 const adapterTypes_1 = require("./clAdapters/adapterTypes");
 exports.AdapterTypes = adapterTypes_1.AdapterTypes;
+exports.AdapterNameMap = adapterTypes_1.AdapterNameMap;
 exports.AdapterLinkedAccountTypes = adapterTypes_1.AdapterLinkedAccountTypes;
 exports.OrgWideAdapterTypes = adapterTypes_1.OrgWideAdapterTypes;
 const adapters = require("./clAdapters/");
@@ -31,6 +32,7 @@ exports.default = {
     Adapter: _1.Adapter,
     AdapterFactory: adapterFactory_1.default,
     AdapterTypes: adapterTypes_1.AdapterTypes,
+    AdapterNameMap: adapterTypes_1.AdapterNameMap,
     AdapterLinkedAccountTypes: adapterTypes_1.AdapterLinkedAccountTypes,
     OrgWideAdapterTypes: adapterTypes_1.OrgWideAdapterTypes,
     AdapterStatus: adapterStatus_1.default,

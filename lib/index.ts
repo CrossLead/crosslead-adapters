@@ -10,6 +10,7 @@ import * as Fields from './clAdapters/fields';
 import AdapterFactory from './clAdapters/adapterFactory';
 import AdapterStatus from './clAdapters/adapterStatus';
 import { AdapterTypes,
+         AdapterNameMap,
          AdapterLinkedAccountTypes,
          OrgWideAdapterTypes,
        } from './clAdapters/adapterTypes';
@@ -31,6 +32,7 @@ export { Adapter };
 export { AdapterFactory };
 export { AdapterStatus };
 export { AdapterTypes };
+export { AdapterNameMap };
 export { AdapterLinkedAccountTypes };
 export { OrgWideAdapterTypes };
 export { adapters };
@@ -45,6 +47,7 @@ export default {
   Adapter,
   AdapterFactory,
   AdapterTypes,
+  AdapterNameMap,
   AdapterLinkedAccountTypes,
   OrgWideAdapterTypes,
   AdapterStatus,

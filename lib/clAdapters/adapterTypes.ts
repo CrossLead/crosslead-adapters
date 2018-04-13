@@ -20,6 +20,27 @@ export enum AdapterTypes {
   GLOBAL_RELAY = 13,
 };
 
+// This map needs to be kept in sync with the above AdapterTypes enum.
+// I'd switch it to a string enum, but for the fact that users of this
+// library put the integer values into databases and so forth.
+
+export const AdapterNameMap = [
+  null,
+  'Custom',
+  'Netsuite',
+  'Mock',
+  'Office 365',
+  'Google Mail',
+  'Google Calendar',
+  'Office 365 Calendar',
+  'JIRA',
+  'Slack',
+  'ActiveSync',
+  'Exchange Service Calendar',
+  'Google OAuth Calendar',
+  'Global Relay',
+];
+
 /**
  * Array of enums values for different user linked adapter types
  *
