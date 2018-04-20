@@ -149,27 +149,24 @@ export default class Office365BaseAdapter extends Adapter {
       formData: tokenRequestFormData,
     };
 
+    let result;
     try {
-      const tokenData = JSON.parse(await request(tokenRequestOptions));
-      if (tokenData && tokenData.access_token) {
-        return this.accessToken = tokenData.access_token;
+      result = await request(tokenRequestOptions);
+    } catch (err) {
+      if (err.message) {
+        throw new Error(err.message);
       } else {
-        throw new Error('Could not get access token.');
-      }
-    } catch (tokenData) {
-      if (tokenData.name === 'StatusCodeError') {
-        const messageData = JSON.parse(
-          tokenData
-            .message
-            .replace(tokenData.statusCode + ' - ', '')
-            .replace(/\"/g, '"')
-        );
-
-        throw new Error(messageData);
-      } else {
-        throw new Error(tokenData);
+        throw err;
       }
     }
+
+    const tokenData = JSON.parse(result);
+
+    if (!(tokenData && tokenData.access_token)) {
+      throw new Error('Could not get access token');
+    }
+
+    return this.accessToken = tokenData.access_token;
   }
 
   async getUserData(

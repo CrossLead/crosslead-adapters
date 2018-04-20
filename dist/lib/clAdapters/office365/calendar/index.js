@@ -63,10 +63,9 @@ class Office365CalendarAdapter extends Adapter_1.default {
                 // return results and success!
                 return Object.assign({}, dataAdapterRunStats, { results, success: true });
             }
-            catch (errorMessage) {
-                console.log(errorMessage.stack);
-                console.log('Office365 GetBatchData Error: ' + JSON.stringify(errorMessage));
-                return Object.assign({}, dataAdapterRunStats, { errorMessage });
+            catch (err) {
+                console.error(`Caught error calling getBatchData: ${err.toString()}`);
+                return Object.assign({}, dataAdapterRunStats, { errorMessage: new Error(err.toString()) });
             }
         });
     }

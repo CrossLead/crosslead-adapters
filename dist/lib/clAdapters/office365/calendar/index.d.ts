@@ -16,7 +16,7 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
         filterEndDate: Date;
         runDate: any;
     } | {
-        errorMessage: any;
+        errorMessage: Error;
         emails: any[];
         filterStartDate: Date;
         filterEndDate: Date;

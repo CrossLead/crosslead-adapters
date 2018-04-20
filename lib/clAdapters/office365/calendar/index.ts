@@ -150,10 +150,9 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
         success: true
       };
 
-    } catch (errorMessage) {
-      console.log(errorMessage.stack);
-      console.log('Office365 GetBatchData Error: ' + JSON.stringify(errorMessage));
-      return { ...dataAdapterRunStats, errorMessage };
+    } catch (err) {
+      console.error( `Caught error calling getBatchData: ${err.toString()}` );
+      return { ...dataAdapterRunStats, errorMessage: new Error(err.toString()) };
     }
 
   }

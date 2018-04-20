@@ -96,27 +96,23 @@ class Office365BaseAdapter extends Adapter_1.default {
                 uri: tokenRequestUrl,
                 formData: tokenRequestFormData,
             };
+            let result;
             try {
-                const tokenData = JSON.parse(yield request(tokenRequestOptions));
-                if (tokenData && tokenData.access_token) {
-                    return this.accessToken = tokenData.access_token;
+                result = yield request(tokenRequestOptions);
+            }
+            catch (err) {
+                if (err.message) {
+                    throw new Error(err.message);
                 }
                 else {
-                    throw new Error('Could not get access token.');
+                    throw err;
                 }
             }
-            catch (tokenData) {
-                if (tokenData.name === 'StatusCodeError') {
-                    const messageData = JSON.parse(tokenData
-                        .message
-                        .replace(tokenData.statusCode + ' - ', '')
-                        .replace(/\"/g, '"'));
-                    throw new Error(messageData);
-                }
-                else {
-                    throw new Error(tokenData);
-                }
+            const tokenData = JSON.parse(result);
+            if (!(tokenData && tokenData.access_token)) {
+                throw new Error('Could not get access token');
             }
+            return this.accessToken = tokenData.access_token;
         });
     }
     getUserData(options, userData, pageToGet = 1) {
