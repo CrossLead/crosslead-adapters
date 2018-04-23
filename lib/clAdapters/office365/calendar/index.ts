@@ -3,6 +3,7 @@ import * as _                          from 'lodash';
 import Office365BaseAdapter            from '../base/Adapter';
 import * as request                    from 'request-promise';
 import { DateRange, UserProfile }      from '../../../common/types';
+import { sanitize }                    from '../../util/util';
 
 /**
  * Office 365 Calendar adapter
@@ -37,7 +38,8 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
     'Subject',
     'Type',
     'WebLink',
-    'Sensitivity'
+    'Sensitivity',
+    'Body',
   ];
 
   // convert the names of the api response data
@@ -81,7 +83,8 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
     'name':                                'Subject',
     'type':                                'Type',
     'url':                                 'WebLink',
-    'privacy':                             'Sensitivity'
+    'privacy':                             'Sensitivity',
+    'description':                         'Body',
   };
 
 
@@ -105,6 +108,23 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
         apiType: 'calendarview'
       })));
 
+      const mapVal = (name: string, val: any) => {
+
+        if ( !val ) {
+          return val;
+        }
+
+        if (val.Content) {
+          return sanitize(val.Content);
+        }
+
+        if (/^(start|end|create)Time/.test(name)) {
+          return new Date(val);
+        }
+
+        return val;
+      };
+
       // replace data keys with desired mappings...
       const results = _.map(eventData, (user: any) => {
         return {
@@ -118,11 +138,9 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
             const mappedEvent: any = {};
 
             // change to desired names
-            _.each(fieldNameMap, (have: string, want: string) => {
-              const mapped = _.get(originalEvent, have);
-              if (mapped !== undefined) {
-                mappedEvent[want] = /^(start|end|create)Time/.test(want) ? new Date(mapped) : mapped;
-              }
+            _.each(fieldNameMap, (origField: string, mappedField: string) => {
+              const origVal = _.get(originalEvent, origField);
+              mappedEvent[mappedField] = mapVal(mappedField, origVal);
             });
 
             if (mappedEvent.response && mappedEvent.response.Response) {

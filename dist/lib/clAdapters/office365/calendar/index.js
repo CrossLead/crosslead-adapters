@@ -12,6 +12,7 @@ const moment = require("moment");
 const _ = require("lodash");
 const Adapter_1 = require("../base/Adapter");
 const request = require("request-promise");
+const util_1 = require("../../util/util");
 /**
  * Office 365 Calendar adapter
  */
@@ -33,6 +34,18 @@ class Office365CalendarAdapter extends Adapter_1.default {
                     additionalFields,
                     apiType: 'calendarview'
                 })));
+                const mapVal = (name, val) => {
+                    if (!val) {
+                        return val;
+                    }
+                    if (val.Content) {
+                        return util_1.sanitize(val.Content);
+                    }
+                    if (/^(start|end|create)Time/.test(name)) {
+                        return new Date(val);
+                    }
+                    return val;
+                };
                 // replace data keys with desired mappings...
                 const results = _.map(eventData, (user) => {
                     return Object.assign({}, user.userProfile, { filterStartDate: user.filterStartDate, filterEndDate: user.filterEndDate, success: user.success, errorMessage: user.errorMessage, 
@@ -40,11 +53,9 @@ class Office365CalendarAdapter extends Adapter_1.default {
                         data: _.map(user.data || [], (originalEvent) => {
                             const mappedEvent = {};
                             // change to desired names
-                            _.each(fieldNameMap, (have, want) => {
-                                const mapped = _.get(originalEvent, have);
-                                if (mapped !== undefined) {
-                                    mappedEvent[want] = /^(start|end|create)Time/.test(want) ? new Date(mapped) : mapped;
-                                }
+                            _.each(fieldNameMap, (origField, mappedField) => {
+                                const origVal = _.get(originalEvent, origField);
+                                mappedEvent[mappedField] = mapVal(mappedField, origVal);
                             });
                             if (mappedEvent.response && mappedEvent.response.Response) {
                                 mappedEvent.response = mappedEvent.response.Response;
@@ -124,7 +135,8 @@ Office365CalendarAdapter.baseFields = [
     'Subject',
     'Type',
     'WebLink',
-    'Sensitivity'
+    'Sensitivity',
+    'Body',
 ];
 // convert the names of the api response data
 Office365CalendarAdapter.fieldNameMap = {
@@ -167,7 +179,8 @@ Office365CalendarAdapter.fieldNameMap = {
     'name': 'Subject',
     'type': 'Type',
     'url': 'WebLink',
-    'privacy': 'Sensitivity'
+    'privacy': 'Sensitivity',
+    'description': 'Body',
 };
 exports.default = Office365CalendarAdapter;
 //# sourceMappingURL=index.js.map
