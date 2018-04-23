@@ -33,7 +33,8 @@
     "node-ews": "git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab",
     "node-uuid": "1.4.3",
     "nodemailer": "4.1.1",
-    "request-promise": "0.4.2"
+    "request-promise": "0.4.2",
+    "sanitize-html": "1.18.2"
   },
   "devDependencies": {
     "ava": "0.17.0",
@@ -43,7 +44,8 @@
     "@types/node": "6.0.60",
     "@types/node-uuid": "0.0.28",
     "@types/request": "0.0.39",
-    "@types/request-promise": "4.1.33"
+    "@types/request-promise": "4.1.33",
+    "@types/sanitize-html": "1.14.0"
   },
   "scripts": {
     "test": "npm run lint && npm run tsc && ava",
