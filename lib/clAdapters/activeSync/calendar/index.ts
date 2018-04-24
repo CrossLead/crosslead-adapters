@@ -7,6 +7,7 @@ import ActiveSyncBaseAdapter from '../base/Adapter';
 import autodiscover from 'autodiscover-activesync';
 import { DateRange, UserProfile } from '../../../common/types';
 import { ConnectionTestResult } from '../../base/Adapter';
+import { sanitize } from '../../util/util';
 
 const credentialMappings: { [key: string]: string } = {
   'username' : 'username',
@@ -29,7 +30,6 @@ const ACCEPTED_STATUS: string = '3';
  * 7 or 15 The meeting has been canceled. The user was not the meeting organizer; the meeting was received from someone else.
  *
  */
-
 export const fieldNameMap = {
   // Desired...                          // Given...
   // ? :                                 'TimeZone', // Do we need this?  I don't think so...
@@ -51,7 +51,34 @@ export const fieldNameMap = {
   'name':                                'Subject',
   'url':                                 'WebLink',
   'allDay':                              'AllDayEvent',
-  'privacy':                             'Sensitivity'
+  'privacy':                             'Sensitivity',
+  'description':                         'Body',
+};
+
+const getZeroth = (val: any) => {
+  return val && val.length ? val[0] : val;
+};
+
+// Apparently, the low level XML mapping library puts everything
+// into arrays, so we have to strip data out of the 0th elements
+// all of the time.
+const mapVal = (name: string, valArray: any) => {
+
+  if ( !valArray ) {
+    return valArray;
+  }
+
+  const val = getZeroth(valArray);
+  const data = getZeroth(val.Data);
+  if (data) {
+    return sanitize(data);
+  }
+
+  if (/^(start|end|create)Time/.test(name)) {
+    return moment(val).toDate();
+  }
+
+  return val;
 };
 
 export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
@@ -490,16 +517,9 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       const mappedEvents = _.map(events || [], (originalEvent: any) => {
         const mappedEvent: any = {};
 
-        // console.log(originalEvent.StartTime[0] + ':' + originalEvent.Subject[0]);
-
-        // change to desired names
-        _.each(fieldNameMap, (have: string, want: string) => {
-          const val = _.get(originalEvent, have);
-          const mapped = val && val.length ? val[0] : val;
-
-          if (mapped !== undefined) {
-            mappedEvent[want] = /^(start|end|create)Time/.test(want) ? moment(mapped).toDate() : mapped;
-          }
+        _.each(fieldNameMap, (origField: string, mappedField: string) => {
+          const origVal = _.get(originalEvent, origField);
+          mappedEvent[mappedField] = mapVal(mappedField, origVal);
         });
 
         const responseStatus = _.get(mappedEvent, 'responseStatus');
@@ -510,7 +530,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
 
         const attendees = originalEvent[fieldNameMap['attendees']];
 
-        if (attendees && attendees.length) {
+        if (attendees && attendees.length && attendees[0].Attendee) {
           const attendeePeople = attendees[0].Attendee;
 
           mappedEvent['attendees'] = attendeePeople

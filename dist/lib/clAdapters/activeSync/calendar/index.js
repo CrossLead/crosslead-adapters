@@ -15,6 +15,7 @@ const index_1 = require("../../base/index");
 const asclient = require("asclient");
 const Adapter_1 = require("../base/Adapter");
 const autodiscover_activesync_1 = require("autodiscover-activesync");
+const util_1 = require("../../util/util");
 const credentialMappings = {
     'username': 'username',
     'email': 'email',
@@ -55,7 +56,28 @@ exports.fieldNameMap = {
     'name': 'Subject',
     'url': 'WebLink',
     'allDay': 'AllDayEvent',
-    'privacy': 'Sensitivity'
+    'privacy': 'Sensitivity',
+    'description': 'Body',
+};
+const getZeroth = (val) => {
+    return val && val.length ? val[0] : val;
+};
+// Apparently, the low level XML mapping library puts everything
+// into arrays, so we have to strip data out of the 0th elements
+// all of the time.
+const mapVal = (name, valArray) => {
+    if (!valArray) {
+        return valArray;
+    }
+    const val = getZeroth(valArray);
+    const data = getZeroth(val.Data);
+    if (data) {
+        return util_1.sanitize(data);
+    }
+    if (/^(start|end|create)Time/.test(name)) {
+        return moment(val).toDate();
+    }
+    return val;
 };
 class ActiveSyncCalendarAdapter extends Adapter_1.default {
     // constructor needs to call super
@@ -396,21 +418,16 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 });
                 const mappedEvents = _.map(events || [], (originalEvent) => {
                     const mappedEvent = {};
-                    // console.log(originalEvent.StartTime[0] + ':' + originalEvent.Subject[0]);
-                    // change to desired names
-                    _.each(exports.fieldNameMap, (have, want) => {
-                        const val = _.get(originalEvent, have);
-                        const mapped = val && val.length ? val[0] : val;
-                        if (mapped !== undefined) {
-                            mappedEvent[want] = /^(start|end|create)Time/.test(want) ? moment(mapped).toDate() : mapped;
-                        }
+                    _.each(exports.fieldNameMap, (origField, mappedField) => {
+                        const origVal = _.get(originalEvent, origField);
+                        mappedEvent[mappedField] = mapVal(mappedField, origVal);
                     });
                     const responseStatus = _.get(mappedEvent, 'responseStatus');
                     if (mappedEvent.responseStatus === ACCEPTED_STATUS || mappedEvent.responseStatus === ORGANIZER_STATUS) {
                         mappedEvent.response = 'Accepted';
                     }
                     const attendees = originalEvent[exports.fieldNameMap['attendees']];
-                    if (attendees && attendees.length) {
+                    if (attendees && attendees.length && attendees[0].Attendee) {
                         const attendeePeople = attendees[0].Attendee;
                         mappedEvent['attendees'] = attendeePeople
                             .map((attendee) => {

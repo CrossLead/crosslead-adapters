@@ -26,6 +26,7 @@ export declare const fieldNameMap: {
     'type': string;
     'url': string;
     'privacy': string;
+    'description': string;
 };
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
     static Configuration: typeof Configuration;
@@ -54,6 +55,7 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
         'type': string;
         'url': string;
         'privacy': string;
+        'description': string;
     };
     _config: Configuration;
     _service: ExchangeServiceService;

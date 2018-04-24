@@ -30,7 +30,8 @@ export const fieldNameMap = {
   'name':                                'summary',
   'url':                                 'htmlLink',
   'hangoutLink':                         'hangoutLink',
-  'privacy':                             'visibility'
+  'privacy':                             'visibility',
+  'description':                         'description',
 };
 
 export type GoogleOauthCredentials = {

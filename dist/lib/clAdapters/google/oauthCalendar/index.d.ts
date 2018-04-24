@@ -23,6 +23,7 @@ export declare const fieldNameMap: {
     'url': string;
     'hangoutLink': string;
     'privacy': string;
+    'description': string;
 };
 export declare type GoogleOauthCredentials = {
     access_token: string;
@@ -67,6 +68,7 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
         'url': string;
         'hangoutLink': string;
         'privacy': string;
+        'description': string;
     };
     sensitiveCredentialsFields: (keyof GoogleOauthCredentials)[];
     _config: Configuration;

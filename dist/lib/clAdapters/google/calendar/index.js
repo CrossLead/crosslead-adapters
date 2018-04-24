@@ -52,7 +52,8 @@ exports.fieldNameMap = {
     'name': 'summary',
     'url': 'htmlLink',
     'hangoutLink': 'hangoutLink',
-    'privacy': 'visibility'
+    'privacy': 'visibility',
+    'description': 'description',
 };
 class GoogleCalendarAdapter extends Adapter_1.default {
     // constructor needs to call super

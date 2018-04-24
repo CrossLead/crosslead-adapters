@@ -7,6 +7,7 @@ import ExchangeServiceBaseAdapter from '../base/Adapter';
 import ExchangeServiceService from '../base/Service';
 import { createExchangeServiceError } from '../errors';
 import { DateRange, UserProfile } from '../../../common/types';
+import { sanitize } from '../../util/util';
 
 const credentialMappings: { [key: string]: string } = {
   username : 'username',
@@ -15,6 +16,23 @@ const credentialMappings: { [key: string]: string } = {
 };
 
 const TEST_EMAIL: string = 'mark.bradley@crosslead.com';
+
+const mapVal = (name: string, val: any) => {
+
+    if ( !val ) {
+        return val;
+    }
+
+    if (val.Content) {
+        return sanitize(val.Content);
+    }
+
+    if (/^(start|end|create)Time/.test(name)) {
+        return new Date(val);
+    }
+
+    return val;
+};
 
 export const fieldNameMap = {
   // Desired...                          // Given...
@@ -42,7 +60,8 @@ export const fieldNameMap = {
   'name':                                'Subject',
   'type':                                'CalendarItemType',
   'url':                                 'NetShowUrl',
-  'privacy':                             'Sensitivity'
+  'privacy':                             'Sensitivity',
+  'description':                         'Body',
 };
 
 export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseAdapter {
@@ -146,18 +165,14 @@ export default class ExchangeServiceCalendarAdapter extends ExchangeServiceBaseA
 
           const data = [];
 
+
           if (items && items.length) {
             for (const item of items) {
               const out: { [key: string]: any } = {};
 
-              _.each(fieldNameMap, (have: string, want: string) => {
-                let modified = _.get(item, have);
-                if (/^(create|start|end)Time/.test(want)) {
-                  modified = new Date(modified);
-                }
-                if (modified !== undefined) {
-                  out[want] = modified;
-                }
+              _.each(fieldNameMap, (origField: string, mappedField: string) => {
+                const origVal = _.get(item, origField);
+                out[mappedField] = mapVal(mappedField, origVal);
               });
 
               await this.attachAttendees(out, item, addr);

@@ -33,6 +33,7 @@ export declare const fieldNameMap: {
     'url': string;
     'allDay': string;
     'privacy': string;
+    'description': string;
 };
 export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     static Configuration: typeof Configuration;
@@ -55,6 +56,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
         'url': string;
         'allDay': string;
         'privacy': string;
+        'description': string;
     };
     _config: Configuration;
     _service: Service;

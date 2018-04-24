@@ -13,6 +13,18 @@ const _ = require("lodash");
 const Adapter_1 = require("../base/Adapter");
 const request = require("request-promise");
 const util_1 = require("../../util/util");
+const mapVal = (name, val) => {
+    if (!val) {
+        return val;
+    }
+    if (val.Content) {
+        return util_1.sanitize(val.Content);
+    }
+    if (/^(start|end|create)Time/.test(name)) {
+        return new Date(val);
+    }
+    return val;
+};
 /**
  * Office 365 Calendar adapter
  */
@@ -34,18 +46,6 @@ class Office365CalendarAdapter extends Adapter_1.default {
                     additionalFields,
                     apiType: 'calendarview'
                 })));
-                const mapVal = (name, val) => {
-                    if (!val) {
-                        return val;
-                    }
-                    if (val.Content) {
-                        return util_1.sanitize(val.Content);
-                    }
-                    if (/^(start|end|create)Time/.test(name)) {
-                        return new Date(val);
-                    }
-                    return val;
-                };
                 // replace data keys with desired mappings...
                 const results = _.map(eventData, (user) => {
                     return Object.assign({}, user.userProfile, { filterStartDate: user.filterStartDate, filterEndDate: user.filterEndDate, success: user.success, errorMessage: user.errorMessage, 

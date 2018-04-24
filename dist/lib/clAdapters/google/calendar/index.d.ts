@@ -23,6 +23,7 @@ export declare const fieldNameMap: {
     'url': string;
     'hangoutLink': string;
     'privacy': string;
+    'description': string;
 };
 export declare type GoogleCalendarApiEvent = {
     [K in keyof (typeof fieldNameMap)]?: (typeof fieldNameMap)[K];
@@ -56,6 +57,7 @@ export default class GoogleCalendarAdapter extends GoogleBaseAdapter {
         'url': string;
         'hangoutLink': string;
         'privacy': string;
+        'description': string;
     };
     _config: Configuration;
     _service: Service;

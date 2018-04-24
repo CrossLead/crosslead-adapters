@@ -22,7 +22,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "asclient": "git://github.com/CrossLead/node-asclient.git#34c1ca87f70ac64c20337c535a37b342833e5c59",
+    "asclient": "git://github.com/CrossLead/node-asclient.git#f2bc8df6925c25678ecfb0499e51936ca14bee62",
     "autodiscover-activesync": "0.0.1",
     "google-auth-library": "0.9.6",
     "googleapis": "17.1.0",

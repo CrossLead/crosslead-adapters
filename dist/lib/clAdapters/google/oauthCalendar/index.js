@@ -37,7 +37,8 @@ exports.fieldNameMap = {
     'name': 'summary',
     'url': 'htmlLink',
     'hangoutLink': 'hangoutLink',
-    'privacy': 'visibility'
+    'privacy': 'visibility',
+    'description': 'description',
 };
 class GoogleOauthCalendarAdapter extends index_1.Adapter {
     // constructor needs to call super

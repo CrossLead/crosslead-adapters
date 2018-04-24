@@ -156,9 +156,9 @@ arrify@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-"asclient@git://github.com/CrossLead/node-asclient.git#34c1ca87f70ac64c20337c535a37b342833e5c59":
+"asclient@git://github.com/CrossLead/node-asclient.git#f2bc8df6925c25678ecfb0499e51936ca14bee62":
   version "0.1.0"
-  resolved "git://github.com/CrossLead/node-asclient.git#34c1ca87f70ac64c20337c535a37b342833e5c59"
+  resolved "git://github.com/CrossLead/node-asclient.git#f2bc8df6925c25678ecfb0499e51936ca14bee62"
   dependencies:
     aswbxml "^0.0.4"
     merge-descriptors "^1.0.0"

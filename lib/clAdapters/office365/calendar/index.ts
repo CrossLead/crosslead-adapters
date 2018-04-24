@@ -5,6 +5,24 @@ import * as request                    from 'request-promise';
 import { DateRange, UserProfile }      from '../../../common/types';
 import { sanitize }                    from '../../util/util';
 
+
+const mapVal = (name: string, val: any) => {
+
+    if ( !val ) {
+        return val;
+    }
+
+    if (val.Content) {
+        return sanitize(val.Content);
+    }
+
+    if (/^(start|end|create)Time/.test(name)) {
+        return new Date(val);
+    }
+
+    return val;
+};
+
 /**
  * Office 365 Calendar adapter
  */
@@ -107,23 +125,6 @@ export default class Office365CalendarAdapter extends Office365BaseAdapter {
         additionalFields,
         apiType: 'calendarview'
       })));
-
-      const mapVal = (name: string, val: any) => {
-
-        if ( !val ) {
-          return val;
-        }
-
-        if (val.Content) {
-          return sanitize(val.Content);
-        }
-
-        if (/^(start|end|create)Time/.test(name)) {
-          return new Date(val);
-        }
-
-        return val;
-      };
 
       // replace data keys with desired mappings...
       const results = _.map(eventData, (user: any) => {

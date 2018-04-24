@@ -15,12 +15,25 @@ const index_1 = require("../../base/index");
 const Adapter_1 = require("../base/Adapter");
 const Service_1 = require("../base/Service");
 const errors_1 = require("../errors");
+const util_1 = require("../../util/util");
 const credentialMappings = {
     username: 'username',
     password: 'password',
     connectUrl: 'connectUrl'
 };
 const TEST_EMAIL = 'mark.bradley@crosslead.com';
+const mapVal = (name, val) => {
+    if (!val) {
+        return val;
+    }
+    if (val.Content) {
+        return util_1.sanitize(val.Content);
+    }
+    if (/^(start|end|create)Time/.test(name)) {
+        return new Date(val);
+    }
+    return val;
+};
 exports.fieldNameMap = {
     // Desired...                          // Given...
     'eventId': 'ItemId.attributes.Id',
@@ -47,7 +60,8 @@ exports.fieldNameMap = {
     'name': 'Subject',
     'type': 'CalendarItemType',
     'url': 'NetShowUrl',
-    'privacy': 'Sensitivity'
+    'privacy': 'Sensitivity',
+    'description': 'Body',
 };
 class ExchangeServiceCalendarAdapter extends Adapter_1.default {
     // constructor needs to call super
@@ -115,14 +129,9 @@ class ExchangeServiceCalendarAdapter extends Adapter_1.default {
                         if (items && items.length) {
                             for (const item of items) {
                                 const out = {};
-                                _.each(fieldNameMap, (have, want) => {
-                                    let modified = _.get(item, have);
-                                    if (/^(create|start|end)Time/.test(want)) {
-                                        modified = new Date(modified);
-                                    }
-                                    if (modified !== undefined) {
-                                        out[want] = modified;
-                                    }
+                                _.each(fieldNameMap, (origField, mappedField) => {
+                                    const origVal = _.get(item, origField);
+                                    out[mappedField] = mapVal(mappedField, origVal);
                                 });
                                 yield this.attachAttendees(out, item, addr);
                                 out.attendees = _.map(out.attendees, (attendee) => {
