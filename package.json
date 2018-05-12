@@ -23,18 +23,22 @@
   "keywords": [],
   "dependencies": {
     "asclient": "git://github.com/CrossLead/node-asclient.git#f2bc8df6925c25678ecfb0499e51936ca14bee62",
-    "autodiscover-activesync": "0.0.1",
+
     "google-auth-library": "0.9.6",
-    "googleapis": "17.1.0",
-    "lodash": "3.10.1",
-    "moment": "2.20.1",
-    "moment-recur": "git://github.com/CrossLead/moment-recur#66ca3f74b57b0e8438f79c98df3443fbfcef7309",
+
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
     "node-ews": "git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab",
-    "node-uuid": "1.4.3",
     "nodemailer": "4.1.1",
     "request-promise": "0.4.2",
     "sanitize-html": "1.18.2"
+  },
+  "peerDependencies": {
+    "autodiscover-activesync": "0.0.1",
+    "googleapis": "17.1.0",
+    "moment": "2.20.1",
+    "lodash": "3.10.1",
+    "node-uuid": "1.4.3",
+    "moment-recur": "git://github.com/CrossLead/moment-recur#66ca3f74b57b0e8438f79c98df3443fbfcef7309"
   },
   "devDependencies": {
     "ava": "0.17.0",
