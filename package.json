@@ -22,8 +22,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "asclient": "git://github.com/CrossLead/node-asclient.git#f2bc8df6925c25678ecfb0499e51936ca14bee62",
-
     "google-auth-library": "0.9.6",
 
     "netsuite-js": "git://github.com/CrossLead/netsuite-js#1b68a15bba2333b928b3110f86be89c857b9d25b",
@@ -33,6 +31,7 @@
     "sanitize-html": "1.18.2"
   },
   "peerDependencies": {
+    "asclient": "git://github.com/CrossLead/node-asclient.git#d77f6452375827e6d201e582156491cfe2078de2",
     "autodiscover-activesync": "0.0.1",
     "googleapis": "17.1.0",
     "moment": "2.20.1",
