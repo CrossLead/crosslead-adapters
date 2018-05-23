@@ -267,7 +267,7 @@ class GoogleCalendarAdapter extends Adapter_1.default {
                 const context = JSON.stringify({ serviceEmail, email });
                 throw (/invalid_request/.test(err.message) ?
                     new Error(`Caught invalid_request performing authorization: ${err.message}, ${context}`) :
-                    new Error(`Caught exception performing authorization: ${err.message}: ${context}`));
+                    new Error(`Caught exception performing authorization: ${err.message ? err.message : err.toString()}: ${context}`));
             }
         });
     }
