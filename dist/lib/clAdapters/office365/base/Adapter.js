@@ -108,7 +108,13 @@ class Office365BaseAdapter extends Adapter_1.default {
                     throw err;
                 }
             }
-            const tokenData = JSON.parse(result);
+            let tokenData = null;
+            try {
+                tokenData = JSON.parse(result);
+            }
+            catch (err) {
+                throw new Error(`Failed to JSON.parse token request result '${result}': ${err.toString()}`);
+            }
             if (!(tokenData && tokenData.access_token)) {
                 throw new Error('Could not get access token');
             }
@@ -185,16 +191,27 @@ class Office365BaseAdapter extends Adapter_1.default {
                 }
             }
             catch (err) {
+                let parsedMsg;
+                if (err.name === 'StatusCodeError') {
+                    const msg = err.message
+                        .replace(err.statusCode + ' - ', '')
+                        .replace(/\"/g, '"');
+                    try {
+                        parsedMsg = JSON.parse(msg);
+                    }
+                    catch (parseError) {
+                        parsedMsg = `Failed to parse error from '${msg}': ${parseError.toString()}`;
+                    }
+                }
+                else {
+                    parsedMsg = err.toString();
+                }
                 Object.assign(userData, {
                     success: false,
-                    errorMessage: new Error(err.name !== 'StatusCodeError' ?
-                        JSON.stringify(err) :
-                        JSON.parse(err.message
-                            .replace(err.statusCode + ' - ', '')
-                            .replace(/\"/g, '"'))
-                            .message)
+                    errorMessage: new Error(parsedMsg),
+                    data: [],
                 });
-                return true;
+                return userData;
             }
         });
     }
