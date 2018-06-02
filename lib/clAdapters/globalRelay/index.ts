@@ -37,6 +37,11 @@ export type GlobalRelayMessage = {
   thread?: string;
   objId?: string;
   attachments?: string[];
+  metricChanges?: {
+    metricName: string;
+    value: number;
+    date: Date;
+  }[];
 };
 
 export type GlobalRelayCredentials = {
@@ -167,6 +172,7 @@ const push = async (msg: GlobalRelayMessage, creds: GlobalRelayCredentials) => {
     subject,
     text: msg.body,
     attachments,
+    metricChanges : msg.metricChanges
   };
 
   return new Promise( (res, rej) => {
