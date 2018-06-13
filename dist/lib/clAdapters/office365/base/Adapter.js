@@ -200,7 +200,17 @@ class Office365BaseAdapter extends Adapter_1.default {
                         parsedMsg = JSON.parse(msg);
                     }
                     catch (parseError) {
-                        parsedMsg = `Failed to parse error from '${msg}': ${parseError.toString()}`;
+                        let msg1 = parseError.message || parseError.toString();
+                        if (msg1 === '[object Object]') {
+                            try {
+                                msg1 =
+                                    JSON.stringify(parseError);
+                            }
+                            catch (err1) {
+                                msg1 = 'Unknown';
+                            }
+                        }
+                        parsedMsg = `Failed to parse error from '${msg}': ${msg1}`;
                     }
                 }
                 else {
