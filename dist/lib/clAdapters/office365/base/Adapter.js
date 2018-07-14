@@ -16,6 +16,7 @@ const _ = require("lodash");
 const Adapter_1 = require("../../base/Adapter");
 const Service_1 = require("./Service");
 const Configuration_1 = require("./Configuration");
+const serializeError = require("serialize-error");
 /**
  * Common reset, runConnectionTest, and getAccessToken methods...
  */
@@ -200,25 +201,15 @@ class Office365BaseAdapter extends Adapter_1.default {
                         parsedMsg = JSON.parse(msg);
                     }
                     catch (parseError) {
-                        let msg1 = parseError.message || parseError.toString();
-                        if (msg1 === '[object Object]') {
-                            try {
-                                msg1 =
-                                    JSON.stringify(parseError);
-                            }
-                            catch (err1) {
-                                msg1 = 'Unknown';
-                            }
-                        }
-                        parsedMsg = `Failed to parse error from '${msg}': ${msg1}`;
+                        parsedMsg = `Failed to parse error from '${msg}': ${serializeError(parseError).message}`;
                     }
                 }
                 else {
-                    parsedMsg = err.toString();
+                    parsedMsg = serializeError(err).message || `Strange error: ${err.message}`;
                 }
                 Object.assign(userData, {
                     success: false,
-                    errorMessage: new Error(parsedMsg),
+                    errorMessage: parsedMsg,
                     data: [],
                 });
                 return userData;

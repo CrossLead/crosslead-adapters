@@ -6,6 +6,7 @@ import * as _                          from 'lodash';
 import Adapter                    from '../../base/Adapter';
 import Office365BaseService       from './Service';
 import Office365BaseConfiguration from './Configuration';
+import * as serializeError from 'serialize-error';
 
 export type Office365Credentials = {
   email: string;
@@ -274,25 +275,15 @@ export default class Office365BaseAdapter extends Adapter {
         try {
           parsedMsg = JSON.parse(msg);
         } catch (parseError) {
-          let msg1 = parseError.message || parseError.toString();
-          if (msg1 === '[object Object]') {
-            try {
-              msg1 =
-                JSON.stringify(parseError);
-            } catch (err1) {
-              msg1 = 'Unknown';
-            }
-          }
-
-          parsedMsg = `Failed to parse error from '${msg}': ${msg1}`;
+          parsedMsg = `Failed to parse error from '${msg}': ${serializeError(parseError).message}`;
         }
       } else {
-        parsedMsg = err.toString();
+        parsedMsg = serializeError(err).message || `Strange error: ${err.message}`;
       }
 
       Object.assign( userData, {
         success: false,
-        errorMessage: new Error(parsedMsg),
+        errorMessage: parsedMsg,
         data: [],
       });
 
