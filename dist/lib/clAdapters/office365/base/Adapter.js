@@ -197,11 +197,16 @@ class Office365BaseAdapter extends Adapter_1.default {
                     const msg = err.message
                         .replace(err.statusCode + ' - ', '')
                         .replace(/\"/g, '"');
-                    try {
-                        parsedMsg = JSON.parse(msg);
+                    if (msg) {
+                        try {
+                            parsedMsg = JSON.parse(msg);
+                        }
+                        catch (parseError) {
+                            parsedMsg = `Failed to parse error from '${msg}': ${serializeError(parseError).message}`;
+                        }
                     }
-                    catch (parseError) {
-                        parsedMsg = `Failed to parse error from '${msg}': ${serializeError(parseError).message}`;
+                    else {
+                        parsedMsg = `No json found in '${err.message}'`;
                     }
                 }
                 else {
