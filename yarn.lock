@@ -2487,9 +2487,9 @@ nan@^2.3.0:
     lodash "3.3.1"
     soap "0.8.0"
 
-"node-ews@git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab":
+"node-ews@git://github.com/CrossLead/node-ews#e36e38fe75fdceccce4e8cac75d7b75b15c09223":
   version "3.2.2"
-  resolved "git://github.com/CrossLead/node-ews#9c14da194f51af54a478c012173a2fab566daaab"
+  resolved "git://github.com/CrossLead/node-ews#e36e38fe75fdceccce4e8cac75d7b75b15c09223"
   dependencies:
     async "2.5.0"
     debug "2.3.3"
