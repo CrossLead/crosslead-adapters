@@ -79,7 +79,29 @@ const mapVal = (name, valArray) => {
     }
     return val;
 };
-class ActiveSyncCalendarAdapter extends Adapter_1.default {
+const getConnectUrls = (credentials) => __awaiter(this, void 0, void 0, function* () {
+    const ret = [];
+    {
+        // First we try the autodiscover route.
+        try {
+            const connectUrl = yield autodiscover_activesync_1.default({
+                emailAddress: credentials.email,
+                username: credentials.username,
+                password: credentials.password
+            });
+            ret.push(connectUrl);
+        }
+        catch (err) {
+            console.error(`Autodiscover failed with ${err}`);
+        }
+    }
+    {
+        // As a backup, we'll simply try the standard O365 URL.
+        ret.push('https://outlook.office365.com/Microsoft-Server-ActiveSync');
+    }
+    return ret;
+});
+class ActiveSyncCalendarAdapter extends Adapter_1.ActiveSyncBaseAdapter {
     // constructor needs to call super
     constructor() {
         super();
@@ -513,27 +535,19 @@ class ActiveSyncCalendarAdapter extends Adapter_1.default {
                 }
             });
             try {
-                const connectUrl = yield autodiscover_activesync_1.default({
-                    emailAddress: credentials.email,
-                    username: credentials.username,
-                    password: credentials.password
-                });
-                this.credentials.connectUrl = connectUrl || '';
-                if (connectUrl) {
+                const connectUrls = yield getConnectUrls(credentials);
+                const messages = [];
+                for (const connectUrl of connectUrls) {
+                    this.credentials.connectUrl = connectUrl || '';
                     const { provisioningResult } = yield this.mkProvisionedClient();
-                    return provisioningResult === 1 ?
-                        {
-                            success: true,
-                        } :
-                        {
-                            success: false,
-                            message: `ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`,
-                        };
+                    if (provisioningResult === 1) {
+                        return { success: true };
+                    }
+                    messages.push(`ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`);
                 }
                 return {
                     success: false,
-                    message: `Failed to validate credentials`,
-                    connectUrl,
+                    message: `${messages}`
                 };
             }
             catch (error) {

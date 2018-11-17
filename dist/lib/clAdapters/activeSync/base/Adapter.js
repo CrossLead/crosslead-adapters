@@ -26,5 +26,5 @@ class ActiveSyncBaseAdapter extends index_1.Adapter {
         });
     }
 }
-exports.default = ActiveSyncBaseAdapter;
+exports.ActiveSyncBaseAdapter = ActiveSyncBaseAdapter;
 //# sourceMappingURL=Adapter.js.map

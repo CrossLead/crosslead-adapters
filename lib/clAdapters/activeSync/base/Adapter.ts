@@ -34,4 +34,4 @@ abstract class ActiveSyncBaseAdapter extends Adapter {
   }
 }
 
-export default ActiveSyncBaseAdapter;
+export {ActiveSyncBaseAdapter};

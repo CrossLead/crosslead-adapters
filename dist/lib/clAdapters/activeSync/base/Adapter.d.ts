@@ -21,4 +21,4 @@ declare abstract class ActiveSyncBaseAdapter extends Adapter {
     sensitiveCredentialsFields: (keyof ActiveSyncCredentials)[];
     getFieldData(): Promise<void>;
 }
-export default ActiveSyncBaseAdapter;
+export { ActiveSyncBaseAdapter };

@@ -1,6 +1,6 @@
 import 'moment-recur';
 import { Configuration, Service } from '../../base/index';
-import ActiveSyncBaseAdapter from '../base/Adapter';
+import { ActiveSyncBaseAdapter } from '../base/Adapter';
 import { DateRange, UserProfile } from '../../../common/types';
 import { ConnectionTestResult } from '../../base/Adapter';
 /**

@@ -3,7 +3,7 @@ import 'moment-recur';
 import * as _ from 'lodash';
 import { Configuration, Service } from '../../base/index';
 import * as asclient from 'asclient';
-import ActiveSyncBaseAdapter from '../base/Adapter';
+import {ActiveSyncBaseAdapter, ActiveSyncCredentials} from '../base/Adapter';
 import autodiscover from 'autodiscover-activesync';
 import { DateRange, UserProfile } from '../../../common/types';
 import { ConnectionTestResult } from '../../base/Adapter';
@@ -14,6 +14,7 @@ const credentialMappings: { [key: string]: string } = {
   'email'    : 'email',
   'password' : 'password',
 };
+
 
 const ORGANIZER_STATUS: string = '1';
 const ACCEPTED_STATUS: string = '3';
@@ -79,6 +80,31 @@ const mapVal = (name: string, valArray: any) => {
   }
 
   return val;
+};
+
+const getConnectUrls = async (credentials: ActiveSyncCredentials) => {
+
+  const ret = [];
+  {
+    // First we try the autodiscover route.
+    try {
+      const connectUrl: string | null = await autodiscover({
+        emailAddress : credentials.email,
+        username: credentials.username,
+        password: credentials.password
+      });
+
+      ret.push(connectUrl);
+    } catch (err) {
+      console.error(`Autodiscover failed with ${err}` );
+    }
+  }
+  {
+    // As a backup, we'll simply try the standard O365 URL.
+    ret.push('https://outlook.office365.com/Microsoft-Server-ActiveSync');
+  }
+
+  return ret;
 };
 
 export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
@@ -628,31 +654,23 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       });
 
     try {
-      const connectUrl: string | null = await autodiscover({
-        emailAddress : credentials.email,
-        username: credentials.username,
-        password: credentials.password
-      });
+      const connectUrls = await getConnectUrls(credentials as ActiveSyncCredentials);
+      const messages = [];
 
-      this.credentials.connectUrl = connectUrl || '';
+      for (const connectUrl of connectUrls) {
+        this.credentials.connectUrl = connectUrl || '';
 
-      if (connectUrl) {
         const {provisioningResult} = await this.mkProvisionedClient();
+        if (provisioningResult === 1) {
+          return {success: true};
+        }
 
-        return provisioningResult === 1 ?
-          {
-            success: true,
-          } :
-          {
-            success: false,
-            message: `ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`,
-          };
+        messages.push(`ActiveSync configuration failed due to '${provisionResultToString(provisioningResult)}'`);
       }
 
       return {
         success: false,
-        message: `Failed to validate credentials`,
-        connectUrl,
+        message: `${messages}`
       };
 
     } catch (error) {
