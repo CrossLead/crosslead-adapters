@@ -10,7 +10,6 @@ import { ConnectionTestResult } from '../../base/Adapter';
 import { sanitize } from '../../util/util';
 
 const credentialMappings: { [key: string]: string } = {
-  'username' : 'username',
   'email'    : 'email',
   'password' : 'password',
 };
@@ -90,11 +89,12 @@ const getConnectUrls = async (credentials: ActiveSyncCredentials) => {
     try {
       const connectUrl: string | null = await autodiscover({
         emailAddress : credentials.email,
-        username: credentials.username,
         password: credentials.password
       });
 
-      ret.push(connectUrl);
+      if (connectUrl) {
+        ret.push(connectUrl);
+      }
     } catch (err) {
       console.error(`Autodiscover failed with ${err}` );
     }
@@ -657,7 +657,7 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       const connectUrls = await getConnectUrls(credentials as ActiveSyncCredentials);
       const messages = [];
 
-      for (const connectUrl of connectUrls) {
+      for (const connectUrl of connectUrls.filter(u => u)) {
         this.credentials.connectUrl = connectUrl || '';
 
         const {provisioningResult} = await this.mkProvisionedClient();
@@ -674,9 +674,12 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
       };
 
     } catch (error) {
+      const message =
+            error.message.match( /Unauthorized/ ) ?
+            'Unauthorized' : error.message;
       return {
         success: false,
-        message: error.message,
+        message,
       };
     }
   }
