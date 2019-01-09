@@ -100,6 +100,26 @@ const getConnectUrls = async (credentials: ActiveSyncCredentials) => {
     }
   }
   {
+    // Second, we add username and try again if the first attempt failed.
+    // This seems to be important only in cases where an on-prem
+    // Exchange server is in use.
+    if (ret.length === 0) {
+      try {
+        const connectUrl: string | null = await autodiscover({
+          emailAddress : credentials.email,
+          username: credentials.username,
+          password: credentials.password
+        });
+
+        if (connectUrl) {
+          ret.push(connectUrl);
+        }
+      } catch (err) {
+        console.error(`Autodiscover failed with ${err}` );
+      }
+    }
+  }
+  {
     // As a backup, we'll simply try the standard O365 URL.
     ret.push('https://outlook.office365.com/Microsoft-Server-ActiveSync');
   }
