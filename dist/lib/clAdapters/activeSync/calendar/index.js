@@ -17,7 +17,6 @@ const Adapter_1 = require("../base/Adapter");
 const autodiscover_activesync_1 = require("autodiscover-activesync");
 const util_1 = require("../../util/util");
 const credentialMappings = {
-    'username': 'username',
     'email': 'email',
     'password': 'password',
 };
@@ -86,10 +85,11 @@ const getConnectUrls = (credentials) => __awaiter(this, void 0, void 0, function
         try {
             const connectUrl = yield autodiscover_activesync_1.default({
                 emailAddress: credentials.email,
-                username: credentials.username,
                 password: credentials.password
             });
-            ret.push(connectUrl);
+            if (connectUrl) {
+                ret.push(connectUrl);
+            }
         }
         catch (err) {
             console.error(`Autodiscover failed with ${err}`);
@@ -537,7 +537,7 @@ class ActiveSyncCalendarAdapter extends Adapter_1.ActiveSyncBaseAdapter {
             try {
                 const connectUrls = yield getConnectUrls(credentials);
                 const messages = [];
-                for (const connectUrl of connectUrls) {
+                for (const connectUrl of connectUrls.filter(u => u)) {
                     this.credentials.connectUrl = connectUrl || '';
                     const { provisioningResult } = yield this.mkProvisionedClient();
                     if (provisioningResult === 1) {
@@ -551,9 +551,11 @@ class ActiveSyncCalendarAdapter extends Adapter_1.ActiveSyncBaseAdapter {
                 };
             }
             catch (error) {
+                const message = error.message.match(/Unauthorized/) ?
+                    'Unauthorized' : error.message;
                 return {
                     success: false,
-                    message: error.message,
+                    message,
                 };
             }
         });
