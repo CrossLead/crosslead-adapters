@@ -415,6 +415,9 @@ export default class ActiveSyncCalendarAdapter extends ActiveSyncBaseAdapter {
     const adapter = this;
     const event: any = folder.ApplicationData[0];
 
+    if (!event.StartTime) {
+      throw new Error(`Detected malformed event: ${JSON.stringify(Object.keys(event))}` );
+    }
     const startTime: any = moment(event.StartTime[0]);
     const endTime: any = moment(event.EndTime[0]);
     const exceptions: any = _.get(event, 'Exceptions[0]');
