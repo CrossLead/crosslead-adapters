@@ -4,6 +4,7 @@ export declare enum GlobalRelayMessageType {
     Update = 1,
     Plan = 2,
     Team = 3,
+    Work = 4,
 }
 export declare type GlobalRelayMessage = {
     type: GlobalRelayMessageType;

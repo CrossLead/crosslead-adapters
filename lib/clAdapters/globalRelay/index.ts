@@ -16,6 +16,7 @@ export enum GlobalRelayMessageType {
   Update = 1,
   Plan = 2,
   Team = 3,
+  Work = 4,
 }
 
 const typeToString = (type: GlobalRelayMessageType) => {
@@ -24,6 +25,7 @@ const typeToString = (type: GlobalRelayMessageType) => {
   case GlobalRelayMessageType.Update: return 'Update';
   case GlobalRelayMessageType.Plan: return 'Plan';
   case GlobalRelayMessageType.Team: return 'Team';
+  case GlobalRelayMessageType.Work: return 'Work';
   default: throw new Error( `Unknown message type ${type}` );
   };
 };
