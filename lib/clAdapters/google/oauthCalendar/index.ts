@@ -275,7 +275,13 @@ export default class GoogleOauthCalendarAdapter extends Adapter {
              )
       ));
       if (items && items.length > 0) {
-        ret = {start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime)};
+          const item = items[0];
+          const start = item.start && new Date(item.start);
+          const end = item.end && new Date(item.end);
+          if (!(start && end)) {
+              throw new Error( `Retrieved event ${eventId} missing one or more date fields; found ${JSON.stringify(Object.keys(item))}` );
+          }
+          ret = {start, end};
       }
     } catch (err) {
       const subject = auth.subject;

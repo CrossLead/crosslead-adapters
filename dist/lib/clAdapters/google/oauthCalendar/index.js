@@ -191,7 +191,13 @@ class GoogleOauthCalendarAdapter extends index_1.Adapter {
                 const calendarIds = yield util_1.calendarIdsFor(userProfile, auth);
                 const items = _.flatten(yield Promise.all(_.map(calendarIds, (calendarId) => new Promise((res, rej) => calendar.events.get({ calendarId, eventId, auth }, util_1.handleGoogleError(res, rej))))));
                 if (items && items.length > 0) {
-                    ret = { start: new Date(items[0].start.dateTime), end: new Date(items[0].end.dateTime) };
+                    const item = items[0];
+                    const start = item.start && new Date(item.start);
+                    const end = item.end && new Date(item.end);
+                    if (!(start && end)) {
+                        throw new Error(`Retrieved event ${eventId} missing one or more date fields; found ${JSON.stringify(Object.keys(item))}`);
+                    }
+                    ret = { start, end };
                 }
             }
             catch (err) {
