@@ -20,6 +20,7 @@ var AdapterTypes;
     AdapterTypes[AdapterTypes["EXCHANGE_SERVICE_CALENDAR"] = 11] = "EXCHANGE_SERVICE_CALENDAR";
     AdapterTypes[AdapterTypes["GOOGLE_OAUTH_CALENDAR"] = 12] = "GOOGLE_OAUTH_CALENDAR";
     AdapterTypes[AdapterTypes["GLOBAL_RELAY"] = 13] = "GLOBAL_RELAY";
+    AdapterTypes[AdapterTypes["MICROSOFT_TEAMS"] = 14] = "MICROSOFT_TEAMS";
 })(AdapterTypes = exports.AdapterTypes || (exports.AdapterTypes = {}));
 ;
 // This map needs to be kept in sync with the above AdapterTypes enum.
@@ -40,6 +41,7 @@ exports.AdapterNameMap = [
     'Exchange Service Calendar',
     'Google OAuth Calendar',
     'Global Relay',
+    'Microsoft Teams'
 ];
 /**
  * Array of enums values for different user linked adapter types

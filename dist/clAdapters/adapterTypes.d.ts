@@ -17,6 +17,7 @@ export declare enum AdapterTypes {
     EXCHANGE_SERVICE_CALENDAR = 11,
     GOOGLE_OAUTH_CALENDAR = 12,
     GLOBAL_RELAY = 13,
+    MICROSOFT_TEAMS = 14,
 }
 export declare const AdapterNameMap: (string | null)[];
 /**

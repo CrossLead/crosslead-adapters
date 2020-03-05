@@ -18,6 +18,7 @@ export enum AdapterTypes {
   EXCHANGE_SERVICE_CALENDAR = 11,
   GOOGLE_OAUTH_CALENDAR = 12,
   GLOBAL_RELAY = 13,
+  MICROSOFT_TEAMS = 14,
 };
 
 // This map needs to be kept in sync with the above AdapterTypes enum.
@@ -39,6 +40,7 @@ export const AdapterNameMap = [
   'Exchange Service Calendar',
   'Google OAuth Calendar',
   'Global Relay',
+  'Microsoft Teams'
 ];
 
 /**
