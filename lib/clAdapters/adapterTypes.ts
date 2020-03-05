@@ -62,6 +62,7 @@ export const OrgWideAdapterTypes = [
   AdapterTypes.GOOGLE_CALENDAR,
   AdapterTypes.OFFICE365_CALENDAR,
   AdapterTypes.EXCHANGE_SERVICE_CALENDAR,
+  AdapterTypes.MICROSOFT_TEAMS,
 ];
 
 
