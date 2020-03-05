@@ -63,6 +63,7 @@ export const OrgWideAdapterTypes = [
   AdapterTypes.OFFICE365_CALENDAR,
   AdapterTypes.EXCHANGE_SERVICE_CALENDAR,
   AdapterTypes.MICROSOFT_TEAMS,
+  AdapterTypes.SLACK
 ];
 
 
