@@ -1,10 +1,10 @@
-import * as uuid                       from 'node-uuid';
-import * as crypto                     from 'crypto';
-import * as request                    from 'request-promise';
-import * as moment                     from 'moment';
-import * as _                          from 'lodash';
-import Adapter                    from '../../base/Adapter';
-import Office365BaseService       from './Service';
+import * as uuid from 'node-uuid';
+import * as crypto from 'crypto';
+import * as request from 'request-promise';
+import * as moment from 'moment';
+import * as _ from 'lodash';
+import Adapter from '../../base/Adapter';
+import Office365BaseService from './Service';
 import Office365BaseConfiguration from './Configuration';
 import * as serializeError from 'serialize-error';
 

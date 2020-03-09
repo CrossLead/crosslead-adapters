@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Adapter_1 = require("../base/Adapter");
 const request = require("request");
 const rate_limit_1 = require("../../utils/rate-limit");
-class SlackAdapter extends Adapter_1.default {
+class MicrosoftTeamsAdapter extends Adapter_1.default {
     constructor() {
         super(...arguments);
         this.credentials = {
@@ -29,7 +29,8 @@ class SlackAdapter extends Adapter_1.default {
     /**
      * Rate limit (at prototype level) slack api calls to once per second.
      */
-    static callSlackApiMethod(method, params = {}) {
+    static callTeamsApiMethod(method, params = {}) {
+        console.log('callTeamsApiMethod');
         let paramString = '';
         for (const p in params) {
             paramString += `${p}=${params[p]}&`;
@@ -47,7 +48,9 @@ class SlackAdapter extends Adapter_1.default {
     }
     // null init function...
     init() {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('init MSTeams Adapter');
+        });
     }
     getFieldData() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -55,9 +58,9 @@ class SlackAdapter extends Adapter_1.default {
         });
     }
 }
-SlackAdapter.baseApiUrl = 'https://slack.com/api';
+MicrosoftTeamsAdapter.baseApiUrl = 'https://slack.com/api';
 __decorate([
     rate_limit_1.default(1000)
-], SlackAdapter, "callSlackApiMethod", null);
-exports.default = SlackAdapter;
+], MicrosoftTeamsAdapter, "callTeamsApiMethod", null);
+exports.default = MicrosoftTeamsAdapter;
 //# sourceMappingURL=index.js.map

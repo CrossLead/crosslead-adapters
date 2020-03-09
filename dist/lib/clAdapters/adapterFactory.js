@@ -37,6 +37,8 @@ class AdapterFactory {
                 return new _1.GoogleOauthCalendarAdapter();
             case adapterTypes_1.AdapterTypes.GLOBAL_RELAY:
                 return new _1.GlobalRelayAdapter();
+            case adapterTypes_1.AdapterTypes.MICROSOFT_TEAMS:
+                return new _1.MicrosoftTeamsAdapter();
             default:
                 throw new Error(`Unknown type ${type}`);
         }

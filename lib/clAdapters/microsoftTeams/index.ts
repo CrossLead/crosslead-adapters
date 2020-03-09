@@ -2,15 +2,12 @@ import Adapter from '../base/Adapter';
 import * as request from 'request';
 import rateLimit from '../../utils/rate-limit';
 
-/**
- * Credentials (access token) currently passed as param to `callSlackApiMethod`
- */
 export type TeamsCredentials = {
     access_token: string;
     scope: string;
 };
 
-export default class SlackAdapter extends Adapter {
+export default class MicrosoftTeamsAdapter extends Adapter {
   credentials: TeamsCredentials = {
     access_token: '',
     scope: ''
@@ -23,7 +20,8 @@ export default class SlackAdapter extends Adapter {
    * Rate limit (at prototype level) slack api calls to once per second.
    */
   @rateLimit<any>(1000)
-  static callSlackApiMethod(method: string, params: {[key: string]: string} = {}): any {
+  static callTeamsApiMethod(method: string, params: {[key: string]: string} = {}): any {
+    console.log('callTeamsApiMethod');
     let paramString = '';
     for (const p in params) {
       paramString += `${p}=${params[p]}&`;
@@ -44,7 +42,9 @@ export default class SlackAdapter extends Adapter {
   }
 
   // null init function...
-  async init() {}
+  async init() {
+    console.log('init MSTeams Adapter');
+  }
 
   async getFieldData() {
     throw new Error('Microsoft Teams adapters currently do not support `getFieldData()`');
