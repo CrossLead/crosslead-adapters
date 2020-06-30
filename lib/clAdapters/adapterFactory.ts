@@ -9,6 +9,7 @@ import {
   GoogleOauthCalendarAdapter,
   JiraAdapter,
   SlackAdapter,
+  MicrosoftTeamsAdapter,
   ActiveSyncCalendarAdapter,
   ExchangeServiceCalendarAdapter,
   GlobalRelayAdapter,
@@ -38,6 +39,7 @@ export default class AdapterFactory {
   static createAdapter(type: Types.GOOGLE_CALENDAR): GoogleCalendarAdapter;
   static createAdapter(type: Types.JIRA): JiraAdapter;
   static createAdapter(type: Types.SLACK): SlackAdapter;
+  static createAdapter(type: Types.MICROSOFT_TEAMS): MicrosoftTeamsAdapter;
   static createAdapter(type: Types.ACTIVE_SYNC_CALENDAR): ActiveSyncCalendarAdapter;
   static createAdapter(type: Types.EXCHANGE_SERVICE_CALENDAR): ExchangeServiceCalendarAdapter;
   static createAdapter(type: Types.GOOGLE_OAUTH_CALENDAR): GoogleOauthCalendarAdapter;
@@ -71,6 +73,8 @@ export default class AdapterFactory {
         return new GoogleOauthCalendarAdapter();
       case Types.GLOBAL_RELAY:
         return new GlobalRelayAdapter();
+      case Types.MICROSOFT_TEAMS:
+        return new MicrosoftTeamsAdapter();
       default:
         throw new Error(`Unknown type ${type}`);
     }
