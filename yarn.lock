@@ -2735,8 +2735,9 @@ node-status-codes@^1.0.0:
   resolved "https://registry.yarnpkg.com/node-status-codes/-/node-status-codes-1.0.0.tgz#5ae5541d024645d32a58fcddc9ceecea7ae3ac2f"
 
 node-uuid@~1.4.0:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.3.tgz#319bb7a56e7cb63f00b5c0cd7851cd4b4ddf1df9"
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
+  integrity sha1-sEDrCSOWivq/jTL7HxfxFn/auQc=
 
 nodemailer@4.1.1:
   version "4.1.1"
